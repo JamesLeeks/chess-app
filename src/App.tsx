@@ -1,26 +1,34 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
+type SquareType = "dark" | "light";
+type ChessPiece = "white-rook"; // TODO: complete this list ;-p
+
+function Square({ squareType }: { squareType: SquareType }) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <span className={`${squareType}-square`}></span>
+  )
+}
+
+function Board() {
+  const boardIndexes = [0, 1, 2, 3, 4, 5, 6, 7]
+  return (
+    <>
+      <div className='board'>
+        {boardIndexes.map(rowIndex =>
+          <div>
+            {boardIndexes.map(columnIndex => (columnIndex + rowIndex) % 2)
+              .map(x => x === 0 ? "light" : "dark")
+              .map(squareType => <Square squareType={squareType} />)}
+          </div>
+        )}
+      </div>
+    </>
   );
+}
+
+function App() {
+  return (<Board />)
 }
 
 export default App;
