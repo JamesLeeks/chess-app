@@ -1,3 +1,7 @@
+body {
+  background-color: rgb(59, 59, 59);
+}
+
 .board {
   font-size: 0;
   grid-template-columns: repeat(5, 1fr);
@@ -14,9 +18,108 @@
   width: 96px;
   display: inline-block;
 }
-
 .dark-square {
   background-image: url("images/darkSquares.png");
+  height: 96px;
+  width: 96px;
+  display: inline-block;
+}
+
+.light-square-selected, .dark-square-selected {
+  background-color: green;
+  height: 96px;
+  width: 96px;
+  display: inline-block;
+}
+
+.black-pawn::after {
+  content: url("images/blackPawn.png");
+  /* background-image: url("blackPawn.png"); */
+  height: 96px;
+  width: 96px;
+  display: inline-block;
+}
+
+.white-pawn::after {
+  content: url("images/whitePawn.png");
+  /* background-image: url("blackPawn.png"); */
+  height: 96px;
+  width: 96px;
+  display: inline-block;
+}
+
+.black-rook::after {
+  content: url("images/blackRook.png");
+  height: 96px;
+  width: 96px;
+  display: inline-block;
+}
+
+.black-queen::after {
+  content: url("images/blackQueen.png");
+  height: 96px;
+  width: 96px;
+  display: inline-block;
+}
+
+.white-queen::after {
+  content: url("images/whiteQueen.png");
+  height: 96px;
+  width: 96px;
+  display: inline-block;
+}
+
+.black-king::after {
+  content: url("images/blackKing.png");
+  /* background-image: url("blackPawn.png"); */
+  height: 96px;
+  width: 96px;
+  display: inline-block;
+}
+
+.black-bishop::after {
+  content: url("images/blackBishop.png");
+  /* background-image: url("blackPawn.png"); */
+  height: 96px;
+  width: 96px;
+  display: inline-block;
+}
+
+.white-bishop::after {
+  content: url("images/whiteBishop.png");
+  /* background-image: url("blackPawn.png"); */
+  height: 96px;
+  width: 96px;
+  display: inline-block;
+}
+
+.white-knight::after {
+  content: url("images/whiteKnight.png");
+  /* background-image: url("blackPawn.png"); */
+  height: 96px;
+  width: 96px;
+  display: inline-block;
+}
+
+.black-knight::after {
+  content: url("images/blackKnight.png");
+  /* background-image: url("blackPawn.png"); */
+  height: 96px;
+  width: 96px;
+  display: inline-block;
+}
+
+.white-rook::after {
+  content: url("images/whiteRook.png");
+  /* background-image: url("blackPawn.png"); */
+  height: 96px;
+  width: 96px;
+  display: inline-block;
+}
+
+.white-king::after {
+  content: url("images/whiteKing.png");
+  /* background-image: url("blackPawn.png"); */
   height: 96px;
   width: 96px;
   display: inline-block;
