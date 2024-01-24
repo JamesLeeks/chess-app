@@ -33,7 +33,6 @@ function Square(props: SquareProps) {
   const pieceClass = chessPiece ?  `${chessPiece.pieceColour}-${chessPiece.pieceType}` : ""
   //build up the class name
   const squareClass = `${squareType}-square${selected ? "-selected" : ""}`
-  console.log(squareClass)
 
   return (
     // TODO: move square stuff to new SquareClass variable
