@@ -2,19 +2,14 @@ import React, { useState } from 'react';
 import './App.css';
 
 type SquareType = "dark" | "light";
-type ChessPiece =
-  "white-rook" |
-  "white-knight" |
-  "white-bishop" |
-  "white-king" |
-  "white-queen" |
-  "white-pawn" |
-  "black-rook" |
-  "black-knight" |
-  "black-bishop" |
-  "black-king" |
-  "black-queen" |
-  "black-pawn";
+type PieceType =
+  "rook" |
+  "knight" |
+  "bishop" |
+  "king" |
+  "queen" |
+  "pawn";
+type PieceColour = "black" | "white";
 
 interface Position {
   row: number,
@@ -26,34 +21,45 @@ interface SquareProps {
   selected?: boolean,
   onSquareClick: () => void
 }
+interface ChessPiece {
+  pieceColour: PieceColour,
+  pieceType: PieceType
+}
+
 function Square(props: SquareProps) {
   // split props out like with an array
   const { squareType, chessPiece, selected, onSquareClick } = props;
+  // if chessPiece: build up the class name. else: just make it an empty string
+  const pieceClass = chessPiece ?  `${chessPiece.pieceColour}-${chessPiece.pieceType}` : ""
+  //build up the class name
+  const squareClass = `${squareType}-square${selected ? "-selected" : ""}`
+  console.log(squareClass)
+
   return (
-    <span className={`${squareType}-square${selected ? "-selected" : ""} ${chessPiece}`} onClick={onSquareClick}></span>
+    // TODO: move square stuff to new SquareClass variable
+    <span className={`${squareClass} ${pieceClass}`} onClick={onSquareClick}></span>
   )
 }
 
-
 function Board() {
   const piecePositions: ChessPiece[][] = [
-    ["black-rook", "black-knight", "black-bishop", "black-queen", "black-king", "black-bishop", "black-knight", "black-rook"],
-    Array(8).fill("black-pawn"),
+    [{pieceColour: 'black', pieceType: 'rook'}, {pieceColour: 'black', pieceType: 'knight'}, {pieceColour: 'black', pieceType: 'bishop'}, {pieceColour: 'black', pieceType: 'queen'}, {pieceColour: 'black', pieceType: 'king'}, {pieceColour: 'black', pieceType: 'bishop'}, {pieceColour: 'black', pieceType: 'knight'}, {pieceColour: 'black', pieceType: 'rook'}],
+    Array(8).fill({pieceColour: 'black', pieceType: 'pawn'}),
     Array(8).fill(undefined),
     Array(8).fill(undefined),
     Array(8).fill(undefined),
     Array(8).fill(undefined),
-    Array(8).fill("white-pawn"),
-    ["white-rook", "white-knight", "white-bishop", "white-queen", "white-king", "white-bishop", "white-knight", "white-rook"],
+    Array(8).fill({pieceColour: 'white', pieceType: 'pawn'}),
+    [{pieceColour: 'white', pieceType: 'rook'}, {pieceColour: 'white', pieceType: 'knight'}, {pieceColour: 'white', pieceType: 'bishop'}, {pieceColour: 'white', pieceType: 'queen'}, {pieceColour: 'white', pieceType: 'king'}, {pieceColour: 'white', pieceType: 'bishop'}, {pieceColour: 'white', pieceType: 'knight'}, {pieceColour: 'white', pieceType: 'rook'}],
   ]
   const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
-  
+
   function handleClick(row: number, column: number) {
     if (!piecePositions[row][column]) {
       setSelectedSquare(null)
       return
     }
-    setSelectedSquare({row: row, column: column})
+    setSelectedSquare({ row: row, column: column })
   }
   // const boardIndexes = [0, 1, 2, 3, 4, 5, 6, 7]
 
