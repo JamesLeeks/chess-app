@@ -10,6 +10,7 @@ type PieceType =
   "queen" |
   "pawn";
 type PieceColour = "black" | "white";
+type BoardSquare = ChessPiece | undefined
 
 interface Position {
   row: number,
@@ -35,13 +36,12 @@ function Square(props: SquareProps) {
   const squareClass = `${squareType}-square${selected ? "-selected" : ""}`
 
   return (
-    // TODO: move square stuff to new SquareClass variable
     <span className={`${squareClass} ${pieceClass}`} onClick={onSquareClick}></span>
   )
 }
 
 function Board() {
-  const piecePositions: ChessPiece[][] = [
+  const [piecePositions, setPiecePositions] = useState<BoardSquare[][]>([
     [{ pieceColour: 'black', pieceType: 'rook' }, { pieceColour: 'black', pieceType: 'knight' }, { pieceColour: 'black', pieceType: 'bishop' }, { pieceColour: 'black', pieceType: 'queen' }, { pieceColour: 'black', pieceType: 'king' }, { pieceColour: 'black', pieceType: 'bishop' }, { pieceColour: 'black', pieceType: 'knight' }, { pieceColour: 'black', pieceType: 'rook' }],
     Array(8).fill({ pieceColour: 'black', pieceType: 'pawn' }),
     Array(8).fill(undefined),
@@ -50,26 +50,53 @@ function Board() {
     Array(8).fill(undefined),
     Array(8).fill({ pieceColour: 'white', pieceType: 'pawn' }),
     [{ pieceColour: 'white', pieceType: 'rook' }, { pieceColour: 'white', pieceType: 'knight' }, { pieceColour: 'white', pieceType: 'bishop' }, { pieceColour: 'white', pieceType: 'queen' }, { pieceColour: 'white', pieceType: 'king' }, { pieceColour: 'white', pieceType: 'bishop' }, { pieceColour: 'white', pieceType: 'knight' }, { pieceColour: 'white', pieceType: 'rook' }],
-  ]
+  ]);
   const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
   const [currentTurn, setCurrentTurn] = useState<PieceColour>("white");
 
+  function movePiece(currentRow: number, currentColumn: number, newRow: number, newColumn: number, pieceColour: PieceColour, pieceType: PieceType) {
+    const newPiecePositions = piecePositions.slice()
+    newPiecePositions[currentRow][currentColumn] = undefined
+    newPiecePositions[newRow][newColumn] = { pieceColour: pieceColour, pieceType: pieceType }
+    // unselect the square
+    setSelectedSquare(null)
+    setPiecePositions(newPiecePositions)
+  }
+
+
+
   function handleClick(row: number, column: number) {
-    // if there is no piece at row, column
-    if (!piecePositions[row][column] || piecePositions[row][column].pieceColour !== currentTurn) {
-      // remove square selection and return
+
+    // if there is no piece on this square
+    if (!piecePositions[row][column]) {
+      // if there is a selected square and it is the turn of the person who has a selected square
+      if (selectedSquare && currentTurn === piecePositions[selectedSquare.row][selectedSquare.column]?.pieceColour) {
+        const selectedPieceColour = piecePositions[selectedSquare.row][selectedSquare.column]?.pieceColour
+        const selectedPieceType = piecePositions[selectedSquare.row][selectedSquare.column]?.pieceType
+        // move the piece to the square that was clicked on
+        if (selectedPieceColour && selectedPieceType) {
+          movePiece(selectedSquare.row, selectedSquare.column, row, column, selectedPieceColour, selectedPieceType)
+        }
+        // switch turn
+        if (currentTurn === "white") {
+          setCurrentTurn("black")
+        } else {
+          setCurrentTurn("white")
+        }
+      } else {
+        // unselect the square
+        setSelectedSquare(null)
+        return
+      }
+    }
+    // if there is a piece on this square and it's their turn
+    if (piecePositions[row][column] && currentTurn === piecePositions[row][column]?.pieceColour) {
+      setSelectedSquare({ row: row, column: column })
+    } else {
       setSelectedSquare(null)
       return
     }
-    setSelectedSquare({ row: row, column: column })
-    if (currentTurn === "white") {
-      setCurrentTurn("black")
-    } else {
-      setCurrentTurn("white")
-    }
   }
-
-  // const boardIndexes = [0, 1, 2, 3, 4, 5, 6, 7]
 
   const boardContent = [];
   // for each row:
@@ -83,7 +110,7 @@ function Board() {
       squareType = 'dark'
     }
     for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
-      const square = <Square
+      const square = <Square key={`column-${columnIndex}}`}
         squareType={squareType}
         // look up position from piecePosition
         chessPiece={piecePositions[rowIndex][columnIndex]}
@@ -99,7 +126,7 @@ function Board() {
       }
     }
     // wrap the Squares in a div
-    const row = <div>{rowSquares}</div>
+    const row = <div key={`row-${rowIndex}}`}>{rowSquares}</div>
     // add row to the board
     boardContent.push(row);
   }
