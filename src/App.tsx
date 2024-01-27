@@ -54,47 +54,39 @@ function Board() {
   const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
   const [currentTurn, setCurrentTurn] = useState<PieceColour>("white");
 
-  function movePiece(currentRow: number, currentColumn: number, newRow: number, newColumn: number, pieceColour: PieceColour, pieceType: PieceType) {
+  function movePiece(from: Position, to: Position) {
     const newPiecePositions = piecePositions.slice()
-    newPiecePositions[currentRow][currentColumn] = undefined
-    newPiecePositions[newRow][newColumn] = { pieceColour: pieceColour, pieceType: pieceType }
-    // unselect the square
-    setSelectedSquare(null)
+    newPiecePositions[to.row][to.column] = piecePositions[from.row][from.column]
+    newPiecePositions[from.row][from.column] = undefined
     setPiecePositions(newPiecePositions)
+    setSelectedSquare(null)
   }
 
 
 
   function handleClick(row: number, column: number) {
-
-    // if there is no piece on this square
-    if (!piecePositions[row][column]) {
-      // if there is a selected square and it is the turn of the person who has a selected square
-      if (selectedSquare && currentTurn === piecePositions[selectedSquare.row][selectedSquare.column]?.pieceColour) {
-        const selectedPieceColour = piecePositions[selectedSquare.row][selectedSquare.column]?.pieceColour
-        const selectedPieceType = piecePositions[selectedSquare.row][selectedSquare.column]?.pieceType
-        // move the piece to the square that was clicked on
-        if (selectedPieceColour && selectedPieceType) {
-          movePiece(selectedSquare.row, selectedSquare.column, row, column, selectedPieceColour, selectedPieceType)
-        }
+    if (selectedSquare) {
+      // have a selected piece - move it
+      if (piecePositions[row][column]?.pieceColour === currentTurn) {
+        setSelectedSquare({ row: row, column: column })
+      } else {
+        movePiece(selectedSquare, { row: row, column: column })
         // switch turn
         if (currentTurn === "white") {
           setCurrentTurn("black")
         } else {
           setCurrentTurn("white")
         }
+      }
+    } else {
+      // picking a piece
+      // if there is a piece on this square and it's their turn
+      if (piecePositions[row][column] && currentTurn === piecePositions[row][column]?.pieceColour) {
+        setSelectedSquare({ row: row, column: column })
       } else {
-        // unselect the square
         setSelectedSquare(null)
         return
       }
-    }
-    // if there is a piece on this square and it's their turn
-    if (piecePositions[row][column] && currentTurn === piecePositions[row][column]?.pieceColour) {
-      setSelectedSquare({ row: row, column: column })
-    } else {
-      setSelectedSquare(null)
-      return
     }
   }
 
