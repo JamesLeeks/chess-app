@@ -18,6 +18,7 @@ body {
   width: 96px;
   display: inline-block;
 }
+
 .dark-square {
   background-image: url("images/darkSquares.png");
   height: 96px;
@@ -25,8 +26,17 @@ body {
   display: inline-block;
 }
 
-.light-square-selected, .dark-square-selected {
+.light-square-selected,
+.dark-square-selected {
   background-color: green;
+  height: 96px;
+  width: 96px;
+  display: inline-block;
+}
+
+.light-square-move,
+.dark-square-move {
+  background-color: yellow;
   height: 96px;
   width: 96px;
   display: inline-block;
