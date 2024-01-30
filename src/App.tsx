@@ -10,26 +10,35 @@ interface Position {
 	row: number;
 	column: number;
 }
-interface SquareProps {
-	squareType: SquareType;
-	chessPiece?: ChessPiece;
-	selected?: boolean;
-	onSquareClick: () => void;
-}
 interface ChessPiece {
 	colour: PieceColour;
 	type: PieceType;
 }
 
+interface SquareProps {
+	squareType: SquareType;
+	chessPiece?: ChessPiece;
+	selected?: boolean;
+	moveOption?: boolean;
+	onSquareClick: () => void;
+}
+
 function Square(props: SquareProps) {
 	// split props out like with an array
-	const { squareType, chessPiece, selected, onSquareClick } = props;
+	const { squareType, chessPiece, selected, moveOption, onSquareClick } =
+		props;
 	// if chessPiece: build up the class name. else: just make it an empty string
 	const pieceClass = chessPiece
 		? `${chessPiece.colour}-${chessPiece.type}`
 		: "";
 	//build up the class name
-	const squareClass = `${squareType}-square${selected ? "-selected" : ""}`;
+	let displayType = "";
+	if (selected) {
+		displayType = "-selected";
+	} else if (moveOption) {
+		displayType = "-move";
+	}
+	const squareClass = `${squareType}-square${displayType}`;
 
 	return (
 		<span
@@ -37,6 +46,23 @@ function Square(props: SquareProps) {
 			onClick={onSquareClick}
 		></span>
 	);
+}
+
+function getMoveOptions(
+	currentTurn: PieceColour,
+	selectedSquare: Position
+): Position[] {
+	if (currentTurn === "white") {
+		return [
+			{ row: selectedSquare.row - 1, column: selectedSquare.column },
+			{ row: selectedSquare.row - 2, column: selectedSquare.column },
+		];
+	} else {
+		return [
+			{ row: selectedSquare.row + 1, column: selectedSquare.column },
+			{ row: selectedSquare.row + 2, column: selectedSquare.column },
+		];
+	}
 }
 
 function Board() {
@@ -69,6 +95,7 @@ function Board() {
 		],
 	]);
 	const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
+	const [moveOptions, setMoveOptions] = useState<Position[]>([]);
 	const [currentTurn, setCurrentTurn] = useState<PieceColour>("white");
 
 	function movePiece(from: Position, to: Position) {
@@ -77,16 +104,31 @@ function Board() {
 			piecePositions[from.row][from.column];
 		newPiecePositions[from.row][from.column] = undefined;
 		setPiecePositions(newPiecePositions);
-		setSelectedSquare(null);
 	}
 
 	function handleClick(row: number, column: number) {
 		if (selectedSquare) {
-			// have a selected piece - move it
+			// there  a selected piece - move it
 			if (piecePositions[row][column]?.colour === currentTurn) {
+				// if it's their turn:
+				const newSelectedSquare = { row: row, column: column };
 				setSelectedSquare({ row: row, column: column });
+				setMoveOptions(getMoveOptions(currentTurn, newSelectedSquare));
 			} else {
-				movePiece(selectedSquare, { row: row, column: column });
+				// TODO: check that row and column is in the moveOptions
+				// note see foundMoveOptions
+				const foundMoveOption = moveOptions.find(
+					(pos) => pos.row === row && pos.column === column
+				);
+				if (foundMoveOption) {
+					movePiece(selectedSquare, { row: row, column: column });
+				} else {
+					setSelectedSquare(null);
+					setMoveOptions([]);
+					return;
+				}
+				setSelectedSquare(null);
+				setMoveOptions([]);
 				// switch turn
 				if (currentTurn === "white") {
 					setCurrentTurn("black");
@@ -101,9 +143,12 @@ function Board() {
 				piecePositions[row][column] &&
 				currentTurn === piecePositions[row][column]?.colour
 			) {
-				setSelectedSquare({ row: row, column: column });
+				const newSelectedSquare = { row: row, column: column };
+				setSelectedSquare(newSelectedSquare);
+				setMoveOptions(getMoveOptions(currentTurn, newSelectedSquare));
 			} else {
 				setSelectedSquare(null);
+				setMoveOptions([]);
 				return;
 			}
 		}
@@ -121,16 +166,21 @@ function Board() {
 			squareType = "dark";
 		}
 		for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
+			const isSelected =
+				selectedSquare?.row === rowIndex &&
+				selectedSquare?.column === columnIndex;
+			const foundMoveOption = moveOptions.find(
+				(pos) => pos.row === rowIndex && pos.column === columnIndex
+			);
+			const isMoveOption = foundMoveOption !== undefined; // if we have foundMoveOption, we found a move option that matches the current row and column
 			const square = (
 				<Square
 					key={`column-${columnIndex}}`}
 					squareType={squareType}
 					// look up position from piecePosition
 					chessPiece={piecePositions[rowIndex][columnIndex]}
-					selected={
-						selectedSquare?.row === rowIndex &&
-						selectedSquare?.column === columnIndex
-					}
+					selected={isSelected}
+					moveOption={isMoveOption}
 					onSquareClick={() => handleClick(rowIndex, columnIndex)}
 				/>
 			);
