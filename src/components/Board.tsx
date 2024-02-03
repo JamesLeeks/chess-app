@@ -27,7 +27,9 @@ export function Board() {
 				// if it's their turn:
 				const newSelectedSquare = { row: row, column: column };
 				setSelectedSquare({ row: row, column: column });
-				setMoveOptions(getMoveOptions(currentTurn, newSelectedSquare));
+				setMoveOptions(
+					getMoveOptions(currentTurn, newSelectedSquare, piecePositions)
+				);
 			} else {
 				// note see foundMoveOptions
 				const foundMoveOption = moveOptions.find(
@@ -58,7 +60,9 @@ export function Board() {
 			) {
 				const newSelectedSquare = { row: row, column: column };
 				setSelectedSquare(newSelectedSquare);
-				setMoveOptions(getMoveOptions(currentTurn, newSelectedSquare));
+				setMoveOptions(
+					getMoveOptions(currentTurn, newSelectedSquare, piecePositions)
+				);
 			} else {
 				setSelectedSquare(null);
 				setMoveOptions([]);
