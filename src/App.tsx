@@ -5,7 +5,6 @@ import { Board } from "./components/Board";
 function App() {
 	return (
 		<>
-			<h1>Chess App</h1>
 			<Board />
 		</>
 	);

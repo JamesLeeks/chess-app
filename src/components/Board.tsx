@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Square } from "./Square";
 import { getMoveOptions } from "../core/getMoveOptions";
 import { BoardSquare, Position, PieceColour, SquareType } from "../core/models";
-import { getStartingBoard } from "../core/getStartingBoard";
+import { getStartingBoard } from "../core/board";
 
 export function Board() {
 	const [piecePositions, setPiecePositions] = useState<BoardSquare[][]>(
@@ -27,9 +27,7 @@ export function Board() {
 				// if it's their turn:
 				const newSelectedSquare = { row: row, column: column };
 				setSelectedSquare({ row: row, column: column });
-				setMoveOptions(
-					getMoveOptions(currentTurn, newSelectedSquare, piecePositions)
-				);
+				setMoveOptions(getMoveOptions(newSelectedSquare, piecePositions));
 			} else {
 				// note see foundMoveOptions
 				const foundMoveOption = moveOptions.find(
@@ -60,9 +58,7 @@ export function Board() {
 			) {
 				const newSelectedSquare = { row: row, column: column };
 				setSelectedSquare(newSelectedSquare);
-				setMoveOptions(
-					getMoveOptions(currentTurn, newSelectedSquare, piecePositions)
-				);
+				setMoveOptions(getMoveOptions(newSelectedSquare, piecePositions));
 			} else {
 				setSelectedSquare(null);
 				setMoveOptions([]);
