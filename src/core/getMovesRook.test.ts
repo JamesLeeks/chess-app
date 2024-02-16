@@ -50,3 +50,99 @@ test("white rook forward capture", () => {
 	const expectedMoveOptions: Position[] = positions("a2", "a3", "a4", "a5", "a6", "a7");
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
+
+test("white rook backward moves", () => {
+	const initialBoard = parseBoard(`
+	WR WN -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	`);
+	const moveOptions = getMoveOptions(position("a8"), initialBoard);
+	const expectedMoveOptions: Position[] = positions("a1", "a2", "a3", "a4", "a5", "a6", "a7");
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
+test("white rook backward blocked", () => {
+	const initialBoard = parseBoard(`
+	WR WN -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	WN -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	`);
+	const moveOptions = getMoveOptions(position("a8"), initialBoard);
+	const expectedMoveOptions: Position[] = positions("a6", "a7");
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
+test("white rook backward capture", () => {
+	const initialBoard = parseBoard(`
+	WR WN -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	BN -- -- -- -- -- -- --
+	`);
+	const moveOptions = getMoveOptions(position("a8"), initialBoard);
+	const expectedMoveOptions: Position[] = positions("a1", "a2", "a3", "a4", "a5", "a6", "a7");
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
+test("white rook right moves", () => {
+	const initialBoard = parseBoard(`
+	WR -- -- -- -- -- -- --
+	WN -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	`);
+	const moveOptions = getMoveOptions(position("a8"), initialBoard);
+	const expectedMoveOptions: Position[] = positions("b8", "c8", "d8", "e8", "f8", "g8", "h8");
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
+test("white rook right blocked", () => {
+	const initialBoard = parseBoard(`
+	WR -- -- -- WN -- -- --
+	WN -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	`);
+	const moveOptions = getMoveOptions(position("a8"), initialBoard);
+	const expectedMoveOptions: Position[] = positions("b8", "c8", "d8");
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
+test("white rook right capture", () => {
+	const initialBoard = parseBoard(`
+	WR -- -- -- BN -- -- --
+	WN -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	`);
+	const moveOptions = getMoveOptions(position("a8"), initialBoard);
+	const expectedMoveOptions: Position[] = positions("b8", "c8", "d8", "e8");
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});

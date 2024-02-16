@@ -23,6 +23,7 @@ function getRookMoves(selectedSquare: Position, board: BoardSquare[][], currentT
 	const opponentTurn = currentTurn === "white" ? "black" : "white";
 	const moves: Position[] = [];
 
+	// upwards
 	for (let rowIndex = selectedSquare.row - 1; rowIndex >= 0; rowIndex--) {
 		const currentSquare = board[rowIndex][selectedSquare.column];
 		// // if the next square in the column is free:
@@ -48,6 +49,41 @@ function getRookMoves(selectedSquare: Position, board: BoardSquare[][], currentT
 			break;
 		}
 	}
+
+	// downwards
+	for (let rowIndex = selectedSquare.row + 1; rowIndex <= 7; rowIndex++) {
+		const currentSquare = board[rowIndex][selectedSquare.column];
+
+		if (currentSquare?.colour === currentTurn) {
+			// Hit our own piece - don't add and stop searching
+			break;
+		}
+
+		moves.push({ row: rowIndex, column: selectedSquare.column });
+
+		if (currentSquare?.colour === opponentTurn) {
+			// Hit an opponent piece - don't search any further
+			break;
+		}
+	}
+
+	// right
+	for (let columnIndex = selectedSquare.column + 1; columnIndex <= 7; columnIndex++) {
+		const currentSquare = board[selectedSquare.row][columnIndex];
+
+		if (currentSquare?.colour === currentTurn) {
+			// Hit our own piece - don't add and stop searching
+			break;
+		}
+
+		moves.push({ row: selectedSquare.row, column: columnIndex });
+
+		if (currentSquare?.colour === opponentTurn) {
+			// Hit an opponent piece - don't search any further
+			break;
+		}
+	}
+
 	return moves;
 }
 
