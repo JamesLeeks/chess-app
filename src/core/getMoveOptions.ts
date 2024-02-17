@@ -17,6 +17,9 @@ export function getMoveOptions(selectedSquare: Position, board: BoardSquare[][])
 		case "bishop":
 			return getBishopMoves(selectedSquare, board, currentTurn);
 
+		case "queen":
+			return getQueenMoves(selectedSquare, board, currentTurn);
+
 		default:
 			return [];
 	}
@@ -51,6 +54,13 @@ function getMovesForDirection(
 		columnIndex = columnIndex + colunmDirection;
 	}
 
+	return moves;
+}
+
+function getQueenMoves(selectedSquare: Position, board: BoardSquare[][], currentTurn: PieceColour) {
+	const moves: Position[] = [];
+	moves.push(...getBishopMoves(selectedSquare, board, currentTurn));
+	moves.push(...getRookMoves(selectedSquare, board, currentTurn));
 	return moves;
 }
 
