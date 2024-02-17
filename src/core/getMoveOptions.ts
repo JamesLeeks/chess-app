@@ -14,6 +14,9 @@ export function getMoveOptions(selectedSquare: Position, board: BoardSquare[][])
 		case "rook":
 			return getRookMoves(selectedSquare, board, currentTurn);
 
+		case "bishop":
+			return getBishopMoves(selectedSquare, board, currentTurn);
+
 		default:
 			return [];
 	}
@@ -47,6 +50,24 @@ function getMovesForDirection(
 		rowIndex = rowIndex + rowDirection;
 		columnIndex = columnIndex + colunmDirection;
 	}
+
+	return moves;
+}
+
+function getBishopMoves(selectedSquare: Position, board: BoardSquare[][], currentTurn: PieceColour) {
+	const moves: Position[] = [];
+
+	// up right
+	moves.push(...getMovesForDirection(selectedSquare, board, currentTurn, -1, 1));
+
+	// up left
+	moves.push(...getMovesForDirection(selectedSquare, board, currentTurn, -1, -1));
+
+	// down right
+	moves.push(...getMovesForDirection(selectedSquare, board, currentTurn, 1, 1));
+
+	// down left
+	moves.push(...getMovesForDirection(selectedSquare, board, currentTurn, 1, -1));
 
 	return moves;
 }
