@@ -19,70 +19,52 @@ export function getMoveOptions(selectedSquare: Position, board: BoardSquare[][])
 	}
 }
 
-function getRookMoves(selectedSquare: Position, board: BoardSquare[][], currentTurn: PieceColour) {
+function getMovesForDirection(
+	selectedSquare: Position,
+	board: BoardSquare[][],
+	currentTurn: PieceColour,
+	rowDirection: number,
+	colunmDirection: number
+) {
 	const opponentTurn = currentTurn === "white" ? "black" : "white";
 	const moves: Position[] = [];
 
-	// upwards
-	for (let rowIndex = selectedSquare.row - 1; rowIndex >= 0; rowIndex--) {
-		const currentSquare = board[rowIndex][selectedSquare.column];
-		// // if the next square in the column is free:
-		// if (!currentSquare) {
-		// 	moves.push({ row: rowIndex, column: selectedSquare.column });
-		// 	// if the next square in the column has an opponent's piece on it:
-		// } else if (currentSquare?.colour !== currentTurn) {
-		// 	moves.push({ row: rowIndex, column: selectedSquare.column });
-		// 	break;
-		// } else {
-		// 	break;
-		// }
-
+	let rowIndex = selectedSquare.row + rowDirection;
+	let columnIndex = selectedSquare.column + colunmDirection;
+	while (rowIndex >= 0 && rowIndex <= 7 && columnIndex >= 0 && columnIndex <= 7) {
+		const currentSquare = board[rowIndex][columnIndex];
 		if (currentSquare?.colour === currentTurn) {
 			// Hit our own piece - don't add and stop searching
 			break;
 		}
 
-		moves.push({ row: rowIndex, column: selectedSquare.column });
+		moves.push({ row: rowIndex, column: columnIndex });
 
 		if (currentSquare?.colour === opponentTurn) {
 			// Hit an opponent piece - don't search any further
 			break;
 		}
+		rowIndex = rowIndex + rowDirection;
+		columnIndex = columnIndex + colunmDirection;
 	}
+
+	return moves;
+}
+
+function getRookMoves(selectedSquare: Position, board: BoardSquare[][], currentTurn: PieceColour) {
+	const moves: Position[] = [];
+
+	// upwards
+	moves.push(...getMovesForDirection(selectedSquare, board, currentTurn, -1, 0));
 
 	// downwards
-	for (let rowIndex = selectedSquare.row + 1; rowIndex <= 7; rowIndex++) {
-		const currentSquare = board[rowIndex][selectedSquare.column];
-
-		if (currentSquare?.colour === currentTurn) {
-			// Hit our own piece - don't add and stop searching
-			break;
-		}
-
-		moves.push({ row: rowIndex, column: selectedSquare.column });
-
-		if (currentSquare?.colour === opponentTurn) {
-			// Hit an opponent piece - don't search any further
-			break;
-		}
-	}
+	moves.push(...getMovesForDirection(selectedSquare, board, currentTurn, 1, 0));
 
 	// right
-	for (let columnIndex = selectedSquare.column + 1; columnIndex <= 7; columnIndex++) {
-		const currentSquare = board[selectedSquare.row][columnIndex];
+	moves.push(...getMovesForDirection(selectedSquare, board, currentTurn, 0, 1));
 
-		if (currentSquare?.colour === currentTurn) {
-			// Hit our own piece - don't add and stop searching
-			break;
-		}
-
-		moves.push({ row: selectedSquare.row, column: columnIndex });
-
-		if (currentSquare?.colour === opponentTurn) {
-			// Hit an opponent piece - don't search any further
-			break;
-		}
-	}
+	// left
+	moves.push(...getMovesForDirection(selectedSquare, board, currentTurn, 0, -1));
 
 	return moves;
 }

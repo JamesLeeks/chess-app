@@ -146,3 +146,51 @@ test("white rook right capture", () => {
 	const expectedMoveOptions: Position[] = positions("b8", "c8", "d8", "e8");
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
+
+test("white rook left moves", () => {
+	const initialBoard = parseBoard(`
+	-- -- -- -- -- -- -- WR
+	-- -- -- -- -- -- -- WN
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	`);
+	const moveOptions = getMoveOptions(position("h8"), initialBoard);
+	const expectedMoveOptions: Position[] = positions("a8", "b8", "c8", "d8", "e8", "f8", "g8");
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
+test("white rook left blocked", () => {
+	const initialBoard = parseBoard(`
+	-- -- -- WN -- -- -- WR
+	-- -- -- -- -- -- -- WN
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	`);
+	const moveOptions = getMoveOptions(position("h8"), initialBoard);
+	const expectedMoveOptions: Position[] = positions("e8", "f8", "g8");
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
+test("white rook left capture", () => {
+	const initialBoard = parseBoard(`
+	-- -- -- BN -- -- -- WR
+	-- -- -- -- -- -- -- WN
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	`);
+	const moveOptions = getMoveOptions(position("h8"), initialBoard);
+	const expectedMoveOptions: Position[] = positions("d8", "e8", "f8", "g8");
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
