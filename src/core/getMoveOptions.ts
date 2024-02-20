@@ -20,6 +20,9 @@ export function getMoveOptions(selectedSquare: Position, board: BoardSquare[][])
 		case "queen":
 			return getQueenMoves(selectedSquare, board, currentTurn);
 
+		case "knight":
+			return getKnightMoves(selectedSquare, board, currentTurn);
+
 		default:
 			return [];
 	}
@@ -54,6 +57,23 @@ function getMovesForDirection(
 		columnIndex = columnIndex + colunmDirection;
 	}
 
+	return moves;
+}
+
+function getKnightMoves(selectedSquare: Position, board: BoardSquare[][], currentTurn: PieceColour) {
+	const moves: Position[] = [
+		{ row: selectedSquare.row - 1, column: selectedSquare.column + 2 },
+		{ row: selectedSquare.row - 1, column: selectedSquare.column - 2 },
+		{ row: selectedSquare.row - 2, column: selectedSquare.column + 1 },
+		{ row: selectedSquare.row - 2, column: selectedSquare.column - 1 },
+		{ row: selectedSquare.row + 1, column: selectedSquare.column + 2 },
+		{ row: selectedSquare.row + 1, column: selectedSquare.column - 2 },
+		{ row: selectedSquare.row + 2, column: selectedSquare.column + 1 },
+		{ row: selectedSquare.row + 2, column: selectedSquare.column - 1 },
+	]
+		.filter((pos) => pos.row >= 0 && pos.row <= 7)
+		.filter((pos) => pos.column >= 0 && pos.column <= 7)
+		.filter((pos) => board[pos.row][pos.column]?.colour !== currentTurn);
 	return moves;
 }
 
