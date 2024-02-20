@@ -26,17 +26,29 @@ body {
   display: inline-block;
 }
 
-.light-square-selected,
-.dark-square-selected {
-  background-color: green;
+.light-square-selected {
+  background-image: url("images/lightSquareSelected.png");
   height: 96px;
   width: 96px;
   display: inline-block;
 }
 
-.light-square-move,
+.dark-square-selected {
+  background-image: url("images/darkSquareSelected.png");
+  height: 96px;
+  width: 96px;
+  display: inline-block;
+}
+
+.light-square-move {
+  background-image: url("images/lightSquareMoves.png");
+  height: 96px;
+  width: 96px;
+  display: inline-block;
+}
+
 .dark-square-move {
-  background-color: yellow;
+  background-image: url("images/darkSquareMoves.png");
   height: 96px;
   width: 96px;
   display: inline-block;
