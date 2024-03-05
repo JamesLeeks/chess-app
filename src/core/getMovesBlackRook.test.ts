@@ -3,6 +3,35 @@ import { parseBoard } from "./board";
 import { Position } from "./models";
 import { position, positions } from "./position";
 
+test("black rook checking white king", () => {
+	const initialBoard = parseBoard(`
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- WK -- -- -- -- BR
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	`);
+	const moveOptions = getMoveOptions(position("h5"), initialBoard);
+	const expectedMoveOptions: Position[] = positions(
+		"c5",
+		"d5",
+		"e5",
+		"f5",
+		"g5",
+		"h1",
+		"h2",
+		"h3",
+		"h4",
+		"h6",
+		"h7",
+		"h8"
+	);
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
 test("black rook forward moves", () => {
 	const initialBoard = parseBoard(`
 	-- -- -- -- -- -- -- --

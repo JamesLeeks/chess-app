@@ -19,6 +19,51 @@ test("white king in check from black bishop", () => {
 	expect(isCheck).toEqual(true);
 });
 
+test("white king in check from black pawn", () => {
+	const board = parseBoard(`
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- BP -- -- --
+    -- -- -- WK -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    `);
+	const isCheck = isInCheck(board, "white", position("d4"));
+	expect(isCheck).toEqual(true);
+});
+
+test("white king blocking black pawn but not in check", () => {
+	const board = parseBoard(`
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- BP -- -- -- --
+    -- -- -- WK -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    `);
+	const isCheck = isInCheck(board, "white", position("d4"));
+	expect(isCheck).toEqual(false);
+});
+
+test("white king in check from black rook", () => {
+	const board = parseBoard(`
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- WK -- -- -- BR
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    `);
+	const isCheck = isInCheck(board, "white", position("d4"));
+	expect(isCheck).toEqual(true);
+});
+
 // PINS
 // test("white pawn pinned", () => {
 // 	const initialBoard = parseBoard(`
