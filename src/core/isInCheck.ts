@@ -1,7 +1,8 @@
 import { BoardSquare, PieceColour, Position } from "./models";
 import { getMoveOptions } from "./getMoveOptions";
 
-export function isInCheck(board: BoardSquare[][], kingColour: PieceColour, kingPosition: Position) {
+export function isInCheck(board: BoardSquare[][], kingColour: PieceColour): boolean {
+	const kingPosition = findKing(board, kingColour);
 	// get the enemy moves
 	// for each row
 	for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
@@ -28,4 +29,16 @@ export function isInCheck(board: BoardSquare[][], kingColour: PieceColour, kingP
 	}
 
 	return false;
+}
+
+function findKing(board: BoardSquare[][], kingColour: PieceColour): Position {
+	for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
+		for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
+			const currentSquare = board[rowIndex][columnIndex];
+			if (currentSquare?.type === "king" && currentSquare.colour === kingColour) {
+				return { row: rowIndex, column: columnIndex };
+			}
+		}
+	}
+	throw new Error(`Cannot find ${kingColour} king`);
 }

@@ -1,7 +1,6 @@
 import { parseBoard } from "./board";
 // import { getMoveOptions } from "./getMoveOptions";
 import { isInCheck } from "./isInCheck";
-import { position } from "./position";
 
 // CHECKS
 test("white king in check from black bishop", () => {
@@ -15,7 +14,7 @@ test("white king in check from black bishop", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const isCheck = isInCheck(board, "white", position("d4"));
+	const isCheck = isInCheck(board, "white");
 	expect(isCheck).toEqual(true);
 });
 
@@ -30,7 +29,7 @@ test("white king in check from black pawn", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const isCheck = isInCheck(board, "white", position("d4"));
+	const isCheck = isInCheck(board, "white");
 	expect(isCheck).toEqual(true);
 });
 
@@ -45,7 +44,7 @@ test("white king blocking black pawn but not in check", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const isCheck = isInCheck(board, "white", position("d4"));
+	const isCheck = isInCheck(board, "white");
 	expect(isCheck).toEqual(false);
 });
 
@@ -60,7 +59,7 @@ test("white king in check from black rook", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const isCheck = isInCheck(board, "white", position("d4"));
+	const isCheck = isInCheck(board, "white");
 	expect(isCheck).toEqual(true);
 });
 
