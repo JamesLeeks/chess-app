@@ -59,6 +59,7 @@ export function parseBoard(boardString: string): BoardSquare[][] {
 	}
 	return rowArray;
 }
+
 function getPieceFromString(squareString: string) {
 	if (squareString === "--") {
 		return undefined;
@@ -78,6 +79,7 @@ function getColourFromString(pieceColourString: string) {
 		throw new Error(`Invalid colour: ${pieceColourString}`);
 	}
 }
+
 function getPieceTypeFromString(pieceTypeString: string): PieceType {
 	switch (pieceTypeString) {
 		case "P":
@@ -95,20 +97,4 @@ function getPieceTypeFromString(pieceTypeString: string): PieceType {
 		default:
 			throw new Error("piece should have a type");
 	}
-
-	// if (pieceTypeString === "P") {
-	// 	return "pawn";
-	// } else if (pieceTypeString === "R") {
-	// 	return "rook";
-	// } else if (pieceTypeString === "N") {
-	// 	return "knight";
-	// } else if (pieceTypeString === "B") {
-	// 	return "bishop";
-	// } else if (pieceTypeString === "Q") {
-	// 	return "queen";
-	// } else if (pieceTypeString === "K") {
-	// 	return "king";
-	// } else {
-	// 	throw new Error("piece should have a type");
-	// }
 }
