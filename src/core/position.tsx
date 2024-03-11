@@ -15,3 +15,18 @@ export function position(squareString: string): Position {
 export function positions(...squareStrings: string[]): Position[] {
 	return squareStrings.map((s) => position(s));
 }
+
+export function toNotation(position: Position): string {
+	const row = position.row;
+	const column = position.column;
+	const files = "abcdefg";
+
+	const rank = 8 - row;
+	const file = files[column];
+
+	return file + rank;
+}
+
+export function toNotations(...positions: Position[]): string[] {
+	return positions.map((s) => toNotation(s));
+}

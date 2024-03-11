@@ -1,5 +1,5 @@
 import { BoardSquare, PieceColour, Position } from "./models";
-import { getMoveOptions } from "./getMoveOptions";
+import { getBaseMoveOptions } from "./getMoveOptions";
 
 export function isInCheck(board: BoardSquare[][], kingColour: PieceColour): boolean {
 	const kingPosition = findKing(board, kingColour);
@@ -13,7 +13,7 @@ export function isInCheck(board: BoardSquare[][], kingColour: PieceColour): bool
 				const selectedSquare = { row: rowIndex, column: columnIndex };
 				const currentSquare = board[rowIndex][columnIndex];
 				if (currentSquare) {
-					const enemyMoves = getMoveOptions(selectedSquare, board);
+					const enemyMoves = getBaseMoveOptions(selectedSquare, board);
 					// check if the king is in check
 					// for every enemy move
 					for (let i = 0; i < enemyMoves.length; i++) {

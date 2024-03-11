@@ -7,10 +7,10 @@ import { position, positions } from "./position";
 test("white queen in center", () => {
 	const initialBoard = parseBoard(`
     -- -- -- -- -- -- -- --
-    -- -- -- -- -- -- -- --
+    -- BK -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- WQ -- -- --
-    -- -- -- -- -- -- -- --
+    -- WK -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
@@ -52,13 +52,13 @@ test("white queen in center", () => {
 
 test("white queen blocked", () => {
 	const initialBoard = parseBoard(`
-    -- -- -- -- -- -- -- --
+    WK -- -- -- -- -- -- --
     -- -- WP -- WP -- WP --
     -- -- -- -- -- -- -- --
     -- WP -- -- WQ -- WP --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- WP --
-    -- WP -- -- WP -- -- --
+    BK WP -- -- WP -- -- --
     -- -- -- -- -- -- -- --
     `);
 	const moveOptions = getMoveOptions(position("e5"), initialBoard);
@@ -82,13 +82,13 @@ test("white queen blocked", () => {
 
 test("white queen captures", () => {
 	const initialBoard = parseBoard(`
-    -- -- -- -- -- -- -- --
+    BK -- -- -- -- -- -- --
     -- -- BP -- BP -- BP --
     -- -- -- -- -- -- -- --
     -- BP -- -- WQ -- BP --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- BP --
-    -- BP -- -- BP -- -- --
+    WK BP -- -- BP -- -- --
     -- -- -- -- -- -- -- --
     `);
 	const moveOptions = getMoveOptions(position("e5"), initialBoard);
@@ -121,11 +121,11 @@ test("white queen captures", () => {
 // black queen
 test("black queen in center", () => {
 	const initialBoard = parseBoard(`
-    -- -- -- -- -- -- -- --
+    BK -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- BQ -- -- --
-    -- -- -- -- -- -- -- --
+    WK -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
@@ -167,13 +167,13 @@ test("black queen in center", () => {
 
 test("black queen blocked", () => {
 	const initialBoard = parseBoard(`
-    -- -- -- -- -- -- -- --
+    WK -- -- -- -- -- -- --
     -- -- BP -- BP -- BP --
     -- -- -- -- -- -- -- --
     -- BP -- -- BQ -- BP --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- BP --
-    -- BP -- -- BP -- -- --
+    BK BP -- -- BP -- -- --
     -- -- -- -- -- -- -- --
     `);
 	const moveOptions = getMoveOptions(position("e5"), initialBoard);
@@ -197,10 +197,10 @@ test("black queen blocked", () => {
 
 test("black queen captures", () => {
 	const initialBoard = parseBoard(`
-    -- -- -- -- -- -- -- --
+    WK -- -- -- -- -- -- --
     -- -- WP -- WP -- WP --
     -- -- -- -- -- -- -- --
-    -- WP -- -- BQ -- WP --
+    BK WP -- -- BQ -- WP --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- WP --
     -- WP -- -- WP -- -- --

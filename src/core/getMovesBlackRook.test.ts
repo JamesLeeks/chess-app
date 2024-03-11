@@ -12,7 +12,7 @@ test("black rook checking white king", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
+	BK -- -- -- -- -- -- --
 	`);
 	const moveOptions = getMoveOptions(position("h5"), initialBoard);
 	const expectedMoveOptions: Position[] = positions(
@@ -41,7 +41,7 @@ test("black rook forward moves", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	BR BN -- -- -- -- -- --
+	BR BN -- -- -- BK -- WK
 	`);
 	const moveOptions = getMoveOptions(position("a1"), initialBoard);
 	const expectedMoveOptions: Position[] = positions("a2", "a3", "a4", "a5", "a6", "a7", "a8");
@@ -57,7 +57,7 @@ test("black rook forward blocked", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	BR BN -- -- -- -- -- --
+	BR BN -- -- -- BK -- WK
 	`);
 	const moveOptions = getMoveOptions(position("a1"), initialBoard);
 	const expectedMoveOptions: Position[] = positions("a2", "a3", "a4", "a5", "a6");
@@ -73,7 +73,7 @@ test("black rook forward capture", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	BR BN -- -- -- -- -- --
+	BR BN -- -- -- BK -- WK
 	`);
 	const moveOptions = getMoveOptions(position("a1"), initialBoard);
 	const expectedMoveOptions: Position[] = positions("a2", "a3", "a4", "a5", "a6", "a7");
@@ -89,7 +89,7 @@ test("black rook backward moves", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
+	-- -- -- -- -- BK -- WK
 	`);
 	const moveOptions = getMoveOptions(position("a8"), initialBoard);
 	const expectedMoveOptions: Position[] = positions("a1", "a2", "a3", "a4", "a5", "a6", "a7");
@@ -105,7 +105,7 @@ test("black rook backward blocked", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
+	-- -- -- -- -- BK -- WK
 	`);
 	const moveOptions = getMoveOptions(position("a8"), initialBoard);
 	const expectedMoveOptions: Position[] = positions("a6", "a7");
@@ -121,7 +121,7 @@ test("black rook backward capture", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	WN -- -- -- -- -- -- --
+	WN -- -- -- -- BK -- WK
 	`);
 	const moveOptions = getMoveOptions(position("a8"), initialBoard);
 	const expectedMoveOptions: Position[] = positions("a1", "a2", "a3", "a4", "a5", "a6", "a7");
@@ -137,7 +137,7 @@ test("black rook right moves", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
+	-- -- -- -- -- BK -- WK
 	`);
 	const moveOptions = getMoveOptions(position("a8"), initialBoard);
 	const expectedMoveOptions: Position[] = positions("b8", "c8", "d8", "e8", "f8", "g8", "h8");
@@ -153,7 +153,7 @@ test("black rook right blocked", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
+	-- -- -- -- -- BK -- WK
 	`);
 	const moveOptions = getMoveOptions(position("a8"), initialBoard);
 	const expectedMoveOptions: Position[] = positions("b8", "c8", "d8");
@@ -169,7 +169,7 @@ test("black rook right capture", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
+	-- -- -- -- -- BK -- WK
 	`);
 	const moveOptions = getMoveOptions(position("a8"), initialBoard);
 	const expectedMoveOptions: Position[] = positions("b8", "c8", "d8", "e8");
@@ -185,7 +185,7 @@ test("black rook left moves", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
+	-- -- -- -- -- BK -- WK
 	`);
 	const moveOptions = getMoveOptions(position("h8"), initialBoard);
 	const expectedMoveOptions: Position[] = positions("a8", "b8", "c8", "d8", "e8", "f8", "g8");
@@ -201,7 +201,7 @@ test("black rook left blocked", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
+	-- -- -- -- -- BK -- WK
 	`);
 	const moveOptions = getMoveOptions(position("h8"), initialBoard);
 	const expectedMoveOptions: Position[] = positions("e8", "f8", "g8");
@@ -217,7 +217,7 @@ test("black rook left capture", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
+	-- -- -- -- -- BK -- WK
 	`);
 	const moveOptions = getMoveOptions(position("h8"), initialBoard);
 	const expectedMoveOptions: Position[] = positions("d8", "e8", "f8", "g8");

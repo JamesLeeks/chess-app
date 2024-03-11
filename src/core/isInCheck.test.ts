@@ -1,11 +1,12 @@
 import { parseBoard } from "./board";
-// import { getMoveOptions } from "./getMoveOptions";
+import { getMoveOptions } from "./getMoveOptions";
 import { isInCheck } from "./isInCheck";
+import { position, toNotations } from "./position";
 
 // CHECKS
 test("white king in check from black bishop", () => {
 	const board = parseBoard(`
-    -- -- -- -- -- -- -- --
+    BK -- -- -- -- -- -- --
     -- -- -- -- -- -- BB --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
@@ -20,7 +21,7 @@ test("white king in check from black bishop", () => {
 
 test("white king in check from black pawn", () => {
 	const board = parseBoard(`
-    -- -- -- -- -- -- -- --
+    BK -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- BP -- -- --
@@ -35,7 +36,7 @@ test("white king in check from black pawn", () => {
 
 test("white king blocking black pawn but not in check", () => {
 	const board = parseBoard(`
-    -- -- -- -- -- -- -- --
+    BK -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- BP -- -- -- --
@@ -50,7 +51,7 @@ test("white king blocking black pawn but not in check", () => {
 
 test("white king in check from black rook", () => {
 	const board = parseBoard(`
-    -- -- -- -- -- -- -- --
+    BK -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
@@ -64,62 +65,62 @@ test("white king in check from black rook", () => {
 });
 
 // PINS
-// test("white pawn pinned", () => {
-// 	const initialBoard = parseBoard(`
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- -- -- BB --
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- WP -- -- --
-//     -- -- -- WK -- -- -- --
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- -- -- -- --
-//     `);
-// const moveOptions = getMoveOptions(position("e5"), initialBoard);
-// 	expect(moveOptions).toEqual([]);
-// });
+test("white pawn pinned", () => {
+	const initialBoard = parseBoard(`
+    BK -- -- -- -- -- -- --
+    -- -- -- -- -- -- BB --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- WP -- -- --
+    -- -- -- WK -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- BK -- -- -- --
+    -- -- -- -- -- -- -- --
+    `);
+	const moveOptions = getMoveOptions(position("e5"), initialBoard);
+	expect(moveOptions).toEqual([]);
+});
 
-// test("white rook pinned", () => {
-// 	const initialBoard = parseBoard(`
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- -- -- BB --
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- WR -- -- --
-//     -- -- -- WK -- -- -- --
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- -- -- -- --
-//     `);
-// 	const moveOptions = getMoveOptions(position("e5"), initialBoard);
-// 	expect(moveOptions).toEqual([]);
-// });
+test("white rook pinned", () => {
+	const initialBoard = parseBoard(`
+    BK -- -- -- -- -- -- --
+    -- -- -- -- -- -- BB --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- WR -- -- --
+    -- -- -- WK -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    `);
+	const moveOptions = getMoveOptions(position("e5"), initialBoard);
+	expect(moveOptions).toEqual([]);
+});
 
-// test("white bishop pinned", () => {
-// 	const initialBoard = parseBoard(`
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- -- -- -- --
-//     -- -- -- WK WB -- BR --
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- -- -- -- --
-//     `);
-// 	const moveOptions = getMoveOptions(position("e4"), initialBoard);
-// 	expect(moveOptions).toEqual([]);
-// });
+test("white bishop pinned", () => {
+	const initialBoard = parseBoard(`
+    BK -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- WK WB -- BR --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    `);
+	const moveOptions = getMoveOptions(position("e4"), initialBoard);
+	expect(moveOptions).toEqual([]);
+});
 
-// test("white queen pinned", () => {
-// 	const initialBoard = parseBoard(`
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- -- -- BB --
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- WQ -- -- --
-//     -- -- -- WK -- -- -- --
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- -- -- -- --
-//     -- -- -- -- -- -- -- --
-//     `);
-// 	const moveOptions = getMoveOptions(position("e5"), initialBoard);
-// 	expect(moveOptions).toIncludeSameMembers(["f6", "g7"]);
-// });
+test("white queen pinned", () => {
+	const initialBoard = parseBoard(`
+    BK -- -- -- -- -- -- --
+    -- -- -- -- -- -- BB --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- WQ -- -- --
+    -- -- -- WK -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    `);
+	const moveOptions = toNotations(...getMoveOptions(position("e5"), initialBoard));
+	expect(moveOptions).toIncludeSameMembers(["f6", "g7"]);
+});

@@ -13,7 +13,7 @@ test("white bishop in center", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
-    -- -- -- -- -- -- -- --
+    -- -- -- -- -- BK -- WK
     `);
 	const moveOptions = getMoveOptions(position("e5"), initialBoard);
 	const expectedMoveOptions: Position[] = positions(
@@ -43,7 +43,7 @@ test("white bishop blocked", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- WP --
 	-- WP -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
+	-- -- -- -- -- BK -- WK
 	`);
 	const moveOptions = getMoveOptions(position("e5"), initialBoard);
 	const expectedMoveOptions: Position[] = positions("c3", "d4", "d6", "f4", "f6");
@@ -59,7 +59,7 @@ test("white bishop captures", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- BP --
 	-- BP -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
+	-- -- -- -- -- BK -- WK
 	`);
 	const moveOptions = getMoveOptions(position("e5"), initialBoard);
 	const expectedMoveOptions: Position[] = positions("c3", "d4", "d6", "f4", "f6", /*captures*/ "b2", "c7", "g3", "g7");
@@ -76,7 +76,7 @@ test("black bishop in center", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
-    -- -- -- -- -- -- -- --
+    -- -- -- -- -- BK -- WK
     `);
 	const moveOptions = getMoveOptions(position("e5"), initialBoard);
 	const expectedMoveOptions: Position[] = positions(
@@ -106,7 +106,7 @@ test("black bishop blocked", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- BP --
 	-- BP -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
+	-- -- -- -- -- BK -- WK
 	`);
 	const moveOptions = getMoveOptions(position("e5"), initialBoard);
 	const expectedMoveOptions: Position[] = positions("c3", "d4", "d6", "f4", "f6");
@@ -122,7 +122,7 @@ test("black bishop captures", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- WP --
 	-- WP -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
+	-- -- -- -- -- BK -- WK
 	`);
 	const moveOptions = getMoveOptions(position("e5"), initialBoard);
 	const expectedMoveOptions: Position[] = positions("c3", "d4", "d6", "f4", "f6", /*captures*/ "b2", "c7", "g3", "g7");

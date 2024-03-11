@@ -6,7 +6,7 @@ import { position, positions } from "./position";
 // white knight
 test("white knight in center", () => {
 	const initialBoard = parseBoard(`
-    -- -- -- -- -- -- -- --
+    BK -- WK -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- WN -- -- --
@@ -22,7 +22,7 @@ test("white knight in center", () => {
 
 test("white knight blocked", () => {
 	const initialBoard = parseBoard(`
-    -- -- -- -- -- -- -- --
+    BK -- WK -- -- -- -- --
     -- -- -- WP -- WP -- --
     -- -- WP -- -- -- WP --
     -- -- -- -- WN -- -- --
@@ -37,7 +37,7 @@ test("white knight blocked", () => {
 
 test("white knight captures", () => {
 	const initialBoard = parseBoard(`
-    -- -- -- -- -- -- -- --
+    WK -- BK -- -- -- -- --
     -- -- -- BP -- BP -- --
     -- -- BP -- -- -- BP --
     -- -- -- -- WN -- -- --
@@ -61,7 +61,7 @@ test("white knight starting position, right side", () => {
 // black knight
 test("black knight in center", () => {
 	const initialBoard = parseBoard(`
-    -- -- -- -- -- -- -- --
+    WK -- BK -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- BN -- -- --
@@ -77,7 +77,7 @@ test("black knight in center", () => {
 
 test("black knight blocked", () => {
 	const initialBoard = parseBoard(`
-    -- -- -- -- -- -- -- --
+    WK -- BK -- -- -- -- --
     -- -- -- BP -- BP -- --
     -- -- BP -- -- -- BP --
     -- -- -- -- BN -- -- --
@@ -92,7 +92,7 @@ test("black knight blocked", () => {
 
 test("black knight captures", () => {
 	const initialBoard = parseBoard(`
-    -- -- -- -- -- -- -- --
+    BK -- WK -- -- -- -- --
     -- -- -- WP -- WP -- --
     -- -- WP -- -- -- WP --
     -- -- -- -- BN -- -- --

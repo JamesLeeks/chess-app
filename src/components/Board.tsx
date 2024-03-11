@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Square } from "./Square";
 import { getMoveOptions } from "../core/getMoveOptions";
 import { BoardSquare, Position, PieceColour, SquareType } from "../core/models";
-import { getStartingBoard } from "../core/board";
+import { getStartingBoard, makeMove } from "../core/board";
 
 export function Board() {
 	const [piecePositions, setPiecePositions] = useState<BoardSquare[][]>(
@@ -13,10 +13,7 @@ export function Board() {
 	const [currentTurn, setCurrentTurn] = useState<PieceColour>("white");
 
 	function movePiece(from: Position, to: Position) {
-		const newPiecePositions = piecePositions.slice();
-		newPiecePositions[to.row][to.column] =
-			piecePositions[from.row][from.column];
-		newPiecePositions[from.row][from.column] = undefined;
+		const newPiecePositions = makeMove(piecePositions, from, to);
 		setPiecePositions(newPiecePositions);
 	}
 

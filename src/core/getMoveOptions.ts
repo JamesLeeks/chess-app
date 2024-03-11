@@ -1,6 +1,32 @@
+import { makeMove } from "./board";
+import { isInCheck } from "./isInCheck";
 import { BoardSquare, PieceColour, Position } from "./models";
 
 export function getMoveOptions(selectedSquare: Position, board: BoardSquare[][]): Position[] {
+	const selectedPiece = board[selectedSquare.row][selectedSquare.column];
+	if (!selectedPiece) {
+		throw new Error("should not get moves for undefined");
+	}
+	const currentTurn = selectedPiece.colour;
+
+	const baseMoves = getBaseMoveOptions(selectedSquare, board);
+	const filteredMoves: Position[] = [];
+
+	// remove check moves
+	for (let i = 0; i < baseMoves.length; i++) {
+		const move = baseMoves[i];
+		const boardAfterMove = makeMove(board, selectedSquare, move);
+		const isCheck = isInCheck(boardAfterMove, currentTurn);
+
+		if (!isCheck) {
+			filteredMoves.push(move);
+		}
+	}
+
+	return filteredMoves;
+}
+
+export function getBaseMoveOptions(selectedSquare: Position, board: BoardSquare[][]): Position[] {
 	const selectedPiece = board[selectedSquare.row][selectedSquare.column];
 	if (!selectedPiece) {
 		throw new Error("should not get moves for undefined");

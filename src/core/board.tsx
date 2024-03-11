@@ -1,4 +1,4 @@
-import { BoardSquare, PieceColour, PieceType } from "./models";
+import { BoardSquare, PieceColour, PieceType, Position } from "./models";
 
 export function getStartingBoard(): BoardSquare[][] {
 	return [
@@ -97,4 +97,11 @@ function getPieceTypeFromString(pieceTypeString: string): PieceType {
 		default:
 			throw new Error("piece should have a type");
 	}
+}
+
+export function makeMove(board: BoardSquare[][], from: Position, to: Position) {
+	const newBoard = board.map((col) => col.slice());
+	newBoard[to.row][to.column] = board[from.row][from.column];
+	newBoard[from.row][from.column] = undefined;
+	return newBoard;
 }
