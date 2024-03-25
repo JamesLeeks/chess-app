@@ -1,6 +1,6 @@
-import { BoardSquare, PieceColour, PieceType, Position } from "./models";
+import { Board, BoardSquare, PieceColour, PieceType, Position } from "./models";
 
-export function getStartingBoard(): BoardSquare[][] {
+export function getStartingBoard(): Board {
 	return [
 		[
 			{ colour: "black", type: "rook" },
@@ -31,7 +31,7 @@ export function getStartingBoard(): BoardSquare[][] {
 	];
 }
 
-export function parseBoard(boardString: string): BoardSquare[][] {
+export function parseBoard(boardString: string): Board {
 	const trimmedBoard = boardString.trim();
 	const boardRows = trimmedBoard
 		.split("\n")
@@ -99,7 +99,7 @@ function getPieceTypeFromString(pieceTypeString: string): PieceType {
 	}
 }
 
-export function makeMove(board: BoardSquare[][], from: Position, to: Position) {
+export function makeMove(board: Board, from: Position, to: Position): Board {
 	const newBoard = board.map((col) => col.slice());
 	newBoard[to.row][to.column] = board[from.row][from.column];
 	newBoard[from.row][from.column] = undefined;

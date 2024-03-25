@@ -1,7 +1,6 @@
-import { getMoveOptions } from "./getMoveOptions";
 import { parseBoard } from "./board";
-import { Position } from "./models";
-import { position, positions } from "./position";
+import { position, toNotations } from "./position";
+import { getGame } from "./testHelpers";
 
 // white queen
 test("white queen in center", () => {
@@ -15,8 +14,9 @@ test("white queen in center", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const moveOptions = getMoveOptions(position("e5"), initialBoard);
-	const expectedMoveOptions: Position[] = positions(
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e5")));
+	const expectedMoveOptions: string[] = [
 		// bishop moves
 		"b8",
 		"c7",
@@ -45,8 +45,8 @@ test("white queen in center", () => {
 		"e4",
 		"e6",
 		"e7",
-		"e8"
-	);
+		"e8",
+	];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -61,8 +61,9 @@ test("white queen blocked", () => {
     BK WP -- -- WP -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const moveOptions = getMoveOptions(position("e5"), initialBoard);
-	const expectedMoveOptions: Position[] = positions(
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e5")));
+	const expectedMoveOptions: string[] = [
 		// bishop moves
 		"d6",
 		"f4",
@@ -75,8 +76,8 @@ test("white queen blocked", () => {
 		"f5",
 		"e3",
 		"e4",
-		"e6"
-	);
+		"e6",
+	];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -91,8 +92,9 @@ test("white queen captures", () => {
     WK BP -- -- BP -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const moveOptions = getMoveOptions(position("e5"), initialBoard);
-	const expectedMoveOptions: Position[] = positions(
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e5")));
+	const expectedMoveOptions: string[] = [
 		// bishop moves
 		"b2",
 		"b5",
@@ -113,8 +115,8 @@ test("white queen captures", () => {
 		"f5",
 		"e3",
 		"e4",
-		"e6"
-	);
+		"e6",
+	];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -130,8 +132,9 @@ test("black queen in center", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const moveOptions = getMoveOptions(position("e5"), initialBoard);
-	const expectedMoveOptions: Position[] = positions(
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e5")));
+	const expectedMoveOptions: string[] = [
 		// bishop moves
 		"b8",
 		"c7",
@@ -160,8 +163,8 @@ test("black queen in center", () => {
 		"e4",
 		"e6",
 		"e7",
-		"e8"
-	);
+		"e8",
+	];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -176,8 +179,9 @@ test("black queen blocked", () => {
     BK BP -- -- BP -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const moveOptions = getMoveOptions(position("e5"), initialBoard);
-	const expectedMoveOptions: Position[] = positions(
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e5")));
+	const expectedMoveOptions: string[] = [
 		// bishop moves
 		"d6",
 		"f4",
@@ -190,8 +194,8 @@ test("black queen blocked", () => {
 		"f5",
 		"e3",
 		"e4",
-		"e6"
-	);
+		"e6",
+	];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -206,8 +210,9 @@ test("black queen captures", () => {
     -- WP -- -- WP -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const moveOptions = getMoveOptions(position("e5"), initialBoard);
-	const expectedMoveOptions: Position[] = positions(
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e5")));
+	const expectedMoveOptions: string[] = [
 		// bishop moves
 		"b2",
 		"b5",
@@ -228,7 +233,7 @@ test("black queen captures", () => {
 		"f5",
 		"e3",
 		"e4",
-		"e6"
-	);
+		"e6",
+	];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });

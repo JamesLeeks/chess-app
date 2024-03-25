@@ -1,8 +1,8 @@
 import { makeMove } from "./board";
 import { isInCheck } from "./isInCheck";
-import { BoardSquare, PieceColour, Position } from "./models";
+import { Board, BoardSquare, PieceColour, Position } from "./models";
 
-export function getMoveOptions(selectedSquare: Position, board: BoardSquare[][]): Position[] {
+export function getMoveOptions(selectedSquare: Position, board: Board): Position[] {
 	const selectedPiece = board[selectedSquare.row][selectedSquare.column];
 	if (!selectedPiece) {
 		throw new Error("should not get moves for undefined");
@@ -26,7 +26,7 @@ export function getMoveOptions(selectedSquare: Position, board: BoardSquare[][])
 	return filteredMoves;
 }
 
-export function getBaseMoveOptions(selectedSquare: Position, board: BoardSquare[][]): Position[] {
+export function getBaseMoveOptions(selectedSquare: Position, board: Board): Position[] {
 	const selectedPiece = board[selectedSquare.row][selectedSquare.column];
 	if (!selectedPiece) {
 		throw new Error("should not get moves for undefined");
@@ -59,7 +59,7 @@ export function getBaseMoveOptions(selectedSquare: Position, board: BoardSquare[
 
 function getMovesForDirection(
 	selectedSquare: Position,
-	board: BoardSquare[][],
+	board: Board,
 	currentTurn: PieceColour,
 	rowDirection: number,
 	colunmDirection: number
@@ -89,7 +89,7 @@ function getMovesForDirection(
 	return moves;
 }
 
-function getKingMoves(selectedSquare: Position, board: BoardSquare[][], currentTurn: PieceColour) {
+function getKingMoves(selectedSquare: Position, board: Board, currentTurn: PieceColour) {
 	const moves: Position[] = [
 		{ row: selectedSquare.row + 1, column: selectedSquare.column },
 		{ row: selectedSquare.row + 1, column: selectedSquare.column + 1 },
@@ -106,7 +106,7 @@ function getKingMoves(selectedSquare: Position, board: BoardSquare[][], currentT
 	return moves;
 }
 
-function getKnightMoves(selectedSquare: Position, board: BoardSquare[][], currentTurn: PieceColour) {
+function getKnightMoves(selectedSquare: Position, board: Board, currentTurn: PieceColour) {
 	const moves: Position[] = [
 		{ row: selectedSquare.row - 1, column: selectedSquare.column + 2 },
 		{ row: selectedSquare.row - 1, column: selectedSquare.column - 2 },

@@ -1,7 +1,6 @@
-import { getMoveOptions } from "./getMoveOptions";
 import { getStartingBoard, parseBoard } from "./board";
-import { Position } from "./models";
-import { position, positions } from "./position";
+import { position, toNotations } from "./position";
+import { getGame } from "./testHelpers";
 
 // white knight
 test("white knight in center", () => {
@@ -15,8 +14,9 @@ test("white knight in center", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const moveOptions = getMoveOptions(position("e5"), initialBoard);
-	const expectedMoveOptions: Position[] = positions("d7", "d3", "f7", "f3", "c6", "c4", "g6", "g4");
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e5")));
+	const expectedMoveOptions: string[] = ["d7", "d3", "f7", "f3", "c6", "c4", "g6", "g4"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -31,7 +31,8 @@ test("white knight blocked", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const moveOptions = getMoveOptions(position("e5"), initialBoard);
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e5")));
 	expect(moveOptions).toEqual([]);
 });
 
@@ -46,15 +47,17 @@ test("white knight captures", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const moveOptions = getMoveOptions(position("e5"), initialBoard);
-	const expectedMoveOptions: Position[] = positions("d7", "d3", "f7", "f3", "c6", "c4", "g6", "g4");
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e5")));
+	const expectedMoveOptions: string[] = ["d7", "d3", "f7", "f3", "c6", "c4", "g6", "g4"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
 test("white knight starting position, right side", () => {
 	const initialBoard = getStartingBoard();
-	const moveOptions = getMoveOptions(position("g1"), initialBoard);
-	const expectedMoveOptions: Position[] = positions("f3", "h3");
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("g1")));
+	const expectedMoveOptions: string[] = ["f3", "h3"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -70,8 +73,9 @@ test("black knight in center", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const moveOptions = getMoveOptions(position("e5"), initialBoard);
-	const expectedMoveOptions: Position[] = positions("d7", "d3", "f7", "f3", "c6", "c4", "g6", "g4");
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e5")));
+	const expectedMoveOptions: string[] = ["d7", "d3", "f7", "f3", "c6", "c4", "g6", "g4"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -86,7 +90,8 @@ test("black knight blocked", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const moveOptions = getMoveOptions(position("e5"), initialBoard);
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e5")));
 	expect(moveOptions).toEqual([]);
 });
 
@@ -101,14 +106,16 @@ test("black knight captures", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const moveOptions = getMoveOptions(position("e5"), initialBoard);
-	const expectedMoveOptions: Position[] = positions("d7", "d3", "f7", "f3", "c6", "c4", "g6", "g4");
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e5")));
+	const expectedMoveOptions: string[] = ["d7", "d3", "f7", "f3", "c6", "c4", "g6", "g4"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
 test("black knight starting position, left side", () => {
 	const initialBoard = getStartingBoard();
-	const moveOptions = getMoveOptions(position("b8"), initialBoard);
-	const expectedMoveOptions: Position[] = positions("a6", "c6");
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("b8")));
+	const expectedMoveOptions: string[] = ["a6", "c6"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });

@@ -1,37 +1,33 @@
 import React, { useState } from "react";
 import { Square } from "./Square";
 import { getMoveOptions } from "../core/getMoveOptions";
-import { BoardSquare, Position, PieceColour, SquareType } from "../core/models";
-import { getStartingBoard, makeMove } from "../core/board";
+import { Board, Position, PieceColour, SquareType } from "../core/models";
 
-export function Board() {
-	const [piecePositions, setPiecePositions] = useState<BoardSquare[][]>(
-		getStartingBoard()
-	);
+export type BoardComponentParams = {
+	board: Board;
+	makeMove: (from: Position, to: Position) => void;
+};
+export function BoardComponent({ board, makeMove }: BoardComponentParams) {
 	const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
 	const [moveOptions, setMoveOptions] = useState<Position[]>([]);
 	const [currentTurn, setCurrentTurn] = useState<PieceColour>("white");
 
-	function movePiece(from: Position, to: Position) {
-		const newPiecePositions = makeMove(piecePositions, from, to);
-		setPiecePositions(newPiecePositions);
-	}
-
+	// TODO: move click handling up to the GameComponent
 	function handleClick(row: number, column: number) {
 		if (selectedSquare) {
 			// there  a selected piece - move it
-			if (piecePositions[row][column]?.colour === currentTurn) {
+			if (board[row][column]?.colour === currentTurn) {
 				// if it's their turn:
 				const newSelectedSquare = { row: row, column: column };
 				setSelectedSquare({ row: row, column: column });
-				setMoveOptions(getMoveOptions(newSelectedSquare, piecePositions));
+				setMoveOptions(getMoveOptions(newSelectedSquare, board));
 			} else {
 				// note see foundMoveOptions
 				const foundMoveOption = moveOptions.find(
 					(pos) => pos.row === row && pos.column === column
 				);
 				if (foundMoveOption) {
-					movePiece(selectedSquare, { row: row, column: column });
+					makeMove(selectedSquare, { row: row, column: column });
 				} else {
 					setSelectedSquare(null);
 					setMoveOptions([]);
@@ -49,13 +45,10 @@ export function Board() {
 		} else {
 			// picking a piece
 			// if there is a piece on this square and it's their turn
-			if (
-				piecePositions[row][column] &&
-				currentTurn === piecePositions[row][column]?.colour
-			) {
+			if (board[row][column] && currentTurn === board[row][column]?.colour) {
 				const newSelectedSquare = { row: row, column: column };
 				setSelectedSquare(newSelectedSquare);
-				setMoveOptions(getMoveOptions(newSelectedSquare, piecePositions));
+				setMoveOptions(getMoveOptions(newSelectedSquare, board));
 			} else {
 				setSelectedSquare(null);
 				setMoveOptions([]);
@@ -88,7 +81,7 @@ export function Board() {
 					key={`column-${columnIndex}}`}
 					squareType={squareType}
 					// look up position from piecePosition
-					chessPiece={piecePositions[rowIndex][columnIndex]}
+					chessPiece={board[rowIndex][columnIndex]}
 					selected={isSelected}
 					moveOption={isMoveOption}
 					onSquareClick={() => handleClick(rowIndex, columnIndex)}

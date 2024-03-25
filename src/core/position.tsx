@@ -19,7 +19,7 @@ export function positions(...squareStrings: string[]): Position[] {
 export function toNotation(position: Position): string {
 	const row = position.row;
 	const column = position.column;
-	const files = "abcdefg";
+	const files = "abcdefgh";
 
 	const rank = 8 - row;
 	const file = files[column];

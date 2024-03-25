@@ -1,26 +1,28 @@
-import { getMoveOptions } from "./getMoveOptions";
 import { getStartingBoard, parseBoard } from "./board";
-import { Position } from "./models";
-import { position, positions } from "./position";
+import { position, toNotations } from "./position";
+import { getGame } from "./testHelpers";
 
 test("black pawn starting position", () => {
 	const initialBoard = getStartingBoard();
-	const moveOptions = getMoveOptions(position("b7"), initialBoard);
-	const expectedMoveOptions: Position[] = positions("b6", "b5");
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("b7")));
+	const expectedMoveOptions: string[] = ["b6", "b5"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
 test("white pawn starting position", () => {
 	const initialBoard = getStartingBoard();
-	const moveOptions = getMoveOptions(position("b2"), initialBoard);
-	const expectedMoveOptions: Position[] = positions("b3", "b4");
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("b2")));
+	const expectedMoveOptions: string[] = ["b3", "b4"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
 test("white pawn starting position, left edge", () => {
 	const initialBoard = getStartingBoard();
-	const moveOptions = getMoveOptions(position("a2"), initialBoard);
-	const expectedMoveOptions: Position[] = positions("a3", "a4");
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("a2")));
+	const expectedMoveOptions: string[] = ["a3", "a4"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -35,8 +37,9 @@ test("white pawn after 1 move", () => {
 	WP -- WP WP WP WP WP WP
 	WR WN WB WQ WK WB WN WR
 	`);
-	const moveOptions = getMoveOptions(position("b3"), initialBoard);
-	const expectedMoveOptions: Position[] = positions("b4");
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("b3")));
+	const expectedMoveOptions: string[] = ["b4"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -51,8 +54,9 @@ test("black pawn after 1 move", () => {
 	WP WP WP WP WP WP WP WP
 	WR WN WB WQ WK WB WN WR
 	`);
-	const moveOptions = getMoveOptions(position("b6"), initialBoard);
-	const expectedMoveOptions: Position[] = positions("b5");
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("b6")));
+	const expectedMoveOptions: string[] = ["b5"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -67,8 +71,9 @@ test("white pawn capture test", () => {
 	WP -- WP WP WP WP WP WP
 	WR WN WB WQ WK WB WN WR
 	`);
-	const moveOptions = getMoveOptions(position("b4"), initialBoard);
-	const expectedMoveOptions: Position[] = positions("a5", "b5");
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("b4")));
+	const expectedMoveOptions: string[] = ["a5", "b5"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -83,8 +88,9 @@ test("black pawn capture test", () => {
 	WP -- WP WP WP WP WP WP
 	WR WN WB WQ WK WB WN WR
 	`);
-	const moveOptions = getMoveOptions(position("a5"), initialBoard);
-	const expectedMoveOptions: Position[] = positions("b4", "a4");
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("a5")));
+	const expectedMoveOptions: string[] = ["b4", "a4"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -99,8 +105,9 @@ test("pawn blocked by piece", () => {
 	WP WP WP -- WP WP WP WP
 	WR WN WB WQ WK WB WN WR
 	`);
-	const moveOptions = getMoveOptions(position("d4"), initialBoard);
-	const expectedMoveOptions: Position[] = [];
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("d4")));
+	const expectedMoveOptions: string[] = [];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -115,8 +122,9 @@ test("home row pawn second move blocked", () => {
 	WP WP WP WP WP WP WP WP
 	WR WN WB WQ WK WB WN WR
 	`);
-	const moveOptions = getMoveOptions(position("d2"), initialBoard);
-	const expectedMoveOptions: Position[] = positions("d3");
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("d2")));
+	const expectedMoveOptions: string[] = ["d3"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -131,7 +139,8 @@ test("home row pawn both moves blocked", () => {
 	WP WP WP WP WP WP WP WP
 	WR WN WB WQ WK WB WN WR
 	`);
-	const moveOptions = getMoveOptions(position("d2"), initialBoard);
-	const expectedMoveOptions: Position[] = [];
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("d2")));
+	const expectedMoveOptions: string[] = [];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
