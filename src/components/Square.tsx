@@ -28,7 +28,7 @@ export function Square(props: SquareProps) {
 
 	return (
 		<span
-			className={`${squareClass} ${pieceClass}`}
+			className={`square ${squareClass} ${pieceClass}`}
 			onClick={onSquareClick}
 		></span>
 	);
