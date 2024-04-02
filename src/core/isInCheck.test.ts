@@ -1,7 +1,7 @@
 import { parseBoard } from "./board";
-import { getMoveOptions } from "./getMoveOptions";
 import { isInCheck } from "./isInCheck";
 import { position, toNotations } from "./position";
+import { getGame } from "./testHelpers";
 
 // CHECKS
 test("white king in check from black bishop", () => {
@@ -76,7 +76,8 @@ test("white pawn pinned", () => {
     -- -- -- BK -- -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const moveOptions = getMoveOptions(position("e5"), initialBoard);
+	const game = getGame(initialBoard);
+	const moveOptions = game.getMoveOptions(position("e5"));
 	expect(moveOptions).toEqual([]);
 });
 
@@ -91,7 +92,8 @@ test("white rook pinned", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const moveOptions = getMoveOptions(position("e5"), initialBoard);
+	const game = getGame(initialBoard);
+	const moveOptions = game.getMoveOptions(position("e5"));
 	expect(moveOptions).toEqual([]);
 });
 
@@ -106,7 +108,8 @@ test("white bishop pinned", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const moveOptions = getMoveOptions(position("e4"), initialBoard);
+	const game = getGame(initialBoard);
+	const moveOptions = game.getMoveOptions(position("e4"));
 	expect(moveOptions).toEqual([]);
 });
 
@@ -121,6 +124,7 @@ test("white queen pinned", () => {
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     `);
-	const moveOptions = toNotations(...getMoveOptions(position("e5"), initialBoard));
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e5")));
 	expect(moveOptions).toIncludeSameMembers(["f6", "g7"]);
 });
