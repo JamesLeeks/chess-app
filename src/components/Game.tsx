@@ -2,11 +2,10 @@ import { useState } from "react";
 import { BoardComponent } from "./Board";
 import { Game } from "../core/game";
 import { getStartingBoard } from "../core/board";
-import { PieceColour, Position } from "../core/models";
+import { Position } from "../core/models";
 
 export function GameComponent() {
 	const [game, setGame] = useState<Game>(new Game(getStartingBoard()));
-	const [currentTurn, setCurrentTurn] = useState<PieceColour>("white");
 	const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
 	const [moveOptions, setMoveOptions] = useState<Position[]>([]);
 
@@ -17,7 +16,7 @@ export function GameComponent() {
 	function handleClick(row: number, column: number) {
 		if (selectedSquare) {
 			// there  a selected piece - move it
-			if (game.board[row][column]?.colour === currentTurn) {
+			if (game.board[row][column]?.colour === game.currentTurn) {
 				// if it's their turn:
 				const newSelectedSquare = { row: row, column: column };
 				setSelectedSquare({ row: row, column: column });
@@ -36,19 +35,13 @@ export function GameComponent() {
 				}
 				setSelectedSquare(null);
 				setMoveOptions([]);
-				// switch turn
-				if (currentTurn === "white") {
-					setCurrentTurn("black");
-				} else {
-					setCurrentTurn("white");
-				}
 			}
 		} else {
 			// picking a piece
 			// if there is a piece on this square and it's their turn
 			if (
 				game.board[row][column] &&
-				currentTurn === game.board[row][column]?.colour
+				game.currentTurn === game.board[row][column]?.colour
 			) {
 				const newSelectedSquare = { row: row, column: column };
 				setSelectedSquare(newSelectedSquare);

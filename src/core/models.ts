@@ -17,3 +17,10 @@ export interface ChessPiece {
 export type BoardSquare = ChessPiece | undefined;
 
 export type Board = BoardSquare[][];
+
+export interface HistoryItem {
+	boardAfterMove: Board;
+	from: Position;
+	to: Position;
+	player: PieceColour;
+}

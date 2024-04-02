@@ -99,7 +99,11 @@ function getPieceTypeFromString(pieceTypeString: string): PieceType {
 	}
 }
 
-export function makeMove(board: Board, from: Position, to: Position): Board {
+export function getBoardAfterMove(
+	board: Board,
+	from: Position,
+	to: Position
+): Board {
 	const newBoard = board.map((col) => col.slice());
 	newBoard[to.row][to.column] = board[from.row][from.column];
 	newBoard[from.row][from.column] = undefined;
