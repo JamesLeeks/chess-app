@@ -21,6 +21,11 @@ export class Game {
 	public get currentTurn(): PieceColour {
 		return this._currentTurn;
 	}
+
+	public get history(): HistoryItem[] {
+		return this._history;
+	}
+
 	getMoveOptions(selectedSquare: Position): Position[] {
 		const selectedPiece = this._board[selectedSquare.row][selectedSquare.column];
 		if (!selectedPiece) {
