@@ -1,4 +1,4 @@
-import { parseBoard } from "./board";
+import { boardToString, parseBoard } from "./board";
 import { position } from "./position";
 import { getGame } from "./testHelpers";
 
@@ -13,20 +13,21 @@ test("history has correct board after move", () => {
 	-- -- -- -- -- -- -- --
 	WR WN -- -- -- WK -- BK
 	`);
-	const expectedBoard = parseBoard(`
-	WR -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
-	-- WN -- -- -- WK -- BK
-	`);
+	const expectedBoard = `
+WR -- -- -- -- -- -- --
+-- -- -- -- -- -- -- --
+-- -- -- -- -- -- -- --
+-- -- -- -- -- -- -- --
+-- -- -- -- -- -- -- --
+-- -- -- -- -- -- -- --
+-- -- -- -- -- -- -- --
+-- WN -- -- -- WK -- BK
+`.trimStart();
 	const game = getGame(initialBoard);
 	const newGame = game.makeMove(position("a1"), position("a8"));
 	const boardAfterMove = newGame.history[0].boardAfterMove;
-	expect(boardAfterMove).toIncludeSameMembers(expectedBoard);
+	const displayBoardAfterMove = boardToString(boardAfterMove);
+	expect(displayBoardAfterMove).toEqual(expectedBoard);
 });
 
 test("history has correct to and from", () => {

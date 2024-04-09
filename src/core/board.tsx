@@ -60,6 +60,26 @@ export function parseBoard(boardString: string): Board {
 	return rowArray;
 }
 
+export function boardToString(board: Board): string {
+	let boardString = "";
+	for (let rowIndex = 0; rowIndex < board.length; rowIndex++) {
+		let rowString = "";
+		let spacer = "";
+		for (
+			let columnIndex = 0;
+			columnIndex < board[rowIndex].length;
+			columnIndex++
+		) {
+			const chessPiece = board[rowIndex][columnIndex];
+			const squareNotation = getStringFromPiece(chessPiece);
+			rowString += spacer + squareNotation;
+			spacer = " ";
+		}
+		boardString += rowString + "\n";
+	}
+	return boardString;
+}
+
 function getPieceFromString(squareString: string) {
 	if (squareString === "--") {
 		return undefined;
@@ -68,6 +88,51 @@ function getPieceFromString(squareString: string) {
 		let type: PieceType = getPieceTypeFromString(squareString[1]);
 		return { colour, type };
 	}
+}
+
+function getStringFromPiece(piece: BoardSquare) {
+	if (!piece) {
+		return "--";
+	}
+	let colourString: string;
+	if (piece.colour === "white") {
+		colourString = "W";
+	} else {
+		colourString = "B";
+	}
+	const pieceType = piece.type;
+	let typeString = "";
+
+	switch (pieceType) {
+		case "rook":
+			typeString = "R";
+			break;
+
+		case "knight":
+			typeString = "N";
+			break;
+
+		case "bishop":
+			typeString = "B";
+			break;
+
+		case "king":
+			typeString = "K";
+			break;
+
+		case "queen":
+			typeString = "Q";
+			break;
+
+		case "pawn":
+			typeString = "P";
+			break;
+
+		default:
+			throw new Error("piece should have a type");
+	}
+
+	return colourString + typeString;
 }
 
 function getColourFromString(pieceColourString: string) {
