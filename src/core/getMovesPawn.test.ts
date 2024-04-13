@@ -144,3 +144,34 @@ test("home row pawn both moves blocked", () => {
 	const expectedMoveOptions: string[] = [];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
+
+// en passant
+
+test("white pawn en passant", () => {
+	// set initial board
+	const initialBoard = parseBoard(`
+	BR BN BB BQ BK BB BN BR
+	BP BP BP BP BP BP BP BP
+	-- -- -- -- -- -- -- --
+	-- -- -- WP -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	WP WP WP -- WP WP WP WP
+	WR WN WB WQ WK WB WN WR
+	`);
+
+	// set game with initial board
+	let game = getGame(initialBoard);
+
+	// make a move for black
+	game = game.makeMove(position("e7"), position("e5"));
+
+	// get move options
+	const moveOptions = toNotations(...game.getMoveOptions(position("d5")));
+
+	// set expected move options
+	const expectedMoveOptions: string[] = ["d6", "e6"];
+
+	// check move options against expected move options
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});

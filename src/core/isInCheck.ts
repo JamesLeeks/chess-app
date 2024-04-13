@@ -13,7 +13,7 @@ export function isInCheck(board: BoardSquare[][], kingColour: PieceColour): bool
 				const selectedSquare = { row: rowIndex, column: columnIndex };
 				const currentSquare = board[rowIndex][columnIndex];
 				if (currentSquare) {
-					const enemyMoves = getBaseMoveOptions(selectedSquare, board);
+					const enemyMoves = getBaseMoveOptions(selectedSquare, board, []);
 					// check if the king is in check
 					// for every enemy move
 					for (let i = 0; i < enemyMoves.length; i++) {

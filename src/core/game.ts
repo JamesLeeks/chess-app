@@ -33,7 +33,7 @@ export class Game {
 		}
 		const currentTurn = selectedPiece.colour;
 
-		const baseMoves = getBaseMoveOptions(selectedSquare, this._board);
+		const baseMoves = getBaseMoveOptions(selectedSquare, this._board, this._history);
 		const filteredMoves: Position[] = [];
 
 		// remove check moves
