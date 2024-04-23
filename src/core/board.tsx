@@ -169,8 +169,32 @@ export function getBoardAfterMove(
 	from: Position,
 	to: Position
 ): Board {
-	const newBoard = board.map((col) => col.slice());
+	// copy the board:
+	const newBoard = board.map(
+		// function (column) { return column.slice(); }
+		// (parameters) => resulting_value;
+		(column) => column.slice()
+	);
+
+	// TODO: handle en passant
+	// if it's a pawn
+	if (newBoard[from.row][from.column]?.type === "pawn") {
+		// if it's a diagonal move
+		if (from.column !== to.column) {
+			// if it's a blank square
+			if (!newBoard[to.row][to.column]) {
+				// remove the piece on the same row you were at and the column you are now at
+				newBoard[from.row][to.column] = undefined;
+			}
+		}
+	}
+
+	// set the destination to have the value of the starting square
 	newBoard[to.row][to.column] = board[from.row][from.column];
+
+	// clear the starting square
 	newBoard[from.row][from.column] = undefined;
+
+	// return the updated board
 	return newBoard;
 }

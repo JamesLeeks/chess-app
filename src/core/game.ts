@@ -49,14 +49,22 @@ export class Game {
 
 		return filteredMoves;
 	}
+
 	makeMove(from: Position, to: Position): Game {
+		// create a new game after move
 		const newBoard = getBoardAfterMove(this._board, from, to);
+		// create a blank history
 		const newHistory = [];
+
+		// create a history item and push it to the history
 		const newHistoryItem: HistoryItem = { boardAfterMove: newBoard, from: from, to: to, player: this._currentTurn };
 		newHistory.push(...this._history, newHistoryItem);
+
 		// switch turn
 		const newTurn: PieceColour = this.currentTurn === "white" ? "black" : "white";
 		const newGame = new Game(newBoard, newHistory, newTurn);
+
+		// return updated game
 		return newGame;
 	}
 }

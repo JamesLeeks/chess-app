@@ -169,19 +169,21 @@ function getPawnMoves(selectedSquare: Position, board: Board, currentTurn: Piece
 	// en passant
 	// if the history length is not zero
 	if (history.length !== 0) {
-		// create a new variable with the value of the current history item
-		const historyItem = history[history.length - 1];
-		// if the piece that last moved was a pawn
-		if (board[historyItem.to.row][historyItem.to.column]?.type === "pawn") {
-			// if the pawn moved from it's starting square two spaces forward (TODO: handle white pawns)
-			if (historyItem.from.row === 1 && historyItem.to.row === 3) {
-				// if { row: 2, column: historyItem.from.column } is controlled by a white piece (TODO: handle black pawns)
-				const pieces = getAllPawnMoves(board, { row: 2, column: historyItem.from.column }, "white", []);
-				if (pieces) {
-					for (let index = 0; index < pieces.length; index++) {
-						if (pieces[index] === selectedSquare) {
-							moves.push({ row: 2, column: historyItem.from.column });
-						}
+		const HistoryItem = history[history.length - 1];
+		// if the last piece moved was a pawn
+		if (board[HistoryItem.to.row][HistoryItem.to.column]?.type === "pawn") {
+			const distanceMoved = HistoryItem.from.row - HistoryItem.to.row;
+			// If the pawn moved two spaces
+			if (Math.abs(distanceMoved) === 2) {
+				const direction = distanceMoved > 0 ? 1 : -1;
+				// if there is a pawn of the oposite colour on the same row
+				if (selectedSquare.row === HistoryItem.to.row) {
+					// if there is a pawn ajacent to the pawn that was just moved
+					if (
+						selectedSquare.column === HistoryItem.to.column - 1 ||
+						selectedSquare.column === HistoryItem.to.column + 1
+					) {
+						moves.push({ row: HistoryItem.to.row + direction, column: HistoryItem.to.column });
 					}
 				}
 			}
@@ -189,42 +191,4 @@ function getPawnMoves(selectedSquare: Position, board: Board, currentTurn: Piece
 	}
 
 	return moves;
-}
-
-function getAllPawnMoves(
-	board: Board,
-	position: Position,
-	colour: PieceColour,
-	history: HistoryItem[]
-): Position[] | null {
-	const pawns: Position[] = [];
-	// get the enemy moves
-	// for each row
-	for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
-		// for each column
-		for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
-			// if the piece on this square is a pawn of the right colour
-			if (board[rowIndex][columnIndex]?.colour === colour && board[rowIndex][columnIndex]?.type === "pawn") {
-				const selectedSquare: Position = { row: rowIndex, column: columnIndex };
-				const currentSquare = board[rowIndex][columnIndex];
-				if (currentSquare) {
-					const enemyMoves = getBaseMoveOptions(selectedSquare, board, history);
-					// check if the square is threatened
-					// for every enemy move
-					for (let moveIndex = 0; moveIndex < enemyMoves.length; moveIndex++) {
-						const enemyMove = enemyMoves[moveIndex];
-						// if the current enemy move is the same as the square that has been passed in
-						if (enemyMove.row === position.row && enemyMove.column === position.column) {
-							pawns.push(selectedSquare);
-						}
-					}
-				}
-			}
-		}
-	}
-	if (pawns.length === 0) {
-		return null;
-	} else {
-		return pawns;
-	}
 }
