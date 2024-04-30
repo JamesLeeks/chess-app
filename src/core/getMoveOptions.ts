@@ -24,7 +24,7 @@ export function getBaseMoveOptions(selectedSquare: Position, board: Board, histo
 			return getKnightMoves(selectedSquare, board, currentTurn);
 
 		case "king":
-			return getKingMoves(selectedSquare, board, currentTurn);
+			return getKingMoves(board, selectedSquare, currentTurn);
 
 		default:
 			return [];
@@ -63,7 +63,8 @@ function getMovesForDirection(
 	return moves;
 }
 
-function getKingMoves(selectedSquare: Position, board: Board, currentTurn: PieceColour) {
+function getKingMoves(board: Board, selectedSquare: Position, currentTurn: PieceColour) {
+	const homeRow = currentTurn === "white" ? 7 : 0;
 	const moves: Position[] = [
 		{ row: selectedSquare.row + 1, column: selectedSquare.column },
 		{ row: selectedSquare.row + 1, column: selectedSquare.column + 1 },
@@ -77,7 +78,40 @@ function getKingMoves(selectedSquare: Position, board: Board, currentTurn: Piece
 		.filter((pos) => pos.row >= 0 && pos.row <= 7)
 		.filter((pos) => pos.column >= 0 && pos.column <= 7)
 		.filter((pos) => board[pos.row][pos.column]?.colour !== currentTurn);
+
+	// TODO: add left side castling later
+	if (canCastleRight(board, homeRow, currentTurn)) {
+		// push right side castle to move options
+		moves.push({ row: homeRow, column: 6 });
+	}
 	return moves;
+}
+
+function canCastleRight(board: Board, homeRow: number, currentTurn: PieceColour): boolean {
+	// is the rook in the correct place for right side castling
+	if (board[homeRow][7]?.colour !== currentTurn || board[homeRow][7]?.type !== "rook") {
+		return false;
+	}
+
+	// is the king is in the right place for right side castling
+	if (board[homeRow][4]?.colour !== currentTurn || board[homeRow][4]?.type !== "king") {
+		return false;
+	}
+
+	// do pieces block the path
+	if (board[homeRow][5] || board[homeRow][6]) {
+		return false;
+	}
+
+	//TODO: has the rook moved before
+
+	//TODO: has the king moved before
+
+	//TODO: would the king be in check after castling
+
+	//TODO: is the path threatened by an opponent's piece
+
+	return true;
 }
 
 function getKnightMoves(selectedSquare: Position, board: Board, currentTurn: PieceColour) {
