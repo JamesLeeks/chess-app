@@ -3,6 +3,7 @@ import { position, toNotations } from "./position";
 import { getGame } from "./testHelpers";
 
 // TODO: add more tests
+// include: 1r5k/8/8/8/8/8/8/R3K3 w Q - 1 1
 
 // white can castle both sides
 test("white can castle both sides", () => {

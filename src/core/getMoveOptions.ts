@@ -81,60 +81,83 @@ function getKingMoves(history: HistoryItem[], board: Board, selectedSquare: Posi
 		.filter((pos) => pos.column >= 0 && pos.column <= 7)
 		.filter((pos) => board[pos.row][pos.column]?.colour !== currentTurn);
 
-	// TODO: add left side castling later
-	if (canCastleRight(history, board, homeRow, currentTurn)) {
-		// push right side castle to move options
+	if (canCastle(history, board, homeRow, currentTurn, 1)) {
+		// push right side castling to move options
 		moves.push({ row: homeRow, column: 6 });
+	}
+	if (canCastle(history, board, homeRow, currentTurn, -1)) {
+		// push left side castling to move options
+		moves.push({ row: homeRow, column: 2 });
 	}
 	return moves;
 }
 
-function canCastleRight(history: HistoryItem[], board: Board, homeRow: number, currentTurn: PieceColour): boolean {
-	// is the rook in the correct place for right side castling
-	if (board[homeRow][7]?.colour !== currentTurn || board[homeRow][7]?.type !== "rook") {
+function canCastle(
+	history: HistoryItem[],
+	board: Board,
+	homeRow: number,
+	currentTurn: PieceColour,
+	direction: 1 | -1
+): boolean {
+	const rookColumn = direction === 1 ? 7 : 0;
+	const kingColumn = 4;
+
+	// is the rook in the correct place for castling
+	if (board[homeRow][rookColumn]?.colour !== currentTurn || board[homeRow][rookColumn]?.type !== "rook") {
 		return false;
 	}
 
-	// is the king is in the right place for right side castling
-	if (board[homeRow][4]?.colour !== currentTurn || board[homeRow][4]?.type !== "king") {
+	// is the king is in the right place for castling
+	if (board[homeRow][kingColumn]?.colour !== currentTurn || board[homeRow][kingColumn]?.type !== "king") {
 		return false;
 	}
 
 	// do pieces block the path
-	if (board[homeRow][5] || board[homeRow][6]) {
-		return false;
+	for (let index = kingColumn + direction; index !== rookColumn; index += direction) {
+		if (board[homeRow][index]) {
+			return false;
+		}
 	}
 
 	// has the rook moved before
 	const hasRookMoved = history.find(
 		(historyItem) =>
-			(historyItem.from.row === homeRow && historyItem.from.column === 7) ||
-			(historyItem.to.row === homeRow && historyItem.to.column === 7)
+			(historyItem.from.row === homeRow && historyItem.from.column === rookColumn) ||
+			(historyItem.to.row === homeRow && historyItem.to.column === rookColumn)
 	);
 	if (hasRookMoved) {
-		// there was a move on the rook square (h8)
+		// there was a move on the rook square
 		return false;
 	}
 
 	// has the king moved before
 	const hasKingMoved = history.find(
 		(historyItem) =>
-			(historyItem.from.row === homeRow && historyItem.from.column === 4) ||
-			(historyItem.to.row === homeRow && historyItem.to.column === 4)
+			(historyItem.from.row === homeRow && historyItem.from.column === kingColumn) ||
+			(historyItem.to.row === homeRow && historyItem.to.column === kingColumn)
 	);
 	if (hasKingMoved) {
-		// there was a move on the king square (e1)
+		// there was a move on the king square
 		return false;
 	}
 
 	// would the king be in check after castling
-	if (isInCheck(getBoardAfterMove(board, { column: 4, row: homeRow }, { column: 6, row: homeRow }), currentTurn)) {
+	if (
+		isInCheck(
+			getBoardAfterMove(
+				board,
+				{ column: kingColumn, row: homeRow },
+				{ column: kingColumn + direction * 2, row: homeRow }
+			),
+			currentTurn
+		)
+	) {
 		return false;
 	}
 
 	// is the path threatened by an opponent's piece
 	const opponentColour = currentTurn === "white" ? "black" : "white";
-	if (isThreatened(board, opponentColour, { column: 5, row: homeRow })) {
+	if (isThreatened(board, opponentColour, { column: kingColumn + direction, row: homeRow })) {
 		return false;
 	}
 
