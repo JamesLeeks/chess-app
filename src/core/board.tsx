@@ -176,7 +176,7 @@ export function getBoardAfterMove(
 		(column) => column.slice()
 	);
 
-	// TODO: handle en passant
+	// handle en passant
 	// if it's a pawn
 	if (newBoard[from.row][from.column]?.type === "pawn") {
 		// if it's a diagonal move

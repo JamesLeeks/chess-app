@@ -64,6 +64,22 @@ test("white king in check from black rook", () => {
 	expect(isCheck).toEqual(true);
 });
 
+test("white king in check from pinned piece", () => {
+	const initialBoard = parseBoard(`
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- BK
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- BN
+    -- -- -- -- -- WK -- WR
+    `);
+	const game = getGame(initialBoard);
+	const isCheck = isInCheck(game.board, "white");
+	expect(isCheck).toEqual(true);
+});
+
 // PINS
 test("white pawn pinned", () => {
 	const initialBoard = parseBoard(`
@@ -99,8 +115,8 @@ test("white rook pinned", () => {
 
 test("white bishop pinned", () => {
 	const initialBoard = parseBoard(`
-    BK -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
+    BK -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
     -- -- -- WK WB -- BR --

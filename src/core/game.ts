@@ -39,10 +39,12 @@ export class Game {
 		// remove check moves
 		for (let i = 0; i < baseMoves.length; i++) {
 			const move = baseMoves[i];
-			const boardAfterMove = getBoardAfterMove(this._board, selectedSquare, move);
-			const isCheck = isInCheck(boardAfterMove, currentTurn);
-
-			if (!isCheck) {
+			const isAttackingOpponentKing =
+				this.board[move.column][move.row]?.type === "king" &&
+				this.board[move.column][move.row]?.colour !== currentTurn;
+			// if attacking opponent's king or not in check after move:
+			if (isAttackingOpponentKing || !isInCheck(getBoardAfterMove(this._board, selectedSquare, move), currentTurn)) {
+				// push move
 				filteredMoves.push(move);
 			}
 		}

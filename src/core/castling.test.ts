@@ -215,7 +215,7 @@ test("white cannot castle right because pieces block the path", () => {
 	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("e1")));
-	const expectedMoveOptions: string[] = ["d1", "f1", "c1"];
+	const expectedMoveOptions: string[] = ["d1", "c1"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -301,7 +301,7 @@ test("white cannot castle left because the path is threatened by an opponent's p
 	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("e1")));
-	const expectedMoveOptions: string[] = ["d1", "c1"];
+	const expectedMoveOptions: string[] = ["f1", "g1"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -318,7 +318,7 @@ test("white cannot castle left because the path is threatened by an opponent's p
 	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("e1")));
-	const expectedMoveOptions: string[] = ["d1", "f1", "c1"];
+	const expectedMoveOptions: string[] = ["d1", "f1", "g1"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
@@ -335,6 +335,41 @@ test("white cannot castle left because the rook on that side has moved", () => {
 	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("e1")));
-	const expectedMoveOptions: string[] = ["d1", "f1", "c1"];
+	const expectedMoveOptions: string[] = ["d1", "f1", "g1"];
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
+// Edge cases
+test("white cannot castle right because they would be in check even though the square is not under threat currently", () => {
+	const initialBoard = parseBoard(`
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- BK
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- BN
+	-- -- -- WP WP WP -- --
+	-- -- -- WP WK -- -- WR
+	`);
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e1")));
+	const expectedMoveOptions: string[] = ["f1"];
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
+test("white cannot castle right because they pass through a square check even though the square is not under threat currently", () => {
+	const initialBoard = parseBoard(`
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- BK
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	-- -- -- WP WP WP -- BN
+	-- -- -- WP WK -- -- WR
+	`);
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e1")));
+	const expectedMoveOptions: string[] = [];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
