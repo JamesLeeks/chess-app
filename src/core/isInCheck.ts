@@ -1,9 +1,10 @@
 import { Board, BoardSquare, PieceColour, Position } from "./models";
 import { getBaseMoveOptions } from "./getMoveOptions";
 
-export function isInCheck(board: BoardSquare[][], kingColour: PieceColour): boolean {
+export function isInCheck(board: BoardSquare[][], kingColour: PieceColour, ignoreKing: boolean = false): boolean {
+	// for info on ignoreKing see comments in isThreatened
 	const opponentColour = kingColour === "white" ? "black" : "white";
-	return isThreatened(board, opponentColour, findKing(board, kingColour));
+	return isThreatened(board, opponentColour, findKing(board, kingColour), ignoreKing);
 }
 
 function findKing(board: BoardSquare[][], kingColour: PieceColour): Position {
@@ -18,13 +19,24 @@ function findKing(board: BoardSquare[][], kingColour: PieceColour): Position {
 	throw new Error(`Cannot find ${kingColour} king`);
 }
 
-export function isThreatened(board: Board, opponentColour: PieceColour, position: Position) {
+export function isThreatened(
+	board: Board,
+	opponentColour: PieceColour,
+	position: Position,
+	ignoreKing: boolean = false
+) {
 	// for each row
 	for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
 		// for each column
 		for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
 			// if the piece on this square is the opponnent's colour
 			if (board[rowIndex][columnIndex]?.colour === opponentColour) {
+				// if ignore king is set to true and the square we're on has the value of king, skip to the next square
+				// (this is for the isInCheck function because the king can never be in check from another king)
+				// This was added to avoid endless recursion!
+				if (ignoreKing && board[rowIndex][columnIndex]?.type === "king") {
+					continue;
+				}
 				const selectedSquare = { row: rowIndex, column: columnIndex };
 				const currentSquare = board[rowIndex][columnIndex];
 				if (currentSquare) {

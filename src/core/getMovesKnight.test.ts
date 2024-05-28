@@ -119,3 +119,21 @@ test("black knight starting position, left side", () => {
 	const expectedMoveOptions: string[] = ["a6", "c6"];
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
+
+// strange bug
+test("black knight weird bug", () => {
+	const initialBoard = parseBoard(`
+    BR BN BB BQ BK -- BN BR
+    BP BP BP BP BB BP BP BP
+    -- -- -- -- BP -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+    -- -- -- -- WP WN -- --
+    WP WP WP WP WB WP WP WP
+    WR WN WB WQ WK -- -- WR
+    `);
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("g8")));
+	const expectedMoveOptions: string[] = ["f6", "h6"];
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});

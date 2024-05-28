@@ -177,7 +177,7 @@ export function getBoardAfterMove(
 	);
 
 	// handle en passant
-	// if it's a pawn
+	// if it's a pawn move
 	if (newBoard[from.row][from.column]?.type === "pawn") {
 		// if it's a diagonal move
 		if (from.column !== to.column) {
@@ -185,6 +185,29 @@ export function getBoardAfterMove(
 			if (!newBoard[to.row][to.column]) {
 				// remove the piece on the same row you were at and the column you are now at
 				newBoard[from.row][to.column] = undefined;
+			}
+		}
+	}
+
+	// handle castling
+	// if it's a king move
+	if (newBoard[from.row][from.column]?.type === "king") {
+		// if it's a move to the right
+		if (from.column < to.column) {
+			// if it moves over multiple squares
+			if (to.column - from.column > 1) {
+				// replace the square to the left of the king with the rook on the square to the right of the king
+				newBoard[to.row][to.column - 1] = board[to.row][to.column + 1];
+				// clear the square to the right of the king
+				newBoard[to.row][to.column + 1] = undefined;
+			}
+		} else {
+			// if it moves over multiple squares
+			if (from.column - to.column > 1) {
+				// replace the square to the right of the king with the rook on the square two spaces to the left of the king
+				newBoard[to.row][to.column + 1] = board[to.row][to.column - 2];
+				// clear the square two spaces to the left of the king
+				newBoard[to.row][to.column - 2] = undefined;
 			}
 		}
 	}

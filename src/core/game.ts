@@ -31,6 +31,7 @@ export class Game {
 		if (!selectedPiece) {
 			throw new Error("should not get moves for undefined");
 		}
+		const ignoreKingMovesOnIsInCheck = selectedPiece.type !== "king";
 		const currentTurn = selectedPiece.colour;
 
 		const baseMoves = getBaseMoveOptions(selectedSquare, this._board, this._history);
@@ -39,11 +40,10 @@ export class Game {
 		// remove check moves
 		for (let i = 0; i < baseMoves.length; i++) {
 			const move = baseMoves[i];
-			const isAttackingOpponentKing =
-				this.board[move.column][move.row]?.type === "king" &&
-				this.board[move.column][move.row]?.colour !== currentTurn;
-			// if attacking opponent's king or not in check after move:
-			if (isAttackingOpponentKing || !isInCheck(getBoardAfterMove(this._board, selectedSquare, move), currentTurn)) {
+			// if not in check after move:
+			if (
+				!isInCheck(getBoardAfterMove(this._board, selectedSquare, move), currentTurn, ignoreKingMovesOnIsInCheck)
+			) {
 				// push move
 				filteredMoves.push(move);
 			}
