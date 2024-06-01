@@ -2,18 +2,26 @@ import { useState } from "react";
 import { BoardComponent } from "./Board";
 import { Game } from "../core/game";
 import { getStartingBoard } from "../core/board";
-import { Position } from "../core/models";
+import { Position, PromotionType } from "../core/models";
 
 export function GameComponent() {
 	const [game, setGame] = useState<Game>(new Game(getStartingBoard()));
 	const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
 	const [moveOptions, setMoveOptions] = useState<Position[]>([]);
+	const [promotionSquare, setPromotionSquare] = useState<Position | null>(
+		null
+	);
 
-	function makeMove(from: Position, to: Position) {
-		setGame(game.makeMove(from, to));
+	function makeMove(
+		from: Position,
+		to: Position,
+		promotionType?: PromotionType
+	) {
+		setGame(game.makeMove(from, to, promotionType));
 	}
 
 	function handleClick(row: number, column: number) {
+		setPromotionSquare(null);
 		if (selectedSquare) {
 			// there's a selected piece - move it
 			if (game.board[row][column]?.colour === game.currentTurn) {
@@ -29,15 +37,16 @@ export function GameComponent() {
 				);
 				if (foundMoveOption) {
 					// clicked on a move option for the selected piece => move it!
+					const promotionRow = game.currentTurn === "black" ? 7 : 0;
+					if (
+						game.board[selectedSquare.row][selectedSquare.column]
+							?.type === "pawn" &&
+						row === promotionRow
+					) {
+						setPromotionSquare({ row: row, column: column });
+						return;
+					}
 					makeMove(selectedSquare, { row: row, column: column });
-					// const promotionRow = game.currentTurn === "black" ? 7 : 0;
-					// if (
-					// 	game.board[selectedSquare.row][selectedSquare.column]
-					// 		?.type === "pawn" &&
-					// 	row === promotionRow
-					// ) {
-					// 	console.log("Bring up the promotion menu!");
-					// }
 				}
 				setSelectedSquare(null);
 				setMoveOptions([]);
@@ -61,6 +70,17 @@ export function GameComponent() {
 		}
 	}
 
+	function promote(
+		from: Position,
+		to: Position,
+		promotionType: PromotionType
+	) {
+		makeMove(from, to, promotionType);
+		setSelectedSquare(null);
+		setMoveOptions([]);
+		setPromotionSquare(null);
+	}
+
 	return (
 		<>
 			<div>
@@ -71,7 +91,41 @@ export function GameComponent() {
 					selectedSquare={selectedSquare}
 				/>
 			</div>
-			<div>hello!</div>
+			{selectedSquare && promotionSquare && (
+				<div>
+					<button
+						onClick={() => {
+							promote(selectedSquare, promotionSquare, "queen");
+						}}
+					>
+						queen
+					</button>
+
+					<button
+						onClick={() => {
+							promote(selectedSquare, promotionSquare, "knight");
+						}}
+					>
+						knight
+					</button>
+
+					<button
+						onClick={() => {
+							promote(selectedSquare, promotionSquare, "bishop");
+						}}
+					>
+						bishop
+					</button>
+
+					<button
+						onClick={() => {
+							promote(selectedSquare, promotionSquare, "rook");
+						}}
+					>
+						rook
+					</button>
+				</div>
+			)}
 		</>
 	);
 }

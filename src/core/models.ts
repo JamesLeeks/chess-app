@@ -3,6 +3,7 @@ export type SquareType = "dark" | "light";
 export type PieceColour = "black" | "white";
 
 export type PieceType = "rook" | "knight" | "bishop" | "king" | "queen" | "pawn";
+export type PromotionType = "rook" | "knight" | "bishop" | "queen";
 
 export interface Position {
 	row: number;

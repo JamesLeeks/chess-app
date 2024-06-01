@@ -1,7 +1,7 @@
 import { getBoardAfterMove } from "./board";
 import { getBaseMoveOptions } from "./getMoveOptions";
 import { isInCheck } from "./isInCheck";
-import { Board, HistoryItem, PieceColour, Position } from "./models";
+import { Board, HistoryItem, PieceColour, Position, PromotionType } from "./models";
 
 export class Game {
 	private _board: Board;
@@ -53,9 +53,9 @@ export class Game {
 		return filteredMoves;
 	}
 
-	makeMove(from: Position, to: Position): Game {
+	makeMove(from: Position, to: Position, promotionType?: PromotionType): Game {
 		// create a new game after move
-		const newBoard = getBoardAfterMove(this._board, from, to);
+		const newBoard = getBoardAfterMove(this._board, from, to, promotionType);
 		// create a blank history
 		const newHistory = [];
 

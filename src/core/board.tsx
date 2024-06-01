@@ -1,4 +1,11 @@
-import { Board, BoardSquare, PieceColour, PieceType, Position } from "./models";
+import {
+	Board,
+	BoardSquare,
+	PieceColour,
+	PieceType,
+	Position,
+	PromotionType,
+} from "./models";
 
 export function getStartingBoard(): Board {
 	// return [
@@ -178,8 +185,14 @@ function getPieceTypeFromString(pieceTypeString: string): PieceType {
 export function getBoardAfterMove(
 	board: Board,
 	from: Position,
-	to: Position
+	to: Position,
+	promotionType?: PromotionType
 ): Board {
+	const fromSquare = board[from.row][from.column];
+	if (!fromSquare) {
+		throw new Error("No piece on starting square");
+	}
+
 	// copy the board:
 	const newBoard = board.map(
 		// function (column) { return column.slice(); }
@@ -224,7 +237,14 @@ export function getBoardAfterMove(
 	}
 
 	// set the destination to have the value of the starting square
-	newBoard[to.row][to.column] = board[from.row][from.column];
+	if (promotionType) {
+		newBoard[to.row][to.column] = {
+			colour: fromSquare.colour,
+			type: promotionType,
+		};
+	} else {
+		newBoard[to.row][to.column] = board[from.row][from.column];
+	}
 
 	// clear the starting square
 	newBoard[from.row][from.column] = undefined;
