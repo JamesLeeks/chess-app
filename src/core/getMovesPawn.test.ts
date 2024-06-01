@@ -1,9 +1,18 @@
-import { getStartingBoard, parseBoard, boardToString } from "./board";
+import { parseBoard, boardToString } from "./board";
 import { position, toNotations } from "./position";
 import { getGame } from "./testHelpers";
 
 test("black pawn starting position", () => {
-	const initialBoard = getStartingBoard();
+	const initialBoard = parseBoard(`
+	BR BN BB BQ BK BB BN BR
+	BP BP BP BP BP BP BP BP
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	WP WP WP WP WP WP WP WP
+	WR WN WB WQ WK WB WN WR
+	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("b7")));
 	const expectedMoveOptions: string[] = ["b6", "b5"];
@@ -11,7 +20,16 @@ test("black pawn starting position", () => {
 });
 
 test("white pawn starting position", () => {
-	const initialBoard = getStartingBoard();
+	const initialBoard = parseBoard(`
+	BR BN BB BQ BK BB BN BR
+	BP BP BP BP BP BP BP BP
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	WP WP WP WP WP WP WP WP
+	WR WN WB WQ WK WB WN WR
+	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("b2")));
 	const expectedMoveOptions: string[] = ["b3", "b4"];
@@ -19,7 +37,16 @@ test("white pawn starting position", () => {
 });
 
 test("white pawn starting position, left edge", () => {
-	const initialBoard = getStartingBoard();
+	const initialBoard = parseBoard(`
+	BR BN BB BQ BK BB BN BR
+	BP BP BP BP BP BP BP BP
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	WP WP WP WP WP WP WP WP
+	WR WN WB WQ WK WB WN WR
+	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("a2")));
 	const expectedMoveOptions: string[] = ["a3", "a4"];

@@ -15,23 +15,29 @@ export function GameComponent() {
 
 	function handleClick(row: number, column: number) {
 		if (selectedSquare) {
-			// there  a selected piece - move it
+			// there's a selected piece - move it
 			if (game.board[row][column]?.colour === game.currentTurn) {
 				// if it's their turn:
+				// update selected square and move options for new selected piece
 				const newSelectedSquare = { row: row, column: column };
 				setSelectedSquare({ row: row, column: column });
 				setMoveOptions(game.getMoveOptions(newSelectedSquare));
 			} else {
-				// note see foundMoveOptions
+				// not their turn
 				const foundMoveOption = moveOptions.find(
 					(pos) => pos.row === row && pos.column === column
 				);
 				if (foundMoveOption) {
+					// clicked on a move option for the selected piece => move it!
 					makeMove(selectedSquare, { row: row, column: column });
-				} else {
-					setSelectedSquare(null);
-					setMoveOptions([]);
-					return;
+					// const promotionRow = game.currentTurn === "black" ? 7 : 0;
+					// if (
+					// 	game.board[selectedSquare.row][selectedSquare.column]
+					// 		?.type === "pawn" &&
+					// 	row === promotionRow
+					// ) {
+					// 	console.log("Bring up the promotion menu!");
+					// }
 				}
 				setSelectedSquare(null);
 				setMoveOptions([]);
@@ -43,25 +49,29 @@ export function GameComponent() {
 				game.board[row][column] &&
 				game.currentTurn === game.board[row][column]?.colour
 			) {
+				// set selected square and show move options
 				const newSelectedSquare = { row: row, column: column };
 				setSelectedSquare(newSelectedSquare);
 				setMoveOptions(game.getMoveOptions(newSelectedSquare));
 			} else {
+				// clear selected piece and move options
 				setSelectedSquare(null);
 				setMoveOptions([]);
-				return;
 			}
 		}
 	}
 
 	return (
 		<>
-			<BoardComponent
-				board={game.board}
-				handleClick={handleClick}
-				moveOptions={moveOptions}
-				selectedSquare={selectedSquare}
-			/>
+			<div>
+				<BoardComponent
+					board={game.board}
+					handleClick={handleClick}
+					moveOptions={moveOptions}
+					selectedSquare={selectedSquare}
+				/>
+			</div>
+			<div>hello!</div>
 		</>
 	);
 }

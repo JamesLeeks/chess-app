@@ -31,13 +31,14 @@ export class Game {
 		if (!selectedPiece) {
 			throw new Error("should not get moves for undefined");
 		}
-		const ignoreKingMovesOnIsInCheck = selectedPiece.type !== "king";
-		const currentTurn = selectedPiece.colour;
 
+		// Get all possible piece moves
 		const baseMoves = getBaseMoveOptions(selectedSquare, this._board, this._history);
 		const filteredMoves: Position[] = [];
 
-		// remove check moves
+		// remove illegal moves
+		const ignoreKingMovesOnIsInCheck = selectedPiece.type !== "king";
+		const currentTurn = selectedPiece.colour;
 		for (let i = 0; i < baseMoves.length; i++) {
 			const move = baseMoves[i];
 			// if not in check after move:

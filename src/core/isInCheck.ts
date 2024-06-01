@@ -29,7 +29,7 @@ export function isThreatened(
 	for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
 		// for each column
 		for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
-			// if the piece on this square is the opponnent's colour
+			// if the piece on this square is the opponent's colour
 			if (board[rowIndex][columnIndex]?.colour === opponentColour) {
 				// if ignore king is set to true and the square we're on has the value of king, skip to the next square
 				// (this is for the isInCheck function because the king can never be in check from another king)
