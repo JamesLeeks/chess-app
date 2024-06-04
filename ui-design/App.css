@@ -2,6 +2,35 @@ body {
   background-color: rgb(59, 59, 59);
 }
 
+.game {
+  display: grid;
+  /* TODO: look up CSS grid tutorial */
+}
+
+@media (min-width: 768px) {
+  .game {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.clock-panel {
+  background-color: blue;
+  min-height: 3em;
+}
+
+.board-panel {
+  background-color: red;
+}
+
+.history-panel {
+  background-color: green;
+}
+
+.promotion-button {
+  border-width: 5px;
+  background-color: rgb(129, 129, 129);
+}
+
 .board {
   font-size: 0;
   grid-template-columns: repeat(5, 1fr);
