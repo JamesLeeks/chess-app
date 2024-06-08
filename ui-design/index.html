@@ -9,89 +9,139 @@
 </head>
 
 <body>
-
-    <!-- 
-    <div id="root">
-        <div>
-            <div class="board">
-                <div><span class="square light-square black-king"></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span></div>
-                <div><span class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square white-pawn"></span></div>
-                <div><span class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span></div>
-                <div><span class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span></div>
-                <div><span class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span></div>
-                <div><span class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span></div>
-                <div><span class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square black-pawn"></span></div>
-                <div><span class="square dark-square white-king"></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span></div>
-            </div>
-        </div>
-        <div class="promotion-panel">
-            <button class="promotion-button" type="submit"> <img src="images/whiteQueen.png" alt="Submit"></button>
-            <button class="promotion-button" type="submit"> <img src="images/whiteKnight.png" alt="Submit"></button>
-            <button class="promotion-button" type="submit"> <img src="images/whiteBishop.png" alt="Submit"></button>
-            <button class="promotion-button" type="submit"> <img src="images/whiteRook.png" alt="Submit"></button>
-        </div>
-    </div> -->
-
     <div class="game">
         <div class="clock-panel">CLOCK HERE</div>
         <div class="board-panel">
             <div class="board">
-                <div><span class="square light-square black-king"></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span></div>
-                <div><span class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square white-pawn"></span></div>
-                <div><span class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span></div>
-                <div><span class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span></div>
-                <div><span class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span></div>
-                <div><span class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span></div>
-                <div><span class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square "></span><span
-                        class="square light-square "></span><span class="square dark-square black-pawn"></span></div>
-                <div><span class="square dark-square white-king"></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span><span
-                        class="square dark-square "></span><span class="square light-square "></span></div>
+                <div class="square">
+                    <div class="piece black-rook"></div>
+                </div>
+                <div class="square">
+                    <div class="piece black-knight"></div>
+                </div>
+                <div class="square">
+                    <div class="piece black-bishop"></div>
+                </div>
+                <div class="square">
+                    <div class="piece black-queen"></div>
+                </div>
+                <div class="square">
+                    <div class="piece black-king"></div>
+                </div>
+                <div class="square">
+                    <div class="piece black-bishop"></div>
+                </div>
+                <div class="square">
+                    <div class="piece black-knight"></div>
+                </div>
+                <div class="square">
+                    <div class="piece black-rook"></div>
+                </div>
+                <div class="square">
+                    <div class="piece black-pawn"></div>
+                </div>
+                <div class="square">
+                    <div class="piece black-pawn"></div>
+                </div>
+                <div class="square">
+                    <div class="piece black-pawn"></div>
+                </div>
+                <div class="square">
+                    <div class="piece black-pawn"></div>
+                </div>
+                <div class="square">
+                    <div class="piece black-pawn"></div>
+                </div>
+                <div class="square">
+                    <div class="piece black-pawn"></div>
+                </div>
+                <div class="square">
+                    <div class="piece black-pawn"></div>
+                </div>
+                <div class="square">
+                    <div class="piece black-pawn"></div>
+                </div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square"></div>
+                <div class="square">
+                    <div class="piece white-pawn"></div>
+                </div>
+                <div class="square">
+                    <div class="piece white-pawn"></div>
+                </div>
+                <div class="square">
+                    <div class="piece white-pawn"></div>
+                </div>
+                <div class="square">
+                    <div class="piece white-pawn"></div>
+                </div>
+                <div class="square">
+                    <div class="piece white-pawn"></div>
+                </div>
+                <div class="square">
+                    <div class="piece white-pawn"></div>
+                </div>
+                <div class="square">
+                    <div class="piece white-pawn"></div>
+                </div>
+                <div class="square">
+                    <div class="piece white-pawn"></div>
+                </div>
+                <div class="square">
+                    <div class="piece white-rook"></div>
+                </div>
+                <div class="square">
+                    <div class="piece white-knight"></div>
+                </div>
+                <div class="square">
+                    <div class="piece white-bishop"></div>
+                </div>
+                <div class="square">
+                    <div class="piece white-queen"></div>
+                </div>
+                <div class="square">
+                    <div class="piece white-king"></div>
+                </div>
+                <div class="square">
+                    <div class="piece white-bishop"></div>
+                </div>
+                <div class="square">
+                    <div class="piece white-knight"></div>
+                </div>
+                <div class="square">
+                    <div class="piece white-rook"></div>
+                </div>
+
             </div>
         </div>
         <div class="history-panel">HISTORY HERE</div>

@@ -7,9 +7,14 @@ body {
   /* TODO: look up CSS grid tutorial */
 }
 
+/* TODO: Add sample clock content */
+/* TODO: Add sample history content */
+/* TODO: centre board in panel */
+/* TODO: figure out how to get board to resize */
+
 @media (min-width: 768px) {
   .game {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 2fr 3fr 2fr;
   }
 }
 
@@ -32,96 +37,80 @@ body {
 }
 
 .board {
-  font-size: 0;
-  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
 }
 
 .square {
-  width: 32px;
-  height: 32px;
-  display: inline-block;
+  background-image: url("images/darkSquares.png");
+  padding-top: 100%;
+  position: relative;
 }
 
-.square::after {
-  content: " ";
-  background-size: 100% 100%;
-  width: 32px;
-  height: 32px;
-  display: inline-block;
-}
-
-.light-square {
+.square:nth-of-type(16n+1),
+.square:nth-of-type(16n+3),
+.square:nth-of-type(16n+5),
+.square:nth-of-type(16n+7),
+.square:nth-of-type(16n+10),
+.square:nth-of-type(16n+12),
+.square:nth-of-type(16n+14),
+.square:nth-of-type(16n+16) {
   background-image: url("images/lightSquares.png");
 }
 
-.dark-square {
-  background-image: url("images/darkSquares.png");
+.piece {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
 }
 
-.light-square-selected {
-  background-image: url("images/lightSquareSelected.png");
+.black-rook {
+  content: url("images/blackRook.png");
 }
 
-.dark-square-selected {
-  background-image: url("images/darkSquareSelected.png");
+.black-knight {
+  content: url("images/blackKnight.png");
 }
 
-.light-square-move {
-  background-image: url("images/lightSquareMoves.png");
+.black-bishop {
+  content: url("images/blackBishop.png");
 }
 
-.dark-square-move {
-  background-image: url("images/darkSquareMoves.png");
+.black-queen {
+  content: url("images/blackQueen.png");
+}
+
+.black-king {
+  content: url("images/blackKing.png");
+}
+
+.black-pawn {
+  content: url("images/blackPawn.png");
 }
 
 
-
-
-
-.black-pawn::after {
-  background-image: url("images/blackPawn.png");
+.white-rook {
+  content: url("images/whiteRook.png");
 }
 
-.white-pawn::after {
-  background-image: url("images/whitePawn.png");
+.white-knight {
+  content: url("images/whiteKnight.png");
 }
 
-.black-rook::after {
-  background-image: url("images/blackRook.png");
+.white-bishop {
+  content: url("images/whiteBishop.png");
 }
 
-.black-queen::after {
-  background-image: url("images/blackQueen.png");
+.white-queen {
+  content: url("images/whiteQueen.png");
 }
 
-.white-queen::after {
-  background-image: url("images/whiteQueen.png");
+.white-king {
+  content: url("images/whiteKing.png");
 }
 
-.black-king::after {
-  background-image: url("images/blackKing.png");
-}
-
-.black-bishop::after {
-  background-image: url("images/blackBishop.png");
-}
-
-.white-bishop::after {
-  background-image: url("images/whiteBishop.png");
-}
-
-.white-knight::after {
-  background-image: url("images/whiteKnight.png");
-}
-
-.black-knight::after {
-  background-image: url("images/blackKnight.png");
-}
-
-.white-rook::after {
-  background-image: url("images/whiteRook.png");
-}
-
-.white-king::after {
-  background-image: url("images/whiteKing.png");
+.white-pawn {
+  content: url("images/whitePawn.png");
 }
