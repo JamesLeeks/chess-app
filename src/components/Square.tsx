@@ -1,8 +1,6 @@
-import React from "react";
-import { SquareType, ChessPiece } from "../core/models";
+import { ChessPiece } from "../core/models";
 
 interface SquareProps {
-	squareType: SquareType;
 	chessPiece?: ChessPiece;
 	selected?: boolean;
 	moveOption?: boolean;
@@ -11,8 +9,7 @@ interface SquareProps {
 
 export function Square(props: SquareProps) {
 	// split props out like with an array
-	const { squareType, chessPiece, selected, moveOption, onSquareClick } =
-		props;
+	const { chessPiece, selected, moveOption, onSquareClick } = props;
 	// if chessPiece: build up the class name. else: just make it an empty string
 	const pieceClass = chessPiece
 		? `${chessPiece.colour}-${chessPiece.type}`
@@ -20,16 +17,17 @@ export function Square(props: SquareProps) {
 	//build up the class name
 	let displayType = "";
 	if (selected) {
-		displayType = "-selected";
+		displayType = "selected";
 	} else if (moveOption) {
-		displayType = "-move";
+		displayType = "move-option";
 	}
-	const squareClass = `${squareType}-square${displayType}`;
 
+	const squareContent = chessPiece ? (
+		<div className={`piece ${pieceClass}`}></div>
+	) : undefined;
 	return (
-		<span
-			className={`square ${squareClass} ${pieceClass}`}
-			onClick={onSquareClick}
-		></span>
+		<div className={`square ${displayType}`} onClick={onSquareClick}>
+			{squareContent}
+		</div>
 	);
 }

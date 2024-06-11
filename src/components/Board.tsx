@@ -1,5 +1,5 @@
 import { Square } from "./Square";
-import { Board, Position, SquareType } from "../core/models";
+import { Board, Position } from "../core/models";
 
 export type BoardComponentParams = {
 	board: Board;
@@ -17,14 +17,7 @@ export function BoardComponent({
 	const boardContent = [];
 	// for each row:
 	for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
-		// build up rows that are <div><Square... /><Square... /> .... </div>
-		// rowSquares is what goes inside the <div></div>
-		const rowSquares = [];
 		// for each column:
-		let squareType: SquareType = "light";
-		if (rowIndex % 2 > 0) {
-			squareType = "dark";
-		}
 		for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
 			const isSelected =
 				selectedSquare?.row === rowIndex &&
@@ -36,7 +29,6 @@ export function BoardComponent({
 			const square = (
 				<Square
 					key={`column-${columnIndex}}`}
-					squareType={squareType}
 					// look up position from piecePosition
 					chessPiece={board[rowIndex][columnIndex]}
 					selected={isSelected}
@@ -44,19 +36,9 @@ export function BoardComponent({
 					onSquareClick={() => handleClick(rowIndex, columnIndex)}
 				/>
 			);
-			// add square to rowSquares
-			rowSquares.push(square);
-
-			if (squareType === "light") {
-				squareType = "dark";
-			} else {
-				squareType = "light";
-			}
+			// add square to boardContent
+			boardContent.push(square);
 		}
-		// wrap the Squares in a div
-		const row = <div key={`row-${rowIndex}}`}>{rowSquares}</div>;
-		// add row to the board
-		boardContent.push(row);
 	}
 
 	return (
