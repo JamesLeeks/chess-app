@@ -3,6 +3,9 @@ import { BoardComponent } from "./Board";
 import { Game } from "../core/game";
 import { getStartingBoard } from "../core/board";
 import { Position, PromotionType } from "../core/models";
+import { HistoryComponent } from "./History";
+
+// TODO: center content vertically
 
 export function GameComponent() {
 	const [game, setGame] = useState<Game>(new Game(getStartingBoard()));
@@ -83,49 +86,63 @@ export function GameComponent() {
 
 	return (
 		<>
-			<div>
-				<BoardComponent
-					board={game.board}
-					handleClick={handleClick}
-					moveOptions={moveOptions}
-					selectedSquare={selectedSquare}
-				/>
-			</div>
-			{selectedSquare && promotionSquare && (
-				<div>
-					<button
-						onClick={() => {
-							promote(selectedSquare, promotionSquare, "queen");
-						}}
-					>
-						queen
-					</button>
-
-					<button
-						onClick={() => {
-							promote(selectedSquare, promotionSquare, "knight");
-						}}
-					>
-						knight
-					</button>
-
-					<button
-						onClick={() => {
-							promote(selectedSquare, promotionSquare, "bishop");
-						}}
-					>
-						bishop
-					</button>
-
-					<button
-						onClick={() => {
-							promote(selectedSquare, promotionSquare, "rook");
-						}}
-					>
-						rook
-					</button>
+			<div className="game">
+				<div className="clock-panel">
+					<div className="clock">00:00:00</div>
+					<div className="clock">00:00:00</div>
 				</div>
-			)}
+				<div className="board-panel">
+					<BoardComponent
+						board={game.board}
+						handleClick={handleClick}
+						moveOptions={moveOptions}
+						selectedSquare={selectedSquare}
+					/>
+					{selectedSquare && promotionSquare && (
+						<div>
+							<button
+								className={`promotion-button ${game.currentTurn}-queen`}
+								onClick={() => {
+									promote(selectedSquare, promotionSquare, "queen");
+								}}
+							>
+								queen
+							</button>
+
+							<button
+								className="promotion-button"
+								onClick={() => {
+									promote(selectedSquare, promotionSquare, "knight");
+								}}
+							>
+								knight
+							</button>
+
+							<button
+								className="promotion-button"
+								onClick={() => {
+									promote(selectedSquare, promotionSquare, "bishop");
+								}}
+							>
+								bishop
+							</button>
+
+							<button
+								className="promotion-button"
+								onClick={() => {
+									promote(selectedSquare, promotionSquare, "rook");
+								}}
+							>
+								rook
+							</button>
+						</div>
+					)}
+				</div>
+
+				<div className="history-panel">
+					<HistoryComponent history={game.history}></HistoryComponent>
+				</div>
+			</div>
 		</>
 	);
 }

@@ -1,0 +1,220 @@
+@font-face {
+	/* <!-- https://www.dafont.com/g7-segment7-s5.font?fpp=200&l[]=10&l[]=1&text=12%3A34%3A56%3A78%3A90 --> */
+	font-family: "G7 Segment7 S5";
+	src: url("G7Segment7S5.woff2") format("woff2"),
+		url("G7Segment7S5.woff") format("woff");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+$clockBorderWidth: 4px;
+$displayBreakpoint: 1327px;
+
+body {
+	background-color: rgb(59, 59, 59);
+}
+
+.game {
+	display: grid;
+}
+
+@media (min-width: $displayBreakpoint) {
+	.game {
+		grid-template-columns: 2fr 3fr 2fr;
+	}
+}
+
+.promotion-button {
+	border-width: 5px;
+	background-color: rgb(129, 129, 129);
+}
+
+.clock-panel {
+	// background-color: blue;
+	min-height: 3em;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	padding-top: 0.5em;
+	padding-bottom: 1em;
+}
+
+.clock {
+	background-color: rgb(108, 108, 108);
+	font-family: "G7 Segment7 S5";
+	font-weight: normal;
+	font-style: normal;
+	font-size: 4vw;
+	border-width: $clockBorderWidth;
+	border-color: black;
+	border-style: solid;
+	/* border: 1px solid cyan; */
+	width: 20vw;
+	text-align: center;
+}
+
+.clock:not(:nth-of-type(1)) {
+	border-left-width: 0px;
+}
+
+@media (min-width: $displayBreakpoint) {
+	.clock-panel {
+		padding-top: 0;
+		padding-bottom: 0;
+		flex-direction: column;
+	}
+
+	.clock:not(:last-of-type) {
+		border-bottom-width: calc($clockBorderWidth/2);
+	}
+
+	.clock:not(:nth-of-type(1)) {
+		border-left-width: $clockBorderWidth;
+		border-top-width: calc($clockBorderWidth/2);
+	}
+}
+
+.board-panel {
+	/* background-color: red; */
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+
+	align-items: center;
+}
+
+.history-panel {
+	/* background-color: green; */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.history {
+	background-color: rgb(108, 108, 108);
+	font-size: 1vw;
+	border-width: 4px;
+	border-color: black;
+	border-style: solid;
+	display: flex;
+	align-content: center;
+	flex-wrap: wrap;
+	width: 20vw;
+	text-align: center;
+}
+
+.history-item {
+	margin: 0.2em;
+}
+
+.board {
+	display: grid;
+	grid-template-columns: repeat(8, 1fr);
+	width: 100%;
+	max-width: 800px;
+}
+
+.square {
+	background-image: url("images/darkSquares.png");
+	padding-top: 100%;
+	position: relative;
+}
+
+.square:nth-of-type(16n + 1),
+.square:nth-of-type(16n + 3),
+.square:nth-of-type(16n + 5),
+.square:nth-of-type(16n + 7),
+.square:nth-of-type(16n + 10),
+.square:nth-of-type(16n + 12),
+.square:nth-of-type(16n + 14),
+.square:nth-of-type(16n + 16) {
+	background-image: url("images/lightSquares.png");
+}
+
+.square.selected {
+	background-image: url("images/darkSquareSelected.png");
+}
+
+.square.selected:nth-of-type(16n + 1),
+.square.selected:nth-of-type(16n + 3),
+.square.selected:nth-of-type(16n + 5),
+.square.selected:nth-of-type(16n + 7),
+.square.selected:nth-of-type(16n + 10),
+.square.selected:nth-of-type(16n + 12),
+.square.selected:nth-of-type(16n + 14),
+.square.selected:nth-of-type(16n + 16) {
+	background-image: url("images/lightSquareSelected.png");
+}
+
+.square.move-option {
+	background-image: url("images/darkSquareMoves.png");
+}
+
+.square.move-option:nth-of-type(16n + 1),
+.square.move-option:nth-of-type(16n + 3),
+.square.move-option:nth-of-type(16n + 5),
+.square.move-option:nth-of-type(16n + 7),
+.square.move-option:nth-of-type(16n + 10),
+.square.move-option:nth-of-type(16n + 12),
+.square.move-option:nth-of-type(16n + 14),
+.square.move-option:nth-of-type(16n + 16) {
+	background-image: url("images/lightSquareMoves.png");
+}
+
+.piece {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+}
+
+.black-rook {
+	content: url("images/blackRook.png");
+}
+
+.black-knight {
+	content: url("images/blackKnight.png");
+}
+
+.black-bishop {
+	content: url("images/blackBishop.png");
+}
+
+.black-queen {
+	content: url("images/blackQueen.png");
+}
+
+.black-king {
+	content: url("images/blackKing.png");
+}
+
+.black-pawn {
+	content: url("images/blackPawn.png");
+}
+
+.white-rook {
+	content: url("images/whiteRook.png");
+}
+
+.white-knight {
+	content: url("images/whiteKnight.png");
+}
+
+.white-bishop {
+	content: url("images/whiteBishop.png");
+}
+
+.white-queen {
+	content: url("images/whiteQueen.png");
+}
+
+.white-king {
+	content: url("images/whiteKing.png");
+}
+
+.white-pawn {
+	content: url("images/whitePawn.png");
+}

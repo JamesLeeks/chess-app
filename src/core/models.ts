@@ -24,4 +24,5 @@ export interface HistoryItem {
 	from: Position;
 	to: Position;
 	player: PieceColour;
+	notation: string;
 }

@@ -1,34 +1,108 @@
+@font-face {
+  /* <!-- https://www.dafont.com/g7-segment7-s5.font?fpp=200&l[]=10&l[]=1&text=12%3A34%3A56%3A78%3A90 --> */
+  font-family: "G7 Segment7 S5";
+  src: url("G7Segment7S5.woff2") format("woff2"), url("G7Segment7S5.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 body {
   background-color: rgb(59, 59, 59);
+  margin: 0;
+  padding: 0;
+}
+@media (min-width: 1327px) {
+  body {
+    display: flex;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+  }
 }
 
 .game {
   display: grid;
-  /* TODO: look up CSS grid tutorial */
+  width: 100%;
 }
-
-/* TODO: Add sample clock content */
-/* TODO: Add sample history content */
-/* TODO: centre board in panel */
-/* TODO: figure out how to get board to resize */
-
-@media (min-width: 768px) {
+@media (min-width: 1327px) {
   .game {
     grid-template-columns: 2fr 3fr 2fr;
   }
 }
 
+/* TODO: Add sample history content */
 .clock-panel {
-  background-color: blue;
   min-height: 3em;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-top: 0.5em;
+  padding-bottom: 1em;
 }
 
+.clock {
+  background-color: rgb(108, 108, 108);
+  font-family: "G7 Segment7 S5";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 4vw;
+  border-width: 4px;
+  border-color: black;
+  border-style: solid;
+  /* border: 1px solid cyan; */
+  width: 20vw;
+  text-align: center;
+}
+
+.clock:not(:nth-of-type(1)) {
+  border-left-width: 0px;
+}
+
+@media (min-width: 1327px) {
+  .clock-panel {
+    flex-direction: column;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .clock:not(:last-of-type) {
+    border-bottom-width: 2px;
+  }
+  .clock:not(:nth-of-type(1)) {
+    border-left-width: 4px;
+    border-top-width: 2px;
+  }
+}
 .board-panel {
-  background-color: red;
+  /* background-color: red; */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .history-panel {
-  background-color: green;
+  /* background-color: green; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.history {
+  background-color: rgb(108, 108, 108);
+  font-size: 1vw;
+  border-width: 4px;
+  border-color: black;
+  border-style: solid;
+  display: flex;
+  align-content: center;
+  flex-wrap: wrap;
+  width: 20vw;
+  text-align: center;
+}
+
+.history-item {
+  margin: 0.2em;
 }
 
 .promotion-button {
@@ -39,6 +113,8 @@ body {
 .board {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
+  width: 100%;
+  max-width: 800px;
 }
 
 .square {
@@ -47,14 +123,14 @@ body {
   position: relative;
 }
 
-.square:nth-of-type(16n+1),
-.square:nth-of-type(16n+3),
-.square:nth-of-type(16n+5),
-.square:nth-of-type(16n+7),
-.square:nth-of-type(16n+10),
-.square:nth-of-type(16n+12),
-.square:nth-of-type(16n+14),
-.square:nth-of-type(16n+16) {
+.square:nth-of-type(16n + 1),
+.square:nth-of-type(16n + 3),
+.square:nth-of-type(16n + 5),
+.square:nth-of-type(16n + 7),
+.square:nth-of-type(16n + 10),
+.square:nth-of-type(16n + 12),
+.square:nth-of-type(16n + 14),
+.square:nth-of-type(16n + 16) {
   background-image: url("images/lightSquares.png");
 }
 
@@ -90,7 +166,6 @@ body {
   content: url("images/blackPawn.png");
 }
 
-
 .white-rook {
   content: url("images/whiteRook.png");
 }
@@ -113,4 +188,4 @@ body {
 
 .white-pawn {
   content: url("images/whitePawn.png");
-}
+}/*# sourceMappingURL=App.css.map */

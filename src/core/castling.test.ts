@@ -5,6 +5,92 @@ import { getGame } from "./testHelpers";
 // TODO: add more tests
 // include: 1r5k/8/8/8/8/8/8/R3K3 w Q - 1 1
 
+// castling bug
+test("both sides can castle right", () => {
+	const initialBoard = parseBoard(`
+	-- -- -- -- BK -- -- BR
+	-- -- -- -- BP BP BP BP
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	-- -- -- -- WP WP WP WP 
+	-- -- -- -- WK -- -- WR
+	`);
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e1")));
+	const expectedMoveOptions: string[] = ["d1", "d2", "f1", "g1"];
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
+test("both sides can castle left", () => {
+	const initialBoard = parseBoard(`
+	BR -- -- -- BK -- -- --
+	BP BP BP BP BP -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	WP WP WP WP WP -- -- --
+	WR -- -- -- WK -- -- --
+	`);
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e1")));
+	const expectedMoveOptions: string[] = ["c1", "d1", "f1", "f2"];
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
+test("white can castle left, black can castle right", () => {
+	const initialBoard = parseBoard(`
+	-- -- -- -- BK -- -- BR
+	-- -- -- -- BP BP BP BP
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	WP WP WP WP WP -- -- --
+	WR -- -- -- WK -- -- --
+	`);
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e1")));
+	const expectedMoveOptions: string[] = ["c1", "d1", "f1", "f2"];
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
+test("white can castle right, black can castle left", () => {
+	const initialBoard = parseBoard(`
+	BR -- -- -- BK -- -- --
+	BP BP BP BP BP -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	-- -- -- -- WP WP WP WP
+	-- -- -- -- WK -- -- WR
+	`);
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e1")));
+	const expectedMoveOptions: string[] = ["d1", "d2", "f1", "g1"];
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
+test("white and black can both castle right and left", () => {
+	const initialBoard = parseBoard(`
+	BR -- -- -- BK -- -- BR
+	BP BP BP BP BP BP BP BP
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	WP WP WP WP WP WP WP WP
+	WR -- -- -- WK -- -- WR
+	`);
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("e1")));
+	const expectedMoveOptions: string[] = ["c1", "d1", "f1", "g1"];
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
 // white can castle both sides
 test("white can castle both sides", () => {
 	const initialBoard = parseBoard(`

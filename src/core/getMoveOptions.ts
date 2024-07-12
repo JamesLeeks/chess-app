@@ -2,7 +2,14 @@ import { getBoardAfterMove } from "./board";
 import { isInCheck, isThreatened } from "./isInCheck";
 import { Board, BoardSquare, HistoryItem, PieceColour, Position } from "./models";
 
-export function getBaseMoveOptions(selectedSquare: Position, board: Board, history: HistoryItem[]): Position[] {
+export function getBaseMoveOptions(
+	selectedSquare: Position,
+	board: Board,
+	history: HistoryItem[],
+	options?: {
+		ignoreCastling?: boolean;
+	}
+): Position[] {
 	const selectedPiece = board[selectedSquare.row][selectedSquare.column];
 	if (!selectedPiece) {
 		throw new Error("should not get moves for undefined");
@@ -26,7 +33,7 @@ export function getBaseMoveOptions(selectedSquare: Position, board: Board, histo
 			return getKnightMoves(selectedSquare, board, currentTurn);
 
 		case "king":
-			return getKingMoves(history, board, selectedSquare, currentTurn);
+			return getKingMoves(history, board, selectedSquare, currentTurn, { ignoreCastling: options?.ignoreCastling });
 
 		default:
 			return [];
@@ -65,7 +72,15 @@ function getMovesForDirection(
 	return moves;
 }
 
-function getKingMoves(history: HistoryItem[], board: Board, selectedSquare: Position, currentTurn: PieceColour) {
+function getKingMoves(
+	history: HistoryItem[],
+	board: Board,
+	selectedSquare: Position,
+	currentTurn: PieceColour,
+	options?: {
+		ignoreCastling?: boolean;
+	}
+) {
 	const homeRow = currentTurn === "white" ? 7 : 0;
 	const moves: Position[] = [
 		{ row: selectedSquare.row + 1, column: selectedSquare.column },
@@ -80,14 +95,15 @@ function getKingMoves(history: HistoryItem[], board: Board, selectedSquare: Posi
 		.filter((pos) => pos.row >= 0 && pos.row <= 7)
 		.filter((pos) => pos.column >= 0 && pos.column <= 7)
 		.filter((pos) => board[pos.row][pos.column]?.colour !== currentTurn);
-
-	if (canCastle(history, board, homeRow, currentTurn, 1)) {
-		// push right side castling to move options
-		moves.push({ row: homeRow, column: 6 });
-	}
-	if (canCastle(history, board, homeRow, currentTurn, -1)) {
-		// push left side castling to move options
-		moves.push({ row: homeRow, column: 2 });
+	if (!options?.ignoreCastling) {
+		if (canCastle(history, board, homeRow, currentTurn, 1)) {
+			// push right side castling to move options
+			moves.push({ row: homeRow, column: 6 });
+		}
+		if (canCastle(history, board, homeRow, currentTurn, -1)) {
+			// push left side castling to move options
+			moves.push({ row: homeRow, column: 2 });
+		}
 	}
 	return moves;
 }
@@ -149,7 +165,8 @@ function canCastle(
 				{ column: kingColumn, row: homeRow },
 				{ column: kingColumn + direction * 2, row: homeRow }
 			),
-			currentTurn
+			currentTurn,
+			{ ignoreCastling: true }
 		)
 	) {
 		return false;
@@ -157,12 +174,14 @@ function canCastle(
 
 	// is the path threatened by an opponent's piece
 	const opponentColour = currentTurn === "white" ? "black" : "white";
-	if (isThreatened(board, opponentColour, { column: kingColumn + direction, row: homeRow })) {
+	if (
+		isThreatened(board, opponentColour, { column: kingColumn + direction, row: homeRow }, { ignoreCastling: true })
+	) {
 		return false;
 	}
 
 	// check if the king is in check
-	if (isInCheck(board, currentTurn)) {
+	if (isInCheck(board, currentTurn, { ignoreKing: true })) {
 		return false;
 	}
 
@@ -235,26 +254,27 @@ function getPawnMoves(selectedSquare: Position, board: Board, currentTurn: Piece
 	const homeRow = currentTurn === "white" ? 6 : 1;
 	const direction = currentTurn === "white" ? -1 : 1;
 
-	// moves
-	// if the square in front is free:
-	if (!board[selectedSquare.row + 1 * direction][selectedSquare.column]) {
-		// add that square to the move options
-		moves.push({ row: selectedSquare.row + 1 * direction, column: selectedSquare.column });
-		// if on starting square and the square two spaces in front is free:
-		if (selectedSquare.row === homeRow && !board[selectedSquare.row + 2 * direction][selectedSquare.column]) {
+	if (selectedSquare.row + 1 * direction >= 0 && selectedSquare.row + 1 * direction < 8) {
+		// moves
+		// if the square in front is free:
+		if (!board[selectedSquare.row + 1 * direction][selectedSquare.column]) {
 			// add that square to the move options
-			moves.push({ row: selectedSquare.row + 2 * direction, column: selectedSquare.column });
+			moves.push({ row: selectedSquare.row + 1 * direction, column: selectedSquare.column });
+			// if on starting square and the square two spaces in front is free:
+			if (selectedSquare.row === homeRow && !board[selectedSquare.row + 2 * direction][selectedSquare.column]) {
+				// add that square to the move options
+				moves.push({ row: selectedSquare.row + 2 * direction, column: selectedSquare.column });
+			}
+		}
+
+		// captures
+		if (board[selectedSquare.row + 1 * direction][selectedSquare.column + 1]?.colour === opponentTurn) {
+			moves.push({ row: selectedSquare.row + 1 * direction, column: selectedSquare.column + 1 });
+		}
+		if (board[selectedSquare.row + 1 * direction][selectedSquare.column - 1]?.colour === opponentTurn) {
+			moves.push({ row: selectedSquare.row + 1 * direction, column: selectedSquare.column - 1 });
 		}
 	}
-
-	// captures
-	if (board[selectedSquare.row + 1 * direction][selectedSquare.column + 1]?.colour === opponentTurn) {
-		moves.push({ row: selectedSquare.row + 1 * direction, column: selectedSquare.column + 1 });
-	}
-	if (board[selectedSquare.row + 1 * direction][selectedSquare.column - 1]?.colour === opponentTurn) {
-		moves.push({ row: selectedSquare.row + 1 * direction, column: selectedSquare.column - 1 });
-	}
-
 	// en passant
 	// if the history length is not zero
 	if (history.length !== 0) {

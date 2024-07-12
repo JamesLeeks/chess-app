@@ -157,7 +157,10 @@ export function getBoardAfterMove(
 	board: Board,
 	from: Position,
 	to: Position,
-	promotionType?: PromotionType
+	options?: {
+		promotionType?: PromotionType;
+		skipPromotion?: boolean;
+	}
 ): Board {
 	const fromSquare = board[from.row][from.column];
 	if (!fromSquare) {
@@ -207,11 +210,19 @@ export function getBoardAfterMove(
 		}
 	}
 
-	// set the destination to have the value of the starting square
-	if (promotionType) {
+	// set the destination to have the value of the promotionType
+	const promotionRow = fromSquare.colour === "white" ? 0 : 7;
+	if (
+		!options?.skipPromotion &&
+		fromSquare.type === "pawn" &&
+		to.row === promotionRow
+	) {
+		if (!options?.promotionType) {
+			throw new Error("Promotion should have type");
+		}
 		newBoard[to.row][to.column] = {
 			colour: fromSquare.colour,
-			type: promotionType,
+			type: options.promotionType,
 		};
 	} else {
 		newBoard[to.row][to.column] = board[from.row][from.column];

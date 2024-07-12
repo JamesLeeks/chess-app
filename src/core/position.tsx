@@ -16,6 +16,7 @@ export function positions(...squareStrings: string[]): Position[] {
 	return squareStrings.map((s) => position(s));
 }
 
+// takes in a position and returns it as a file and rank
 export function toNotation(position: Position): string {
 	const row = position.row;
 	const column = position.column;
@@ -29,4 +30,15 @@ export function toNotation(position: Position): string {
 
 export function toNotations(...positions: Position[]): string[] {
 	return positions.map((s) => toNotation(s));
+}
+
+export function toNotationSeperate(position: Position) {
+	const row = position.row;
+	const column = position.column;
+	const files = "abcdefgh";
+
+	const rank = 8 - row;
+	const file = files[column];
+
+	return { file, rank };
 }
