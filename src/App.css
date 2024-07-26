@@ -97,6 +97,14 @@ body {
 .history-item {
   margin: 0.2em;
 }
+.history-item span {
+  cursor: pointer;
+}
+
+.selected-history-item {
+  color: rgb(81, 32, 100);
+  font-weight: bold;
+}
 
 .board {
   display: grid;

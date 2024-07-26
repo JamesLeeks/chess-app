@@ -2,18 +2,21 @@ import { useState } from "react";
 import { BoardComponent } from "./Board";
 import { Game } from "../core/game";
 import { getStartingBoard } from "../core/board";
-import { Position, PromotionType } from "../core/models";
+import { HistoryItem, Position, PromotionType } from "../core/models";
 import { HistoryComponent } from "./History";
 
 // TODO: center content vertically
 
 export function GameComponent() {
+	// game state properties
 	const [game, setGame] = useState<Game>(new Game(getStartingBoard()));
 	const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
 	const [moveOptions, setMoveOptions] = useState<Position[]>([]);
 	const [promotionSquare, setPromotionSquare] = useState<Position | null>(
 		null
 	);
+	const [selectedHistoryItem, setSelectedHistoryItem] =
+		useState<HistoryItem | null>(null);
 
 	function makeMove(
 		from: Position,
@@ -24,6 +27,9 @@ export function GameComponent() {
 	}
 
 	function handleClick(row: number, column: number) {
+		if (selectedHistoryItem) {
+			return;
+		}
 		setPromotionSquare(null);
 		if (selectedSquare) {
 			// there's a selected piece - move it
@@ -73,6 +79,18 @@ export function GameComponent() {
 		}
 	}
 
+	function handleHistoryItemSelected(index: number) {
+		setSelectedSquare(null);
+		setMoveOptions([]);
+
+		const latestItemIndex = game.history.length - 1;
+		if (index === latestItemIndex) {
+			setSelectedHistoryItem(null);
+		} else {
+			setSelectedHistoryItem(game.history[index]);
+		}
+	}
+
 	function promote(
 		from: Position,
 		to: Position,
@@ -84,6 +102,10 @@ export function GameComponent() {
 		setPromotionSquare(null);
 	}
 
+	const boardToUse = selectedHistoryItem
+		? selectedHistoryItem.boardAfterMove
+		: game.board;
+
 	return (
 		<>
 			<div className="game">
@@ -93,7 +115,7 @@ export function GameComponent() {
 				</div>
 				<div className="board-panel">
 					<BoardComponent
-						board={game.board}
+						board={boardToUse}
 						handleClick={handleClick}
 						moveOptions={moveOptions}
 						selectedSquare={selectedSquare}
@@ -140,7 +162,14 @@ export function GameComponent() {
 				</div>
 
 				<div className="history-panel">
-					<HistoryComponent history={game.history}></HistoryComponent>
+					<HistoryComponent
+						history={game.history}
+						selectedHistoryItem={
+							selectedHistoryItem ??
+							game.history[game.history.length - 1]
+						}
+						onNotationClicked={handleHistoryItemSelected}
+					></HistoryComponent>
 				</div>
 			</div>
 		</>

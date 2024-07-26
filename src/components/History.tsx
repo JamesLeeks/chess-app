@@ -1,19 +1,46 @@
 import { HistoryItem } from "../core/models";
 
-export type HistoryComponentParameters = {
+export type HistoryProps = {
 	history: HistoryItem[];
+	selectedHistoryItem: HistoryItem;
+	onNotationClicked: (historyIndex: number) => void;
 };
 
-export function HistoryComponent({ history }: HistoryComponentParameters) {
+export function HistoryComponent(props: HistoryProps) {
 	const historyElements: JSX.Element[] = [];
+	// split props out like with an array
+	const { history, selectedHistoryItem, onNotationClicked } = props;
 
 	for (let index = 0; index < history.length; index += 2) {
 		const historyItemA = history[index];
 		const historyItemB = history[index + 1];
 		historyElements.push(
 			<div className="history-item">
-				{index / 2 + 1}. {historyItemA.notation}{" "}
-				{historyItemB?.notation ?? "..."}
+				{index / 2 + 1}.{" "}
+				<span
+					className={
+						historyItemA === selectedHistoryItem
+							? "selected-history-item"
+							: ""
+					}
+					onClick={() => onNotationClicked(index)}
+				>
+					{historyItemA.notation}
+				</span>{" "}
+				{historyItemB ? (
+					<span
+						className={
+							historyItemB === selectedHistoryItem
+								? "selected-history-item"
+								: ""
+						}
+						onClick={() => onNotationClicked(index + 1)}
+					>
+						{historyItemB.notation}
+					</span>
+				) : (
+					<>...</>
+				)}
 			</div>
 		);
 	}
