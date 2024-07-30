@@ -10,6 +10,14 @@ body {
   background-color: rgb(59, 59, 59);
 }
 
+@media (min-width: 1327px) {
+  .game {
+    display: flex;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+  }
+}
 .game {
   display: grid;
 }
@@ -83,7 +91,7 @@ body {
 
 .history {
   background-color: rgb(108, 108, 108);
-  font-size: 1vw;
+  font-size: 1.2vw;
   border-width: 4px;
   border-color: black;
   border-style: solid;
@@ -147,6 +155,7 @@ body {
 
 .square.move-option {
   background-image: url("images/darkSquareMoves.png");
+  cursor: pointer;
 }
 
 .square.move-option:nth-of-type(16n + 1),
@@ -158,6 +167,7 @@ body {
 .square.move-option:nth-of-type(16n + 14),
 .square.move-option:nth-of-type(16n + 16) {
   background-image: url("images/lightSquareMoves.png");
+  cursor: pointer;
 }
 
 .piece {
@@ -170,48 +180,60 @@ body {
 
 .black-rook {
   content: url("images/blackRook.png");
+  cursor: pointer;
 }
 
 .black-knight {
   content: url("images/blackKnight.png");
+  cursor: pointer;
 }
 
 .black-bishop {
   content: url("images/blackBishop.png");
+  cursor: pointer;
 }
 
 .black-queen {
   content: url("images/blackQueen.png");
+  cursor: pointer;
 }
 
 .black-king {
   content: url("images/blackKing.png");
+  cursor: pointer;
 }
 
 .black-pawn {
   content: url("images/blackPawn.png");
+  cursor: pointer;
 }
 
 .white-rook {
   content: url("images/whiteRook.png");
+  cursor: pointer;
 }
 
 .white-knight {
   content: url("images/whiteKnight.png");
+  cursor: pointer;
 }
 
 .white-bishop {
   content: url("images/whiteBishop.png");
+  cursor: pointer;
 }
 
 .white-queen {
   content: url("images/whiteQueen.png");
+  cursor: pointer;
 }
 
 .white-king {
   content: url("images/whiteKing.png");
+  cursor: pointer;
 }
 
 .white-pawn {
   content: url("images/whitePawn.png");
+  cursor: pointer;
 }/*# sourceMappingURL=App.css.map */

@@ -27,6 +27,17 @@ export class Game {
 		return this._history;
 	}
 
+	public historyToString(): string {
+		if (this.history.length === 0) {
+			return "";
+		}
+		let historyString = this.history[0].notation;
+		for (let index = 1; index < this.history.length; index++) {
+			historyString = historyString + " " + this.history[index].notation;
+		}
+		return historyString;
+	}
+
 	private getPieceLetter(piece: PieceType) {
 		switch (piece) {
 			case "rook":
