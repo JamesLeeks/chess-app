@@ -54,6 +54,7 @@ body {
   /* border: 1px solid cyan; */
   width: 20vw;
   text-align: center;
+  border-width: 4px;
 }
 
 .clock:not(:nth-of-type(1)) {
@@ -68,10 +69,14 @@ body {
   }
   .clock:not(:last-of-type) {
     border-bottom-width: 2px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
   }
-  .clock:not(:nth-of-type(1)) {
+  .clock:not(:first-of-type) {
     border-left-width: 4px;
     border-top-width: 2px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
   }
 }
 .board-panel {
@@ -85,16 +90,30 @@ body {
 .history-panel {
   /* background-color: green; */
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
+.history-panel-item {
+  border-color: black;
+  border-width: 4px;
+  border-style: solid;
+}
+
+@media (min-width: 1327px) {
+  .history-panel-item:not(:last-of-type) {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+  .history-panel-item:not(:first-of-type) {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+  }
+}
 .history {
   background-color: rgb(108, 108, 108);
   font-size: 1.2vw;
-  border-width: 4px;
-  border-color: black;
-  border-style: solid;
   display: flex;
   align-content: center;
   flex-wrap: wrap;
@@ -111,6 +130,44 @@ body {
 
 .selected-history-item {
   color: rgb(81, 32, 100);
+  font-weight: bold;
+}
+
+.result {
+  background-color: rgb(108, 108, 108);
+  border-bottom-width: 0;
+  width: 20vw;
+  text-align: center;
+}
+
+.result-text {
+  font-size: 2em;
+}
+
+.result-button-container {
+  padding-bottom: 6px;
+}
+
+.result-button {
+  font-size: 1.5em;
+  cursor: pointer;
+  border-width: 3px;
+  border-style: solid;
+  border-radius: 6px;
+  background-color: rgb(129, 129, 129);
+}
+
+.result-button:hover {
+  background-color: rgb(119, 119, 119);
+  border-color: rgb(44, 44, 44);
+  color: rgb(81, 32, 100);
+  font-weight: bold;
+}
+
+.result-button:active {
+  background-color: rgb(134, 134, 134);
+  border-color: rgb(44, 44, 44);
+  color: rgb(126, 51, 155);
   font-weight: bold;
 }
 

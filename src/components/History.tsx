@@ -51,7 +51,7 @@ export function HistoryComponent(props: HistoryProps) {
 
 	return (
 		<>
-			<div className="history">{historyElements}</div>
+			<div className="history history-panel-item">{historyElements}</div>
 		</>
 	);
 }

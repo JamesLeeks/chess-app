@@ -1,18 +1,42 @@
-import { getBoardAfterMove } from "./board";
+import { boardToString, getBoardAfterMove } from "./board";
 import { getBaseMoveOptions } from "./getMoveOptions";
-import { isInCheck, isInCheckmate } from "./isInCheck";
-import { Board, ChessPiece, HistoryItem, PieceColour, PieceType, Position, PromotionType } from "./models";
+import { isInCheck, isInCheckmate, isInStalemate } from "./isInCheck";
+import {
+	Board,
+	ChessPiece,
+	GameResultFull,
+	HistoryItem,
+	PieceColour,
+	PieceType,
+	Position,
+	PromotionType,
+	SquareColour,
+} from "./models";
 import { toNotation, toNotationSeperate } from "./position";
 
 export class Game {
 	private _board: Board;
 	private _history: HistoryItem[];
 	private _currentTurn: PieceColour;
+	private _whiteTimeRemainingAtStartOfTurn: number;
+	private _blackTimeRemainingAtStartOfTurn: number;
+	private _turnStartTime: Date;
+	private _gameResult: GameResultFull | undefined;
 
-	constructor(board: Board, history?: HistoryItem[], currentTurn?: PieceColour) {
+	constructor(
+		board: Board,
+		history?: HistoryItem[],
+		currentTurn?: PieceColour,
+		whiteTime?: number,
+		blackTime?: number
+	) {
 		this._board = board;
 		this._history = history ?? [];
 		this._currentTurn = currentTurn ?? "white";
+		this._whiteTimeRemainingAtStartOfTurn = whiteTime ?? 60;
+		this._blackTimeRemainingAtStartOfTurn = blackTime ?? 60;
+		this._turnStartTime = new Date();
+		this._gameResult = this.getGameResult();
 	}
 
 	public get board(): Board {
@@ -27,15 +51,172 @@ export class Game {
 		return this._history;
 	}
 
-	public historyToString(): string {
-		if (this.history.length === 0) {
-			return "";
+	public get whiteTime(): number {
+		if (this.currentTurn === "white" && this._history.length > 1 && !this._gameResult) {
+			const currentTime = new Date();
+			const timeSinceTurnStart = (currentTime.valueOf() - this._turnStartTime.valueOf()) / 1000;
+			const timeRemaining = this._whiteTimeRemainingAtStartOfTurn - timeSinceTurnStart;
+			return Math.max(timeRemaining, 0);
 		}
-		let historyString = this.history[0].notation;
-		for (let index = 1; index < this.history.length; index++) {
-			historyString = historyString + " " + this.history[index].notation;
+		return this._whiteTimeRemainingAtStartOfTurn;
+	}
+
+	public get blackTime(): number {
+		if (this.currentTurn === "black" && this._history.length > 1 && !this._gameResult) {
+			const currentTime = new Date();
+			const timeSinceTurnStart = (currentTime.valueOf() - this._turnStartTime.valueOf()) / 1000;
+			const timeRemaining = this._blackTimeRemainingAtStartOfTurn - timeSinceTurnStart;
+			return Math.max(timeRemaining, 0);
 		}
-		return historyString;
+		return this._blackTimeRemainingAtStartOfTurn;
+	}
+
+	private isThreeFoldRepetition(): boolean {
+		let count = 0;
+		for (let index = 0; index < this.history.length; index++) {
+			if (
+				this.history[index].boardString === this.history[this.history.length - 1].boardString &&
+				this.history[index].player === this.history[this.history.length - 1].player
+			) {
+				count++;
+			}
+		}
+		if (count >= 3) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public getGameResult(): GameResultFull | undefined {
+		if (isInCheckmate(this)) {
+			return {
+				reason: this.currentTurn === "white" ? "whiteInCheckmate" : "blackInCheckmate",
+				result: this.currentTurn === "white" ? "blackWins" : "whiteWins",
+			};
+		}
+		if (isInStalemate(this)) {
+			return { reason: this.currentTurn === "white" ? "whiteInStalemate" : "blackInStalemate", result: "draw" };
+		}
+		if (this.whiteTime <= 0) {
+			return this.sideCanCheckMate("black")
+				? { reason: "whiteTimeOut", result: "blackWins" }
+				: { reason: "whiteTimeOut", result: "draw" };
+		}
+		if (this.blackTime <= 0) {
+			return this.sideCanCheckMate("white")
+				? { reason: "blackTimeOut", result: "whiteWins" }
+				: { reason: "blackTimeOut", result: "draw" };
+		}
+		if (this.isThreeFoldRepetition()) {
+			return { reason: "threeFoldRepetition", result: "draw" };
+		}
+		return undefined;
+	}
+
+	public sideCanCheckMate(sideColour: PieceColour) {
+		// return true if the side has pawns
+		if (this.sideHasPawns(sideColour)) {
+			return true;
+		}
+
+		if (this.sideOnlyHasBishops(sideColour) && this.allBishopsAreSameColour(sideColour)) {
+			return false;
+		}
+
+		if (this.calculateMaterial(sideColour) >= 5) {
+			// return true if the player has least five points of material and does not have to bishops of the same colour
+			return true;
+		}
+	}
+
+	public sideOnlyHasBishops(sideColour: PieceColour) {
+		for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
+			for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
+				const currentSquare = this.board[rowIndex][columnIndex];
+				if (currentSquare?.colour === sideColour) {
+					if (currentSquare.type === "knight" || currentSquare.type === "queen" || currentSquare.type === "rook") {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+	private getSquareColour(row: number, column: number): SquareColour {
+		if (row % 2 === 0) {
+			return column % 2 === 0 ? "light" : "dark";
+		} else {
+			return column % 2 === 0 ? "dark" : "light";
+		}
+	}
+
+	private allBishopsAreSameColour(sideColour: PieceColour): boolean {
+		let bishopColourSoFar: SquareColour | null = null;
+		for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
+			for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
+				const currentSquare = this.board[rowIndex][columnIndex];
+				if (currentSquare?.colour === sideColour && currentSquare.type === "bishop") {
+					const squareColor = this.getSquareColour(rowIndex, columnIndex);
+					if (bishopColourSoFar) {
+						if (squareColor !== bishopColourSoFar) {
+							return false;
+						}
+					} else {
+						bishopColourSoFar = squareColor;
+					}
+				}
+			}
+		}
+		return bishopColourSoFar ? true : false;
+	}
+
+	public calculateMaterial(sideColour: PieceColour) {
+		let material = 0;
+		// loop over the board
+		for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
+			for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
+				const currentSquare = this.board[rowIndex][columnIndex];
+				if (currentSquare?.colour === sideColour) {
+					// add on points for peices of the specified colour
+					if (currentSquare.type === "bishop") {
+						material += 3;
+					} else if (currentSquare.type === "knight") {
+						material += 3;
+					} else if (currentSquare.type === "pawn") {
+						material += 1;
+					} else if (currentSquare.type === "queen") {
+						material += 9;
+					} else if (currentSquare.type === "rook") {
+						material += 5;
+					}
+				}
+			}
+		}
+		return material;
+	}
+
+	public sideHasPawns(sideColour: PieceColour) {
+		for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
+			for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
+				const currentSquare = this.board[rowIndex][columnIndex];
+				if (currentSquare?.type === "pawn" && currentSquare.colour === sideColour) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public isActive(): boolean {
+		if (this.getGameResult()) {
+			return false;
+		}
+		return true;
+	}
+	private noMovesLeft() {
+		return isInCheckmate(this) || isInStalemate(this);
 	}
 
 	private getPieceLetter(piece: PieceType) {
@@ -148,9 +329,13 @@ export class Game {
 			check = "+";
 		}
 
+		const boardString = boardToString(boardAfterMove);
 		const tempGame = new Game(
 			boardAfterMove,
-			[...this._history, { boardAfterMove, from, to, player: currentTurn, notation: "NOT A REAL VALUE" }],
+			[
+				...this._history,
+				{ boardAfterMove, from, to, player: currentTurn, notation: "NOT A REAL VALUE", boardString },
+			],
 			opponentColour
 		);
 		if (isInCheckmate(tempGame)) {
@@ -171,6 +356,59 @@ export class Game {
 
 		// Ba1xb2#
 		return this.getPieceLetter(pieceType) + disambiguation + captures + toAsString + promotion + check;
+	}
+
+	public historyToString(): string {
+		if (this.history.length === 0) {
+			return "";
+		}
+		let historyString = this.history[0].notation;
+		for (let index = 1; index < this.history.length; index++) {
+			historyString = historyString + " " + this.history[index].notation;
+		}
+		return historyString;
+	}
+
+	private getHistoryItemFromString(
+		moveString: string,
+		player: PieceColour,
+		boardBeforeMove: Board
+	) /*: HistoryItem */ {
+		let pieceType = "pawn";
+		for (let index = 0; index < moveString.length; index++) {
+			const character = moveString[index];
+
+			switch (character) {
+				case "K":
+					pieceType = "king";
+					break;
+
+				case "Q":
+					pieceType = "queen";
+					break;
+
+				case "R":
+					pieceType = "rook";
+					break;
+
+				case "B":
+					pieceType = "bishop";
+					break;
+
+				case "N":
+					pieceType = "knight";
+					break;
+
+				default:
+					break;
+			}
+		}
+		// try to find a caps K or Q or R or B or N
+		// if there isn't one, then it's a pawn move
+	}
+
+	public historyFromString(): HistoryItem[] {
+		return [];
 	}
 
 	getMoveOptions(selectedSquare: Position): Position[] {
@@ -215,12 +453,13 @@ export class Game {
 			to: to,
 			player: this._currentTurn,
 			notation: this.getMoveNotation(to, from, newBoard, this._board),
+			boardString: boardToString(newBoard),
 		};
 		newHistory.push(...this._history, newHistoryItem);
 
 		// switch turn
 		const newTurn: PieceColour = this.currentTurn === "white" ? "black" : "white";
-		const newGame = new Game(newBoard, newHistory, newTurn);
+		const newGame = new Game(newBoard, newHistory, newTurn, this.whiteTime, this.blackTime);
 
 		// return updated game
 		return newGame;

@@ -4,8 +4,8 @@ import { Game } from "../core/game";
 import { getStartingBoard } from "../core/board";
 import { HistoryItem, Position, PromotionType } from "../core/models";
 import { HistoryComponent } from "./History";
-
-// TODO: center content vertically
+import { ClockComponent } from "./Clock";
+import { ResultComponent } from "./Result";
 
 export function GameComponent() {
 	// game state properties
@@ -17,6 +17,7 @@ export function GameComponent() {
 	);
 	const [selectedHistoryItem, setSelectedHistoryItem] =
 		useState<HistoryItem | null>(null);
+	const [timerUpdate, setTimeUpdate] = useState(0);
 
 	function makeMove(
 		from: Position,
@@ -27,6 +28,11 @@ export function GameComponent() {
 	}
 
 	function handleClick(row: number, column: number) {
+		if (!game.isActive()) {
+			setSelectedSquare(null);
+			setMoveOptions([]);
+			return;
+		}
 		if (selectedHistoryItem) {
 			return;
 		}
@@ -102,6 +108,14 @@ export function GameComponent() {
 		setPromotionSquare(null);
 	}
 
+	function updateClock() {
+		setTimeUpdate(timerUpdate + 1);
+	}
+
+	if (game.isActive()) {
+		setTimeout(updateClock, 500);
+	}
+
 	const boardToUse = selectedHistoryItem
 		? selectedHistoryItem.boardAfterMove
 		: game.board;
@@ -110,8 +124,8 @@ export function GameComponent() {
 		<>
 			<div className="game">
 				<div className="clock-panel">
-					<div className="clock">00:00:00</div>
-					<div className="clock">00:00:00</div>
+					<ClockComponent time={game.blackTime} />
+					<ClockComponent time={game.whiteTime} />
 				</div>
 				<div className="board-panel">
 					<BoardComponent
@@ -162,6 +176,11 @@ export function GameComponent() {
 				</div>
 
 				<div className="history-panel">
+					{!game.isActive() && (
+						<ResultComponent
+							gameResult={game.getGameResult()}
+						></ResultComponent>
+					)}
 					<HistoryComponent
 						history={game.history}
 						selectedHistoryItem={
