@@ -5,13 +5,12 @@ export type ClockProps = {
 
 export function ClockComponent(props: ClockProps) {
 	const { time, isActive } = props;
-	let hours = 0;
-	let minutes = 0;
-	let seconds = 0;
+
 	// CONVERT TIME
-	hours = Math.floor(time / 3600);
-	minutes = Math.floor(time / 60) % 60;
-	seconds = Math.floor(time % 60);
+	const hours = Math.floor(time / 3600);
+	const minutes = Math.floor(time / 60) % 60;
+	const seconds = Math.floor(time % 60);
+	const milliseconds = Math.round((time - Math.floor(time)) * 100);
 	// if (time >= 3600) {
 	// 	hours = Math.floor(time / 60);
 	// 	minutes = time % 60;
@@ -26,10 +25,18 @@ export function ClockComponent(props: ClockProps) {
 	// }
 	// TODO: when time low show milliseconds
 	const classString = isActive ? "clock active" : "clock";
+	if (time > 30) {
+		return (
+			<div className={classString}>
+				{String(hours).padStart(2, "0")}:{String(minutes).padStart(2, "0")}:
+				{String(seconds).padStart(2, "0")}
+			</div>
+		);
+	}
 	return (
 		<div className={classString}>
-			{String(hours).padStart(2, "0")}:{String(minutes).padStart(2, "0")}:
-			{String(seconds).padStart(2, "0")}
+			{String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}.
+			{String(milliseconds).padStart(2, "0")}
 		</div>
 	);
 }

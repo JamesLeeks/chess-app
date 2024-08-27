@@ -113,7 +113,13 @@ export function GameComponent() {
 	}
 
 	if (game.isActive()) {
-		setTimeout(updateClock, 500);
+		const currentTurnTime =
+			game.currentTurn === "white" ? game.whiteTime : game.blackTime;
+		if (currentTurnTime > 30) {
+			setTimeout(updateClock, 500);
+		} else {
+			setTimeout(updateClock, 100);
+		}
 	}
 
 	const boardToUse = selectedHistoryItem

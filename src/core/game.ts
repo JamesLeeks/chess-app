@@ -33,8 +33,8 @@ export class Game {
 		this._board = board;
 		this._history = history ?? [];
 		this._currentTurn = currentTurn ?? "white";
-		this._whiteTimeRemainingAtStartOfTurn = whiteTime ?? 60;
-		this._blackTimeRemainingAtStartOfTurn = blackTime ?? 60;
+		this._whiteTimeRemainingAtStartOfTurn = whiteTime ?? 600;
+		this._blackTimeRemainingAtStartOfTurn = blackTime ?? 600;
 		this._turnStartTime = new Date();
 		this._gameResult = this.getGameResult();
 	}
