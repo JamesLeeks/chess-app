@@ -8,6 +8,7 @@
 	font-display: swap;
 }
 
+$purple: rgb(81, 32, 100);
 $clockBorderWidth: 4px;
 $displayBreakpoint: 1327px;
 
@@ -65,7 +66,10 @@ body {
 	border-width: 4px;
 }
 
-//
+.clock.active {
+	color: $purple;
+}
+
 .clock:not(:nth-of-type(1)) {
 	border-left-width: 0px;
 }
@@ -126,6 +130,18 @@ body {
 	}
 }
 
+@media (min-width: $displayBreakpoint) {
+	.history-panel-item:not(:last-of-type) {
+		border-top-left-radius: 12px;
+		border-top-right-radius: 12px;
+	}
+
+	.history-panel-item:not(:first-of-type) {
+		border-bottom-left-radius: 12px;
+		border-bottom-right-radius: 12px;
+	}
+}
+
 .history {
 	background-color: rgb(108, 108, 108);
 	font-size: 1.2vw;
@@ -144,7 +160,7 @@ body {
 }
 
 .selected-history-item {
-	color: rgb(81, 32, 100);
+	color: $purple;
 	font-weight: bold;
 }
 

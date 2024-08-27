@@ -124,8 +124,14 @@ export function GameComponent() {
 		<>
 			<div className="game">
 				<div className="clock-panel">
-					<ClockComponent time={game.blackTime} />
-					<ClockComponent time={game.whiteTime} />
+					<ClockComponent
+						time={game.blackTime}
+						isActive={game.currentTurn === "black"}
+					/>
+					<ClockComponent
+						time={game.whiteTime}
+						isActive={game.currentTurn === "white"}
+					/>
 				</div>
 				<div className="board-panel">
 					<BoardComponent

@@ -57,6 +57,10 @@ body {
   border-width: 4px;
 }
 
+.clock.active {
+  color: rgb(81, 32, 100);
+}
+
 .clock:not(:nth-of-type(1)) {
   border-left-width: 0px;
 }
@@ -101,6 +105,16 @@ body {
   border-style: solid;
 }
 
+@media (min-width: 1327px) {
+  .history-panel-item:not(:last-of-type) {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+  .history-panel-item:not(:first-of-type) {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+  }
+}
 @media (min-width: 1327px) {
   .history-panel-item:not(:last-of-type) {
     border-top-left-radius: 12px;

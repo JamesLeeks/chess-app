@@ -1,9 +1,10 @@
 export type ClockProps = {
 	time: number;
+	isActive: boolean;
 };
 
 export function ClockComponent(props: ClockProps) {
-	const { time } = props;
+	const { time, isActive } = props;
 	let hours = 0;
 	let minutes = 0;
 	let seconds = 0;
@@ -24,8 +25,9 @@ export function ClockComponent(props: ClockProps) {
 	// 	// arange like this: minutes:seconds
 	// }
 	// TODO: when time low show milliseconds
+	const classString = isActive ? "clock active" : "clock";
 	return (
-		<div className="clock">
+		<div className={classString}>
 			{String(hours).padStart(2, "0")}:{String(minutes).padStart(2, "0")}:
 			{String(seconds).padStart(2, "0")}
 		</div>
