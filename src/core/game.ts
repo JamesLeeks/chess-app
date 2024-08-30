@@ -33,8 +33,8 @@ export class Game {
 		this._board = board;
 		this._history = history ?? [];
 		this._currentTurn = currentTurn ?? "white";
-		this._whiteTimeRemainingAtStartOfTurn = whiteTime ?? 600;
-		this._blackTimeRemainingAtStartOfTurn = blackTime ?? 600;
+		this._whiteTimeRemainingAtStartOfTurn = whiteTime ?? 45;
+		this._blackTimeRemainingAtStartOfTurn = blackTime ?? 45;
 		this._turnStartTime = new Date();
 		this._gameResult = this.getGameResult();
 	}
@@ -376,8 +376,10 @@ export class Game {
 	) /*: HistoryItem */ {
 		let pieceType = "pawn";
 		for (let index = 0; index < moveString.length; index++) {
-			const character = moveString[index];
+			// try to find a CAPS K or Q or R or B or N
+			// if we never find one, then it's a pawn move
 
+			const character = moveString[index];
 			switch (character) {
 				case "K":
 					pieceType = "king";
@@ -403,8 +405,6 @@ export class Game {
 					break;
 			}
 		}
-		// try to find a caps K or Q or R or B or N
-		// if there isn't one, then it's a pawn move
 	}
 
 	public historyFromString(): HistoryItem[] {

@@ -12,7 +12,7 @@ body {
 
 @media (min-width: 1327px) {
   .game {
-    display: flex;
+    grid-template-columns: 2fr 3fr 2fr;
     position: absolute;
     height: 100%;
     width: 100%;
@@ -22,11 +22,6 @@ body {
   display: grid;
 }
 
-@media (min-width: 1327px) {
-  .game {
-    grid-template-columns: 2fr 3fr 2fr;
-  }
-}
 .promotion-button {
   border-width: 5px;
   background-color: rgb(129, 129, 129);
@@ -47,29 +42,51 @@ body {
   font-family: "G7 Segment7 S5";
   font-weight: normal;
   font-style: normal;
-  font-size: 4vw;
-  border-width: 4px;
+  font-size: 8vw;
+  border-width: 2px;
   border-color: black;
   border-style: solid;
   /* border: 1px solid cyan; */
-  width: 20vw;
+  width: 38vw;
   text-align: center;
-  border-width: 4px;
 }
 
 .clock.active {
   color: rgb(81, 32, 100);
 }
 
-.clock:not(:nth-of-type(1)) {
-  border-left-width: 0px;
+@media (max-width: 1327px) {
+  .clock:not(:last-of-type) {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+  }
+  .clock:not(:first-of-type) {
+    border-left-width: 0px;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+  }
 }
-
+@media (max-width: 554px) {
+  .clock:not(:last-of-type) {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+  .clock:not(:first-of-type) {
+    border-left-width: 0px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+}
 @media (min-width: 1327px) {
   .clock-panel {
     padding-top: 0;
     padding-bottom: 0;
     flex-direction: column;
+  }
+  .clock {
+    font-size: 4vw;
+    border-width: 4px;
+    width: 20vw;
   }
   .clock:not(:last-of-type) {
     border-bottom-width: 2px;
@@ -81,6 +98,11 @@ body {
     border-top-width: 2px;
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;
+  }
+}
+@media (min-width: 554px) {
+  .clock {
+    border-width: 4px;
   }
 }
 .board-panel {
@@ -97,6 +119,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-top: 8px;
 }
 
 .history-panel-item {
@@ -105,36 +128,81 @@ body {
   border-style: solid;
 }
 
-@media (min-width: 1327px) {
-  .history-panel-item:not(:last-of-type) {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-  }
-  .history-panel-item:not(:first-of-type) {
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
-  }
-}
-@media (min-width: 1327px) {
-  .history-panel-item:not(:last-of-type) {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-  }
-  .history-panel-item:not(:first-of-type) {
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
-  }
-}
 .history {
   background-color: rgb(108, 108, 108);
-  font-size: 1.2vw;
+  font-size: 4vw;
   display: flex;
   align-content: center;
   flex-wrap: wrap;
-  width: 20vw;
+  width: 80vw;
   text-align: center;
+  border-width: 2px;
 }
 
+.result {
+  background-color: rgb(108, 108, 108);
+  border-bottom: 0;
+  width: 80vw;
+  text-align: center;
+  border-width: 2px;
+}
+
+@media (min-width: 554px) {
+  .history {
+    border-width: 4px;
+    font-size: 2.4vw;
+  }
+  .result {
+    border-width: 4px;
+    font-size: 2.4vw;
+  }
+}
+@media (min-width: 1327px) {
+  .history {
+    border-width: 4px;
+    font-size: 1.2vw;
+    width: 20vw;
+    border-radius: 12px;
+  }
+  .result {
+    border-width: 4px;
+    font-size: 1.2vw;
+    width: 20vw;
+    border-bottom: 0;
+  }
+  .history-panel-item:not(:last-of-type) {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+  .history-panel-item:not(:first-of-type) {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}
+.history-panel-item:not(:last-of-type) {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.history-panel-item:not(:first-of-type) {
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+@media (max-width: 1327px) {
+  .history {
+    border-radius: 12px;
+  }
+}
+@media (max-width: 554px) {
+  .history {
+    border-radius: 8px;
+  }
+}
 .history-item {
   margin: 0.2em;
 }
@@ -145,13 +213,6 @@ body {
 .selected-history-item {
   color: rgb(81, 32, 100);
   font-weight: bold;
-}
-
-.result {
-  background-color: rgb(108, 108, 108);
-  border-bottom-width: 0;
-  width: 20vw;
-  text-align: center;
 }
 
 .result-text {
