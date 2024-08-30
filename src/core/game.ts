@@ -369,43 +369,43 @@ export class Game {
 		return historyString;
 	}
 
-	private getHistoryItemFromString(
-		moveString: string,
-		player: PieceColour,
-		boardBeforeMove: Board
-	) /*: HistoryItem */ {
-		let pieceType = "pawn";
-		for (let index = 0; index < moveString.length; index++) {
-			// try to find a CAPS K or Q or R or B or N
-			// if we never find one, then it's a pawn move
+	// private getHistoryItemFromString(
+	// 	moveString: string,
+	// 	player: PieceColour,
+	// 	boardBeforeMove: Board
+	// ) /*: HistoryItem */ {
+	// 	let pieceType = "pawn";
+	// 	for (let index = 0; index < moveString.length; index++) {
+	// 		// try to find a CAPS K or Q or R or B or N
+	// 		// if we never find one, then it's a pawn move
 
-			const character = moveString[index];
-			switch (character) {
-				case "K":
-					pieceType = "king";
-					break;
+	// 		const character = moveString[index];
+	// 		switch (character) {
+	// 			case "K":
+	// 				pieceType = "king";
+	// 				break;
 
-				case "Q":
-					pieceType = "queen";
-					break;
+	// 			case "Q":
+	// 				pieceType = "queen";
+	// 				break;
 
-				case "R":
-					pieceType = "rook";
-					break;
+	// 			case "R":
+	// 				pieceType = "rook";
+	// 				break;
 
-				case "B":
-					pieceType = "bishop";
-					break;
+	// 			case "B":
+	// 				pieceType = "bishop";
+	// 				break;
 
-				case "N":
-					pieceType = "knight";
-					break;
+	// 			case "N":
+	// 				pieceType = "knight";
+	// 				break;
 
-				default:
-					break;
-			}
-		}
-	}
+	// 			default:
+	// 				break;
+	// 		}
+	// 	}
+	// }
 
 	public historyFromString(): HistoryItem[] {
 		return [];
