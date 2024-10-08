@@ -552,7 +552,7 @@ test("check castling left", () => {
 	WR -- -- -- WK WP -- --
 	`);
 	const game = getGame(initialBoard);
-	game.makeMove(position("e1"), position("g1"));
+	game.makeMove(position("e1"), position("c1"));
 	const boardAfterMove = getBoardAfterMove(game.board, position("e1"), position("c1"));
 	expect(boardToString(boardAfterMove)).toEqual(
 		`

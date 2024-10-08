@@ -1,4 +1,4 @@
-import { boardToString, getBoardAfterMove } from "./board";
+import { boardToString, getBoardAfterMove, getStartingBoard } from "./board";
 import { getBaseMoveOptions } from "./getMoveOptions";
 import { isInCheck, isInCheckmate, isInStalemate } from "./isInCheck";
 import {
@@ -12,6 +12,7 @@ import {
 	PromotionType,
 	SquareColour,
 } from "./models";
+import { MoveParser } from "./moveParser";
 import { toNotation, toNotationSeperate } from "./position";
 
 export class Game {
@@ -301,28 +302,19 @@ export class Game {
 			}
 		}
 
+		const isPawnCapture = fromSquare.type === "pawn" && from.column !== to.column;
+		const captures = isPawnCapture || boardBeforeMove[to.row][to.column] ? "x" : "";
+
 		const rankAndFile = toNotationSeperate(from);
 		const fileString = useFile ? rankAndFile.file : "";
 		const rankString = useRank ? rankAndFile.rank : "";
-		const disambiguation = fileString + rankString;
-
-		// check if the move was a capture
-		let captures = "";
-		if (boardBeforeMove[to.row][to.column]) {
-			captures = "x";
-		}
-		if (boardBeforeMove[to.row][to.column] && pieceType === "pawn") {
-			captures = rankAndFile.file + "x";
-		}
+		const disambiguation = isPawnCapture ? rankAndFile.file : fileString + rankString;
 
 		const currentTurn = boardAfterMove[to.row][to.column]?.colour;
 		if (!currentTurn) {
 			throw new Error("Piece should have colour");
 		}
-		let opponentColour: PieceColour = "black";
-		if (currentTurn === "black") {
-			opponentColour = "white";
-		}
+		const opponentColour: PieceColour = currentTurn === "black" ? "white" : "black";
 
 		let check = "";
 		if (isInCheck(boardAfterMove, opponentColour, { ignoreKing: true })) {
@@ -369,52 +361,96 @@ export class Game {
 		return historyString;
 	}
 
-	// private getHistoryItemFromString(
-	// 	moveString: string,
-	// 	player: PieceColour,
-	// 	boardBeforeMove: Board
-	// ) /*: HistoryItem */ {
-	// 	let pieceType = "pawn";
-	// 	for (let index = 0; index < moveString.length; index++) {
-	// 		// try to find a CAPS K or Q or R or B or N
-	// 		// if we never find one, then it's a pawn move
+	private findMatchingPiece(
+		board: Board,
+		pieceColour: PieceColour,
+		pieceType: PieceType,
+		to: Position,
+		row?: number,
+		column?: number
+	): Position {
+		for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
+			for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
+				const currentSquare = board[rowIndex][columnIndex];
+				if (currentSquare?.type === pieceType && currentSquare.colour === pieceColour) {
+					const options = this.getMoveOptions({ row: rowIndex, column: columnIndex });
+					const findItem = options.find((option) => option.row === to.row && option.column === to.column);
+					// check that the piece can move to the destination
+					if (findItem) {
+						// this deals with disambiguation
+						if (row && !column) {
+							if (rowIndex === row) {
+								return { row: rowIndex, column: columnIndex };
+							}
+						} else if (column && !row) {
+							if (columnIndex === column) {
+								return { row: rowIndex, column: columnIndex };
+							}
+						} else if (row && column) {
+							if (rowIndex === row && columnIndex === column) {
+								return { row: rowIndex, column: columnIndex };
+							}
+						} else {
+							return { row: rowIndex, column: columnIndex };
+						}
+					}
+				}
+			}
+		}
+		throw new Error(
+			`Cannot find ${pieceColour} ${pieceType} (to: {row: ${to.row}, column: ${to.column}}, row: ${row}, column: ${column})`
+		);
+	}
 
-	// 		const character = moveString[index];
-	// 		switch (character) {
-	// 			case "K":
-	// 				pieceType = "king";
-	// 				break;
+	private static getMoveFromString(game: Game, boardBeforeMove: Board, player: PieceColour, moveString: string) {
+		const parsedMove = MoveParser.parse(moveString);
 
-	// 			case "Q":
-	// 				pieceType = "queen";
-	// 				break;
+		if (parsedMove.castle) {
+			const row = player === "white" ? 7 : 0;
+			const toColumn = moveString === "O-O" ? 6 : 2;
+			return {
+				from: { row: row, column: 4 },
+				to: { row: row, column: toColumn },
+				promotionType: undefined,
+			};
+		}
 
-	// 			case "R":
-	// 				pieceType = "rook";
-	// 				break;
+		if (parsedMove.toColumn === undefined || parsedMove.toRow === undefined) {
+			throw new Error(`Move should have destination. Move string: ${moveString}`);
+		}
+		const toPosition: Position = { row: parsedMove.toRow, column: parsedMove.toColumn };
 
-	// 			case "B":
-	// 				pieceType = "bishop";
-	// 				break;
+		const fromPosition = game.findMatchingPiece(
+			boardBeforeMove,
+			player,
+			parsedMove.pieceType ?? "pawn",
+			toPosition,
+			parsedMove.fromRow,
+			parsedMove.fromColumn
+		);
 
-	// 			case "N":
-	// 				pieceType = "knight";
-	// 				break;
+		return {
+			from: fromPosition,
+			to: toPosition,
+			promotionType: parsedMove.promotionType,
+		};
+	}
 
-	// 			default:
-	// 				break;
-	// 		}
-	// 	}
-	// }
-
-	public historyFromString(): HistoryItem[] {
-		return [];
+	public static getGameFromString(historyString: string): Game {
+		let game = new Game(getStartingBoard());
+		const notationArray = historyString.split(" ");
+		for (let index = 0; index < notationArray.length; index++) {
+			const notation = notationArray[index];
+			const move = Game.getMoveFromString(game, game.board, game.currentTurn, notation);
+			game = game.makeMove(move.from, move.to, move.promotionType);
+		}
+		return game;
 	}
 
 	getMoveOptions(selectedSquare: Position): Position[] {
 		const selectedPiece = this._board[selectedSquare.row][selectedSquare.column];
 		if (!selectedPiece) {
-			throw new Error("should not get moves for undefined");
+			throw new Error(`should not get moves for undefined. Tried to read ${toNotation(selectedSquare)}`);
 		}
 
 		// Get all possible piece moves
@@ -441,6 +477,11 @@ export class Game {
 	}
 
 	makeMove(from: Position, to: Position, promotionType?: PromotionType): Game {
+		const options = this.getMoveOptions(from);
+		const findItem = options.find((option) => option.row === to.row && option.column === to.column);
+		if (!findItem) {
+			throw new Error(`Piece cannot move from ${toNotation(from)} to ${toNotation(to)}`);
+		}
 		// create a new game after move
 		const newBoard = getBoardAfterMove(this._board, from, to, { promotionType });
 		// create a blank history

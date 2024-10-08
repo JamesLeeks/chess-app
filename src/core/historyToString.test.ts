@@ -14,11 +14,13 @@ test("check and checkmate", () => {
 	-- -- -- -- -- -- -- WK
 	`);
 	const expectedString = "Rh7+ Ka8 Rg8#";
-	const game0 = getGame(initialBoard);
-	const game1 = game0.makeMove(position("h5"), position("h7"));
-	const game2 = game1.makeMove(position("a7"), position("a8"));
-	const game3 = game2.makeMove(position("g6"), position("g8"));
-	expect(game3.historyToString()).toEqual(expectedString);
+
+	const game = getGame(initialBoard)
+		.makeMove(position("h5"), position("h7"))
+		.makeMove(position("a7"), position("a8"))
+		.makeMove(position("g6"), position("g8"));
+
+	expect(game.historyToString()).toEqual(expectedString);
 });
 
 test("no history", () => {
