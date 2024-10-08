@@ -1,4 +1,4 @@
-import { position, positions, toNotation, toNotations } from "./position";
+import { position, positions, toNotation, toNotations } from "../position";
 
 test("position: d4", () => {
 	const square = position("d4");

@@ -1,5 +1,5 @@
-import { parseBoard } from "./board";
-import { position } from "./position";
+import { parseBoard } from "../board";
+import { position } from "../position";
 import { getGame } from "./testHelpers";
 
 test("Qh8", () => {

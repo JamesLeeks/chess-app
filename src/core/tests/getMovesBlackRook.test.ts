@@ -1,8 +1,25 @@
-import { parseBoard } from "./board";
-import { position, toNotations } from "./position";
+import { parseBoard } from "../board";
+import { position, toNotations } from "../position";
 import { getGame } from "./testHelpers";
 
-test("white rook forward moves", () => {
+test("black rook checking white king", () => {
+	const initialBoard = parseBoard(`
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- WK -- -- -- -- BR
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	BK -- -- -- -- -- -- --
+	`);
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("h5")));
+	const expectedMoveOptions: string[] = ["c5", "d5", "e5", "f5", "g5", "h1", "h2", "h3", "h4", "h6", "h7", "h8"];
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
+test("black rook forward moves", () => {
 	const initialBoard = parseBoard(`
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
@@ -11,7 +28,7 @@ test("white rook forward moves", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	WR WN -- -- -- WK -- BK
+	BR BN -- -- -- BK -- WK
 	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("a1")));
@@ -19,24 +36,7 @@ test("white rook forward moves", () => {
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
-test("white rook forward blocked", () => {
-	const initialBoard = parseBoard(`
-	-- -- -- -- -- -- -- --
-	WN -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
-    -- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
-	WR WN -- -- -- WK -- BK
-	`);
-	const game = getGame(initialBoard);
-	const moveOptions = toNotations(...game.getMoveOptions(position("a1")));
-	const expectedMoveOptions: string[] = ["a2", "a3", "a4", "a5", "a6"];
-	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
-});
-
-test("white rook forward capture", () => {
+test("black rook forward blocked", () => {
 	const initialBoard = parseBoard(`
 	-- -- -- -- -- -- -- --
 	BN -- -- -- -- -- -- --
@@ -45,7 +45,24 @@ test("white rook forward capture", () => {
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	WR WN -- -- -- WK -- BK
+	BR BN -- -- -- BK -- WK
+	`);
+	const game = getGame(initialBoard);
+	const moveOptions = toNotations(...game.getMoveOptions(position("a1")));
+	const expectedMoveOptions: string[] = ["a2", "a3", "a4", "a5", "a6"];
+	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
+});
+
+test("black rook forward capture", () => {
+	const initialBoard = parseBoard(`
+	-- -- -- -- -- -- -- --
+	WN -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+    -- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- --
+	BR BN -- -- -- BK -- WK
 	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("a1")));
@@ -53,16 +70,16 @@ test("white rook forward capture", () => {
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
-test("white rook backward moves", () => {
+test("black rook backward moves", () => {
 	const initialBoard = parseBoard(`
-	WR WN -- -- -- -- -- --
+	BR BN -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- WK -- BK
+	-- -- -- -- -- BK -- WK
 	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("a8")));
@@ -70,16 +87,16 @@ test("white rook backward moves", () => {
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
-test("white rook backward blocked", () => {
+test("black rook backward blocked", () => {
 	const initialBoard = parseBoard(`
-	WR WN -- -- -- -- -- --
+	BR BN -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	WN -- -- -- -- -- -- --
+	BN -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- WK -- BK
+	-- -- -- -- -- BK -- WK
 	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("a8")));
@@ -87,16 +104,16 @@ test("white rook backward blocked", () => {
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
-test("white rook backward capture", () => {
+test("black rook backward capture", () => {
 	const initialBoard = parseBoard(`
-	WR WN -- -- -- -- -- --
+	BR BN -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	BN -- -- -- -- WK -- BK
+	WN -- -- -- -- BK -- WK
 	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("a8")));
@@ -104,16 +121,16 @@ test("white rook backward capture", () => {
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
-test("white rook right moves", () => {
+test("black rook right moves", () => {
 	const initialBoard = parseBoard(`
-	WR -- -- -- -- -- -- --
-	WN -- -- -- -- -- -- --
+	BR -- -- -- -- -- -- --
+	BN -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- WK -- BK
+	-- -- -- -- -- BK -- WK
 	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("a8")));
@@ -121,16 +138,16 @@ test("white rook right moves", () => {
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
-test("white rook right blocked", () => {
+test("black rook right blocked", () => {
 	const initialBoard = parseBoard(`
-	WR -- -- -- WN -- -- --
-	WN -- -- -- -- -- -- --
+	BR -- -- -- BN -- -- --
+	BN -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- WK -- BK
+	-- -- -- -- -- BK -- WK
 	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("a8")));
@@ -138,16 +155,16 @@ test("white rook right blocked", () => {
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
-test("white rook right capture", () => {
+test("black rook right capture", () => {
 	const initialBoard = parseBoard(`
-	WR -- -- -- BN -- -- --
-	WN -- -- -- -- -- -- --
+	BR -- -- -- WN -- -- --
+	BN -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- WK -- BK
+	-- -- -- -- -- BK -- WK
 	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("a8")));
@@ -155,16 +172,16 @@ test("white rook right capture", () => {
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
-test("white rook left moves", () => {
+test("black rook left moves", () => {
 	const initialBoard = parseBoard(`
-	-- -- -- -- -- -- -- WR
-	-- -- -- -- -- -- -- WN
+	-- -- -- -- -- -- -- BR
+	-- -- -- -- -- -- -- BN
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- WK -- BK
+	-- -- -- -- -- BK -- WK
 	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("h8")));
@@ -172,16 +189,16 @@ test("white rook left moves", () => {
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
-test("white rook left blocked", () => {
+test("black rook left blocked", () => {
 	const initialBoard = parseBoard(`
-	-- -- -- WN -- -- -- WR
-	-- -- -- -- -- -- -- WN
+	-- -- -- BN -- -- -- BR
+	-- -- -- -- -- -- -- BN
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- WK -- BK
+	-- -- -- -- -- BK -- WK
 	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("h8")));
@@ -189,16 +206,16 @@ test("white rook left blocked", () => {
 	expect(moveOptions).toIncludeSameMembers(expectedMoveOptions);
 });
 
-test("white rook left capture", () => {
+test("black rook left capture", () => {
 	const initialBoard = parseBoard(`
-	-- -- -- BN -- -- -- WR
-	-- -- -- -- -- -- -- WN
+	-- -- -- WN -- -- -- BR
+	-- -- -- -- -- -- -- BN
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- WK -- BK
+	-- -- -- -- -- BK -- WK
 	`);
 	const game = getGame(initialBoard);
 	const moveOptions = toNotations(...game.getMoveOptions(position("h8")));

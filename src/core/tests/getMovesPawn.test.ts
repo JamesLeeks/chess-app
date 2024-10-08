@@ -1,5 +1,5 @@
-import { parseBoard, boardToString } from "./board";
-import { position, toNotations } from "./position";
+import { parseBoard, boardToString } from "../board";
+import { position, toNotations } from "../position";
 import { getGame } from "./testHelpers";
 
 test("black pawn starting position", () => {

@@ -1,5 +1,5 @@
-import { getStartingBoard } from "./board";
-import { Game } from "./game";
+import { getStartingBoard } from "../board";
+import { Game } from "../game";
 import { compareHistories, getGame } from "./testHelpers";
 
 test("2 move game history test", () => {

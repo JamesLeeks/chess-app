@@ -1,4 +1,4 @@
-import { parseBoard } from "./board";
+import { parseBoard } from "../board";
 import { getGame } from "./testHelpers";
 
 test("white can checkmate with two bishops", () => {

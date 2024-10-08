@@ -1,6 +1,6 @@
-import { parseBoard } from "./board";
-import { isInCheck } from "./isInCheck";
-import { position, toNotations } from "./position";
+import { parseBoard } from "../board";
+import { isInCheck } from "../isInCheck";
+import { position, toNotations } from "../position";
 import { getGame } from "./testHelpers";
 
 // CHECKS

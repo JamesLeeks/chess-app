@@ -1,5 +1,5 @@
-import { getStartingBoard, parseBoard } from "./board";
-import { position } from "./position";
+import { getStartingBoard, parseBoard } from "../board";
+import { position } from "../position";
 import { getGame } from "./testHelpers";
 
 test("check and checkmate", () => {

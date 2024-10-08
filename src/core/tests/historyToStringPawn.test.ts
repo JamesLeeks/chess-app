@@ -1,23 +1,23 @@
-import { parseBoard } from "./board";
-import { position } from "./position";
+import { parseBoard } from "../board";
+import { position } from "../position";
 import { getGame } from "./testHelpers";
 
-test("Ne4", () => {
+test("h8=Q", () => {
 	const initialBoard = parseBoard(`
 	-- -- -- -- -- -- -- --
+	-- -- -- -- -- -- -- WP
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- WN --
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- BK -- -- WK -- --
+	-- -- -- -- -- BK -- WK
 	`);
-	const expectedTo = position("e4");
-	const expectedFrom = position("g5");
-	const expectedString = "Ne4";
+	const expectedTo = position("h8");
+	const expectedFrom = position("h7");
+	const expectedString = "h8=Q";
 	const game = getGame(initialBoard);
-	const newGame = game.makeMove(position("g5"), position("e4"));
+	const newGame = game.makeMove(position("h7"), position("h8"), "queen");
 	const to = newGame.history[0].to;
 	const from = newGame.history[0].from;
 	if (!to || !from) {
@@ -29,49 +29,22 @@ test("Ne4", () => {
 	expect(historyItemString).toEqual(expectedString);
 });
 
-test("Nxe4", () => {
+test("hxg8=Q", () => {
 	const initialBoard = parseBoard(`
+	-- -- -- -- -- -- BN --
+	-- -- -- -- -- -- -- WP
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- WN --
-	-- -- -- -- BP -- -- --
-    -- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
-	-- -- BK -- -- WK -- --
-	`);
-	const expectedTo = position("e4");
-	const expectedFrom = position("g5");
-	const expectedString = "Nxe4";
-	const game = getGame(initialBoard);
-	const newGame = game.makeMove(position("g5"), position("e4"));
-	const to = newGame.history[0].to;
-	const from = newGame.history[0].from;
-	if (!to || !from) {
-		throw new Error("to and from should exist");
-	}
-	const historyItemString = newGame.history[0].notation;
-	expect(to).toEqual(expectedTo);
-	expect(from).toEqual(expectedFrom);
-	expect(historyItemString).toEqual(expectedString);
-});
-
-test("Nge4", () => {
-	const initialBoard = parseBoard(`
-	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- -- --
-	-- -- WN -- -- -- WN --
 	-- -- -- -- -- -- -- --
     -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- BK -- -- WK -- --
+	-- -- -- -- -- WK -- BK
 	`);
-	const expectedTo = position("e4");
-	const expectedFrom = position("g5");
-	const expectedString = "Nge4";
+	const expectedTo = position("g8");
+	const expectedFrom = position("h7");
+	const expectedString = "hxg8=Q";
 	const game = getGame(initialBoard);
-	const newGame = game.makeMove(position("g5"), position("e4"));
+	const newGame = game.makeMove(position("h7"), position("g8"), "queen");
 	const to = newGame.history[0].to;
 	const from = newGame.history[0].from;
 	if (!to || !from) {
@@ -83,22 +56,22 @@ test("Nge4", () => {
 	expect(historyItemString).toEqual(expectedString);
 });
 
-test("N5e4", () => {
+test("h5", () => {
 	const initialBoard = parseBoard(`
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- -- -- -- -- WN --
 	-- -- -- -- -- -- -- --
-    -- -- -- -- -- -- WN --
+	-- -- -- -- -- -- -- WP
+    -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- BK -- -- WK -- --
+	-- -- -- -- -- WK -- BK
 	`);
-	const expectedTo = position("e4");
-	const expectedFrom = position("g5");
-	const expectedString = "N5e4";
+	const expectedTo = position("h5");
+	const expectedFrom = position("h4");
+	const expectedString = "h5";
 	const game = getGame(initialBoard);
-	const newGame = game.makeMove(position("g5"), position("e4"));
+	const newGame = game.makeMove(position("h4"), position("h5"));
 	const to = newGame.history[0].to;
 	const from = newGame.history[0].from;
 	if (!to || !from) {
@@ -110,22 +83,22 @@ test("N5e4", () => {
 	expect(historyItemString).toEqual(expectedString);
 });
 
-test("Ng5e4", () => {
+test("hxg5", () => {
 	const initialBoard = parseBoard(`
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-	-- -- WN -- -- -- WN --
+	-- -- -- -- -- -- BP --
+	-- -- -- -- -- -- -- WP
+    -- -- -- -- -- -- -- --
 	-- -- -- -- -- -- -- --
-    -- -- -- -- -- -- WN --
-	-- -- -- -- -- -- -- --
-	-- -- BK -- -- WK -- --
+	-- -- -- -- -- WK -- BK
 	`);
-	const expectedTo = position("e4");
-	const expectedFrom = position("g5");
-	const expectedString = "Ng5e4";
+	const expectedTo = position("g5");
+	const expectedFrom = position("h4");
+	const expectedString = "hxg5";
 	const game = getGame(initialBoard);
-	const newGame = game.makeMove(position("g5"), position("e4"));
+	const newGame = game.makeMove(position("h4"), position("g5"));
 	const to = newGame.history[0].to;
 	const from = newGame.history[0].from;
 	if (!to || !from) {

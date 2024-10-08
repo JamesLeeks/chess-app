@@ -1,5 +1,5 @@
-import { getStartingBoard, parseBoard } from "./board";
-import { position, toNotations } from "./position";
+import { getStartingBoard, parseBoard } from "../board";
+import { position, toNotations } from "../position";
 import { getGame } from "./testHelpers";
 
 // white knight

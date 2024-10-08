@@ -1,4 +1,4 @@
-import { parseBoard } from "./board";
+import { parseBoard } from "../board";
 
 test("empty board", () => {
 	const board = parseBoard(`

@@ -1,5 +1,5 @@
-import { boardToString, getBoardAfterMove, parseBoard } from "./board";
-import { position, toNotations } from "./position";
+import { boardToString, getBoardAfterMove, parseBoard } from "../board";
+import { position, toNotations } from "../position";
 import { getGame } from "./testHelpers";
 
 // TODO: add more tests

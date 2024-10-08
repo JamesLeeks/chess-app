@@ -1,5 +1,5 @@
-import { boardToString, parseBoard } from "./board";
-import { position } from "./position";
+import { boardToString, parseBoard } from "../board";
+import { position } from "../position";
 import { getGame } from "./testHelpers";
 
 test("history has correct board after move", () => {

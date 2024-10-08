@@ -1,4 +1,4 @@
-import { MoveParser, ParsedMove } from "./moveParser";
+import { MoveParser, ParsedMove } from "../moveParser";
 
 test("kingside castling", () => {
 	const expected: ParsedMove = {

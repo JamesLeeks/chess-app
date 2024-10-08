@@ -1,4 +1,4 @@
-import { boardToString } from "./board";
+import { boardToString } from "../board";
 
 test("empty board", () => {
 	const board = boardToString([
