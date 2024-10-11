@@ -15,6 +15,9 @@ import {
 import { MoveParser } from "./moveParser";
 import { toNotation, toNotationSeperate } from "./position";
 import { nanoid } from "nanoid";
+import { hi } from "../../../common/src/foo";
+
+hi();
 
 export class Game {
 	private _board: Board;

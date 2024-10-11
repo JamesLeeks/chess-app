@@ -1,0 +1,11 @@
+{
+  "name": "chess-common",
+  "version": "0.0.1",
+  "description": "Common code for chess api and web app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "James Leeks",
+  "license": "ISC"
+}
