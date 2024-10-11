@@ -15,4 +15,5 @@ test("castling", () => {
 
 	const gameB = Game.fromJson(gameA.toJson());
 	compareHistories(gameA.history, gameB.history);
+	expect(gameA.id).toEqual(gameB.id);
 });

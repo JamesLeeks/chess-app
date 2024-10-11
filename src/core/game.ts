@@ -14,6 +14,7 @@ import {
 } from "./models";
 import { MoveParser } from "./moveParser";
 import { toNotation, toNotationSeperate } from "./position";
+import { nanoid } from "nanoid";
 
 export class Game {
 	private _board: Board;
@@ -23,13 +24,15 @@ export class Game {
 	private _blackTimeRemainingAtStartOfTurn: number;
 	private _turnStartTime: Date;
 	private _gameResult: GameResultFull | undefined;
+	private _id: string;
 
 	constructor(
 		board: Board,
 		history?: HistoryItem[],
 		currentTurn?: PieceColour,
 		whiteTime?: number,
-		blackTime?: number
+		blackTime?: number,
+		id?: string
 	) {
 		this._board = board;
 		this._history = history ?? [];
@@ -38,6 +41,11 @@ export class Game {
 		this._blackTimeRemainingAtStartOfTurn = blackTime ?? 45;
 		this._turnStartTime = new Date();
 		this._gameResult = this.getGameResult();
+		this._id = id ?? nanoid();
+	}
+
+	public get id(): string {
+		return this._id;
 	}
 
 	public get board(): Board {
@@ -419,7 +427,7 @@ export class Game {
 			moves.push({ move: historyItem.notation, time: "TODO" });
 		}
 		const serialisedShape = {
-			id: "TODO",
+			id: this.id,
 			moves,
 		};
 
@@ -434,9 +442,9 @@ export class Game {
 
 	public static fromJson(gameString: string) {
 		const jsonGame = JSON.parse(gameString);
-		// const id = jsonGame["id"];
+		const id = jsonGame.id;
 		const moves = jsonGame.moves;
-		let game = new Game(getStartingBoard());
+		let game = new Game(getStartingBoard(), undefined, undefined, undefined, undefined, id);
 
 		for (let index = 0; index < moves.length; index++) {
 			const moveString = moves[index].move;
@@ -535,7 +543,7 @@ export class Game {
 
 		// switch turn
 		const newTurn: PieceColour = this.currentTurn === "white" ? "black" : "white";
-		const newGame = new Game(newBoard, newHistory, newTurn, this.whiteTime, this.blackTime);
+		const newGame = new Game(newBoard, newHistory, newTurn, this.whiteTime, this.blackTime, this.id);
 
 		// return updated game
 		return newGame;
