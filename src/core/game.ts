@@ -402,47 +402,12 @@ export class Game {
 		);
 	}
 
-	private static getMoveFromString(game: Game, boardBeforeMove: Board, player: PieceColour, moveString: string) {
-		const parsedMove = MoveParser.parse(moveString);
-
-		if (parsedMove.castle) {
-			const row = player === "white" ? 7 : 0;
-			const toColumn = moveString === "O-O" ? 6 : 2;
-			return {
-				from: { row: row, column: 4 },
-				to: { row: row, column: toColumn },
-				promotionType: undefined,
-			};
-		}
-
-		if (parsedMove.toColumn === undefined || parsedMove.toRow === undefined) {
-			throw new Error(`Move should have destination. Move string: ${moveString}`);
-		}
-		const toPosition: Position = { row: parsedMove.toRow, column: parsedMove.toColumn };
-
-		const fromPosition = game.findMatchingPiece(
-			boardBeforeMove,
-			player,
-			parsedMove.pieceType ?? "pawn",
-			toPosition,
-			parsedMove.fromRow,
-			parsedMove.fromColumn
-		);
-
-		return {
-			from: fromPosition,
-			to: toPosition,
-			promotionType: parsedMove.promotionType,
-		};
-	}
-
 	public static getGameFromString(historyString: string): Game {
 		let game = new Game(getStartingBoard());
 		const notationArray = historyString.split(" ");
 		for (let index = 0; index < notationArray.length; index++) {
 			const notation = notationArray[index];
-			const move = Game.getMoveFromString(game, game.board, game.currentTurn, notation);
-			game = game.makeMove(move.from, move.to, move.promotionType);
+			game = game.makeMoveFromNotation(notation);
 		}
 		return game;
 	}
@@ -475,8 +440,7 @@ export class Game {
 
 		for (let index = 0; index < moves.length; index++) {
 			const moveString = moves[index].move;
-			const move = Game.getMoveFromString(game, game.board, game.currentTurn, moveString);
-			game = game.makeMove(move.from, move.to, move.promotionType);
+			game = game.makeMoveFromNotation(moveString);
 		}
 		return game;
 	}
@@ -510,6 +474,43 @@ export class Game {
 		return filteredMoves;
 	}
 
+	private getMoveFromString(moveString: string) {
+		const parsedMove = MoveParser.parse(moveString);
+
+		if (parsedMove.castle) {
+			const row = this.currentTurn === "white" ? 7 : 0;
+			const toColumn = moveString === "O-O" ? 6 : 2;
+			return {
+				from: { row: row, column: 4 },
+				to: { row: row, column: toColumn },
+				promotionType: undefined,
+			};
+		}
+
+		if (parsedMove.toColumn === undefined || parsedMove.toRow === undefined) {
+			throw new Error(`Move should have destination. Move string: ${moveString}`);
+		}
+		const toPosition: Position = { row: parsedMove.toRow, column: parsedMove.toColumn };
+
+		const fromPosition = this.findMatchingPiece(
+			this.board,
+			this.currentTurn,
+			parsedMove.pieceType ?? "pawn",
+			toPosition,
+			parsedMove.fromRow,
+			parsedMove.fromColumn
+		);
+
+		return {
+			from: fromPosition,
+			to: toPosition,
+			promotionType: parsedMove.promotionType,
+		};
+	}
+	makeMoveFromNotation(notation: string): Game {
+		const move = this.getMoveFromString(notation);
+		return this.makeMove(move.from, move.to, move.promotionType);
+	}
 	makeMove(from: Position, to: Position, promotionType?: PromotionType): Game {
 		const options = this.getMoveOptions(from);
 		const findItem = options.find((option) => option.row === to.row && option.column === to.column);
