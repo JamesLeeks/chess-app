@@ -447,6 +447,40 @@ export class Game {
 		return game;
 	}
 
+	public toJson(): string {
+		const moves = [];
+		for (let index = 0; index < this.history.length; index++) {
+			const historyItem = this.history[index];
+			moves.push({ move: historyItem.notation, time: "TODO" });
+		}
+		const serialisedShape = {
+			id: "TODO",
+			moves,
+		};
+
+		// const serialisedShape = {
+		// 	id: "TODO",
+		// 	moves: this.history.map((historyItem) => {
+		// 		return { move: historyItem.notation, time: "TODO" };
+		// 	}),
+		// };
+		return JSON.stringify(serialisedShape);
+	}
+
+	public static fromJson(gameString: string) {
+		const jsonGame = JSON.parse(gameString);
+		// const id = jsonGame["id"];
+		const moves = jsonGame.moves;
+		let game = new Game(getStartingBoard());
+
+		for (let index = 0; index < moves.length; index++) {
+			const moveString = moves[index].move;
+			const move = Game.getMoveFromString(game, game.board, game.currentTurn, moveString);
+			game = game.makeMove(move.from, move.to, move.promotionType);
+		}
+		return game;
+	}
+
 	getMoveOptions(selectedSquare: Position): Position[] {
 		const selectedPiece = this._board[selectedSquare.row][selectedSquare.column];
 		if (!selectedPiece) {
