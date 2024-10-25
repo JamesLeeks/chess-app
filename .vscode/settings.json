@@ -3,5 +3,7 @@
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"editor.formatOnSave": true,
-	"liveSassCompile.settings.showOutputWindowOn": "Error"
+	"liveSassCompile.settings.showOutputWindowOn": "Error",
+	"jest.rootPath": "common",
+	"jest.jestCommandLine": "jest"
 }

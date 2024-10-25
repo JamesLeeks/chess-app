@@ -1,0 +1,22 @@
+{
+	"configurations": [
+		{
+			"type": "node",
+			"name": "vscode-jest-tests.v2.chess-app",
+			"request": "launch",
+			"args": [
+				"--runInBand",
+				"--watchAll=false",
+				"--testNamePattern",
+				"${jest.testNamePattern}",
+				"--runTestsByPath",
+				"${jest.testFile}"
+			],
+			"cwd": "${workspaceFolder}\\common",
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen",
+			"disableOptimisticBPs": true,
+			"program": "${workspaceFolder}\\common\\node_modules\\jest\\bin\\jest"
+		}
+	]
+}

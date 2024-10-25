@@ -4,8 +4,22 @@
 	"description": "Common code for chess api and web app",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "react-scripts test"
 	},
 	"author": "James Leeks",
-	"license": "ISC"
+	"license": "ISC",
+	"dependencies": {
+		"@types/jest": "^27.5.2",
+		"nanoid": "^3.3.7"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.25.9",
+		"@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+		"@babel/preset-env": "^7.25.9",
+		"@babel/preset-typescript": "^7.25.9",
+		"@types/node": "^22.7.9",
+		"babel-jest": "^29.7.0",
+		"jest-extended": "^4.0.2",
+		"ts-node": "^10.9.2"
+	}
 }

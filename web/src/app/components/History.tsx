@@ -1,4 +1,4 @@
-import { HistoryItem } from "../core/models";
+import { HistoryItem } from "../../../../common/src/models";
 
 export type HistoryProps = {
 	history: HistoryItem[];
@@ -15,7 +15,7 @@ export function HistoryComponent(props: HistoryProps) {
 		const historyItemA = history[index];
 		const historyItemB = history[index + 1];
 		historyElements.push(
-			<div className="history-item">
+			<div className="history-item" key={index}>
 				{index / 2 + 1}.{" "}
 				<span
 					className={
@@ -46,7 +46,11 @@ export function HistoryComponent(props: HistoryProps) {
 	}
 
 	if (historyElements.length === 0) {
-		historyElements.push(<div className="history-item">1. ...</div>);
+		historyElements.push(
+			<div className="history-item" key={0}>
+				1. ...
+			</div>
+		);
 	}
 
 	return (

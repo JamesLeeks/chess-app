@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { BoardComponent } from "./Board";
-import { Game } from "../core/game";
-import { getStartingBoard } from "../core/board";
-import { HistoryItem, Position, PromotionType } from "../core/models";
+import { Game } from "../../../../common/src/game";
+import { getStartingBoard } from "../../../../common/src/board";
+import {
+	HistoryItem,
+	Position,
+	PromotionType,
+} from "../../../../common/src/models";
 import { HistoryComponent } from "./History";
 import { ClockComponent } from "./Clock";
 import { ResultComponent } from "./Result";
