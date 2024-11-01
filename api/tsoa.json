@@ -1,0 +1,13 @@
+{
+	"entryFile": "src/server.ts",
+	"noImplicitAdditionalProperties": "throw-on-extras",
+	"controllerPathGlobs": ["**/*Controller.ts"],
+	"spec": {
+		"name": "chess.james.leeks.net",
+		"outputDirectory": "build",
+		"specVersion": 3
+	},
+	"routes": {
+		"routesDir": "build"
+	}
+}
