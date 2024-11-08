@@ -13,7 +13,7 @@ test("castling", () => {
 		.makeMoveFromNotation("a4")
 		.makeMoveFromNotation("O-O");
 
-	const gameB = Game.fromJson(gameA.toJson());
+	const gameB = Game.fromJson(gameA.toJsonString());
 	compareHistories(gameA.history, gameB.history);
 	expect(gameA.id).toEqual(gameB.id);
 });

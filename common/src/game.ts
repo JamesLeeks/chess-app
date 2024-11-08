@@ -16,6 +16,14 @@ import { MoveParser } from "./moveParser";
 import { toNotation, toNotationSeperate } from "./position";
 import { nanoid } from "nanoid";
 
+export interface SerializedGame {
+	id: string;
+	moves: {
+		move: string;
+		time: string;
+	}[];
+}
+
 export class Game {
 	private _board: Board;
 	private _history: HistoryItem[];
@@ -27,14 +35,14 @@ export class Game {
 	private _id: string;
 
 	constructor(
-		board: Board,
+		board?: Board,
 		history?: HistoryItem[],
 		currentTurn?: PieceColour,
 		whiteTime?: number,
 		blackTime?: number,
 		id?: string
 	) {
-		this._board = board;
+		this._board = board ?? getStartingBoard();
 		this._history = history ?? [];
 		this._currentTurn = currentTurn ?? "white";
 		this._whiteTimeRemainingAtStartOfTurn = whiteTime ?? 45;
@@ -419,25 +427,29 @@ export class Game {
 		}
 		return game;
 	}
+	public toJsonString(): string {
+		const serialisedShape = this.toJsonObject();
 
-	public toJson(): string {
+		return JSON.stringify(serialisedShape);
+	}
+
+	public toJsonObject(): SerializedGame {
 		const moves = [];
 		for (let index = 0; index < this.history.length; index++) {
 			const historyItem = this.history[index];
 			moves.push({ move: historyItem.notation, time: "TODO" });
 		}
-		const serialisedShape = {
+		const serialisedGame = {
 			id: this.id,
 			moves,
 		};
-
-		// const serialisedShape = {
+		// const serialisedGame = {
 		// 	id: "TODO",
 		// 	moves: this.history.map((historyItem) => {
 		// 		return { move: historyItem.notation, time: "TODO" };
 		// 	}),
 		// };
-		return JSON.stringify(serialisedShape);
+		return serialisedGame;
 	}
 
 	public static fromJson(gameString: string) {
