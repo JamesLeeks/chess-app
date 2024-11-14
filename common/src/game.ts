@@ -454,6 +454,10 @@ export class Game {
 
 	public static fromJson(gameString: string) {
 		const jsonGame = JSON.parse(gameString);
+		return Game.fromJsonObject(jsonGame);
+	}
+
+	public static fromJsonObject(jsonGame: any) {
 		const id = jsonGame.id;
 		const moves = jsonGame.moves;
 		let game = new Game(getStartingBoard(), undefined, undefined, undefined, undefined, id);

@@ -4,7 +4,7 @@
 	"description": "Common code for chess api and web app",
 	"main": "index.js",
 	"scripts": {
-		"test": "react-scripts test"
+		"test": "jest"
 	},
 	"author": "James Leeks",
 	"license": "ISC",
