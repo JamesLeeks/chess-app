@@ -20,7 +20,10 @@ jobs:
               submodules: true
               lfs: false
          - run: |
-              cd web
+              cd common
+              npm install
+
+              cd ../web
               npm install
               npm run build
            name: npm install and build
