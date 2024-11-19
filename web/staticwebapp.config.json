@@ -1,5 +1,9 @@
 {
 	"mimeTypes": {
 		".tsx": "text/javascript"
+	},
+	"navigationFallback": {
+		"rewrite": "/index.html",
+		"exclude": ["/assets/*"]
 	}
 }
