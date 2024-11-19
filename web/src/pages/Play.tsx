@@ -21,7 +21,6 @@ export function Play() {
 			},
 		});
 		const responseBody = await response.json();
-		console.log(responseBody);
 		const game = Game.fromJsonObject(responseBody);
 		setGame(game);
 	}
@@ -31,7 +30,6 @@ export function Play() {
 			method: "GET",
 		});
 		const responseBody = await response.json();
-		console.log(responseBody);
 		const game = Game.fromJsonObject(responseBody);
 		setGame(game);
 	}

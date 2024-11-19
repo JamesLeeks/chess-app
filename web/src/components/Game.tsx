@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { BoardComponent } from "./Board";
 import { Game } from "../../../common/src/game";
-import { getStartingBoard } from "../../../common/src/board";
 import {
 	HistoryItem,
 	Position,

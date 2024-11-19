@@ -51,4 +51,5 @@ export interface HistoryItem {
 	player: PieceColour;
 	notation: string;
 	boardString: string;
+	timePlayed: number;
 }

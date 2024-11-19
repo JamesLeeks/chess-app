@@ -20,8 +20,16 @@ export interface SerializedGame {
 	id: string;
 	moves: {
 		move: string;
-		time: string;
+		time: number;
 	}[];
+	players: {
+		white: {
+			timeRemainingAtStartOfTurn: number;
+		};
+		black: {
+			timeRemainingAtStartOfTurn: number;
+		};
+	};
 }
 
 export class Game {
@@ -30,7 +38,6 @@ export class Game {
 	private _currentTurn: PieceColour;
 	private _whiteTimeRemainingAtStartOfTurn: number;
 	private _blackTimeRemainingAtStartOfTurn: number;
-	private _turnStartTime: Date;
 	private _gameResult: GameResultFull | undefined;
 	private _id: string;
 
@@ -47,7 +54,6 @@ export class Game {
 		this._currentTurn = currentTurn ?? "white";
 		this._whiteTimeRemainingAtStartOfTurn = whiteTime ?? 45;
 		this._blackTimeRemainingAtStartOfTurn = blackTime ?? 45;
-		this._turnStartTime = new Date();
 		this._gameResult = this.getGameResult();
 		this._id = id ?? nanoid();
 	}
@@ -68,10 +74,14 @@ export class Game {
 		return this._history;
 	}
 
+	private get turnStartTime(): number {
+		return this._history[this._history.length - 1].timePlayed;
+	}
+
 	public get whiteTime(): number {
 		if (this.currentTurn === "white" && this._history.length > 1 && !this._gameResult) {
 			const currentTime = new Date();
-			const timeSinceTurnStart = (currentTime.valueOf() - this._turnStartTime.valueOf()) / 1000;
+			const timeSinceTurnStart = (currentTime.valueOf() - this.turnStartTime) / 1000;
 			const timeRemaining = this._whiteTimeRemainingAtStartOfTurn - timeSinceTurnStart;
 			return Math.max(timeRemaining, 0);
 		}
@@ -81,7 +91,7 @@ export class Game {
 	public get blackTime(): number {
 		if (this.currentTurn === "black" && this._history.length > 1 && !this._gameResult) {
 			const currentTime = new Date();
-			const timeSinceTurnStart = (currentTime.valueOf() - this._turnStartTime.valueOf()) / 1000;
+			const timeSinceTurnStart = (currentTime.valueOf() - this.turnStartTime) / 1000;
 			const timeRemaining = this._blackTimeRemainingAtStartOfTurn - timeSinceTurnStart;
 			return Math.max(timeRemaining, 0);
 		}
@@ -342,7 +352,7 @@ export class Game {
 			boardAfterMove,
 			[
 				...this._history,
-				{ boardAfterMove, from, to, player: currentTurn, notation: "NOT A REAL VALUE", boardString },
+				{ boardAfterMove, from, to, player: currentTurn, notation: "NOT A REAL VALUE", boardString, timePlayed: 0 },
 			],
 			opponentColour
 		);
@@ -437,11 +447,16 @@ export class Game {
 		const moves = [];
 		for (let index = 0; index < this.history.length; index++) {
 			const historyItem = this.history[index];
-			moves.push({ move: historyItem.notation, time: "TODO" });
+			const timePlayed = historyItem.timePlayed;
+			moves.push({ move: historyItem.notation, time: timePlayed });
 		}
-		const serialisedGame = {
+		const serialisedGame: SerializedGame = {
 			id: this.id,
 			moves,
+			players: {
+				white: { timeRemainingAtStartOfTurn: this._whiteTimeRemainingAtStartOfTurn },
+				black: { timeRemainingAtStartOfTurn: this._blackTimeRemainingAtStartOfTurn },
+			},
 		};
 		// const serialisedGame = {
 		// 	id: "TODO",
@@ -457,14 +472,24 @@ export class Game {
 		return Game.fromJsonObject(jsonGame);
 	}
 
-	public static fromJsonObject(jsonGame: any) {
+	public static fromJsonObject(jsonGame: SerializedGame) {
 		const id = jsonGame.id;
 		const moves = jsonGame.moves;
-		let game = new Game(getStartingBoard(), undefined, undefined, undefined, undefined, id);
+		const whiteTimeRemainingAtStartOfTurn = jsonGame.players.white.timeRemainingAtStartOfTurn;
+		const blackTimeRemainingAtStartOfTurn = jsonGame.players.black.timeRemainingAtStartOfTurn;
+		let game = new Game(
+			getStartingBoard(),
+			undefined,
+			undefined,
+			whiteTimeRemainingAtStartOfTurn,
+			blackTimeRemainingAtStartOfTurn,
+			id
+		);
 
 		for (let index = 0; index < moves.length; index++) {
 			const moveString = moves[index].move;
-			game = game.makeMoveFromNotation(moveString);
+			const time = moves[index].time;
+			game = game.makeMoveFromNotation(moveString, time);
 		}
 		return game;
 	}
@@ -531,11 +556,11 @@ export class Game {
 			promotionType: parsedMove.promotionType,
 		};
 	}
-	makeMoveFromNotation(notation: string): Game {
+	makeMoveFromNotation(notation: string, moveTime?: number): Game {
 		const move = this.getMoveFromString(notation);
-		return this.makeMove(move.from, move.to, move.promotionType);
+		return this.makeMove(move.from, move.to, move.promotionType, moveTime);
 	}
-	makeMove(from: Position, to: Position, promotionType?: PromotionType): Game {
+	makeMove(from: Position, to: Position, promotionType?: PromotionType, moveTime?: number): Game {
 		const options = this.getMoveOptions(from);
 		const findItem = options.find((option) => option.row === to.row && option.column === to.column);
 		if (!findItem) {
@@ -546,6 +571,8 @@ export class Game {
 		// create a blank history
 		const newHistory = [];
 
+		const currentTime = new Date();
+
 		// create a history item and push it to the history
 		const newHistoryItem: HistoryItem = {
 			boardAfterMove: newBoard,
@@ -554,12 +581,15 @@ export class Game {
 			player: this._currentTurn,
 			notation: this.getMoveNotation(to, from, newBoard, this._board),
 			boardString: boardToString(newBoard),
+			timePlayed: moveTime ?? currentTime.valueOf(),
 		};
 		newHistory.push(...this._history, newHistoryItem);
 
 		// switch turn
 		const newTurn: PieceColour = this.currentTurn === "white" ? "black" : "white";
-		const newGame = new Game(newBoard, newHistory, newTurn, this.whiteTime, this.blackTime, this.id);
+		const whiteTimeRemaining = moveTime ? this._whiteTimeRemainingAtStartOfTurn : this.whiteTime;
+		const blackTimeRemaining = moveTime ? this._blackTimeRemainingAtStartOfTurn : this.blackTime;
+		const newGame = new Game(newBoard, newHistory, newTurn, whiteTimeRemaining, blackTimeRemaining, this.id);
 
 		// return updated game
 		return newGame;
