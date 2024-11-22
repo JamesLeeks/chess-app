@@ -16,7 +16,9 @@ RUN cd common \
 # Copy full source and build
 COPY api api
 COPY common common
-RUN cd api \
+RUN cd common \
+    && tsc \
+    && cd ../api \
     && npm run build
 
 CMD ["node", "./api/build/src/server.js"]
