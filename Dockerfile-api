@@ -1,0 +1,22 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy API package.json and run install
+COPY api/package.json ./api
+RUN cd api \
+    && npm install \
+    && npm install typescript -g
+
+# Copy common package.json and run install
+COPY common/package.json ./common
+RUN cd common \
+    && npm install
+
+# Copy full source and build
+COPY api api
+COPY common common
+RUN cd api \
+    && npm run build
+
+CMD ["node", "./api/build/src/server.js"]

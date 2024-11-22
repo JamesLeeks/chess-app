@@ -21,8 +21,7 @@ jobs:
               lfs: false
 
          - run: |
-              cd api
-              docker build . -t jamesleeks-chess-api
+              docker build . -f Dockerfile-api -t jamesleeks-chess-api
 
            name: Docker build api
 
