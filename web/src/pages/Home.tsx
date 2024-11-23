@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
+import { getApiBase } from "../getApiBase";
 
 export function Home() {
 	const navigate = useNavigate();
 	async function onClick() {
-		//TODO: don't hardcode the url
-		const response = await fetch("http://localhost:3000/games", {
+		const response = await fetch(`${getApiBase()}/games`, {
 			method: "POST",
 		});
 		const responseBody = await response.json();

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Game } from "../../../common/src/game";
 import { GameComponent } from "../components/Game";
 import { Position, PromotionType } from "../../../common/src/models";
+import { getApiBase } from "../getApiBase";
 
 export function Play() {
 	const { id } = useParams();
@@ -13,7 +14,7 @@ export function Play() {
 		to: Position,
 		promotionType?: PromotionType
 	) {
-		const response = await fetch(`http://localhost:3000/games/${id}/moves`, {
+		const response = await fetch(`${getApiBase()}/games/${id}/moves`, {
 			method: "POST",
 			body: JSON.stringify({ from, to, promotionType }),
 			headers: {
@@ -26,7 +27,7 @@ export function Play() {
 	}
 
 	async function getGame() {
-		const response = await fetch(`http://localhost:3000/games/${id}`, {
+		const response = await fetch(`${getApiBase()}/games/${id}`, {
 			method: "GET",
 		});
 		const responseBody = await response.json();
