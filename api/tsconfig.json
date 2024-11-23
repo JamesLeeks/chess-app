@@ -5,7 +5,7 @@
 		}
 	],
 	"compilerOptions": {
-		"outDir": "./build",
+		"outDir": "./dist",
 		"rootDir": "./",
 		"experimentalDecorators": true,
 		"resolveJsonModule": true,

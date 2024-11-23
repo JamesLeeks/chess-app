@@ -21,4 +21,7 @@ RUN cd common \
     && cd ../api \
     && npm run build
 
-CMD ["node", "./api/build/src/server.js"]
+RUN npm install -g ts-node
+
+# CMD ["node", "./api/dist/src/server.js"]
+CMD ["npx", "ts-node", "./api/src/server.ts"]
