@@ -39,6 +39,10 @@ jobs:
             lfs: false
 
       -  run: |
+            echo "IMAGE_NAME=${IMAGE_NAME@L}" >> "${GITHUB_ENV}"
+         name: Force repository and image to lowercase
+
+      -  run: |
             set -e
             docker build . -f Dockerfile-api -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
             docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
