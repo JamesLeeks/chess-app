@@ -3,6 +3,7 @@ import { Game } from "./models";
 import { SerializedGame } from "../../../common/src/game";
 import { gameService } from "./GameService";
 import { Position, PromotionType } from "../../../common/src/models";
+import { getServer } from "../socket";
 
 interface MakeMoveBody {
 	from: Position;
@@ -30,6 +31,10 @@ export class GamesController extends Controller {
 	public async makeMove(@Path() gameId: string, @Body() move: MakeMoveBody): Promise<SerializedGame> {
 		const newGame = gameService.makeMove(gameId, move.from, move.to, move.promotionType);
 
-		return newGame.toJsonObject();
+		const newGameJson = newGame.toJsonObject();
+		const io = getServer();
+		io.emit("gameUpdate", newGameJson);
+
+		return newGameJson;
 	}
 }

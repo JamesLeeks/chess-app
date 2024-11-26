@@ -1,13 +1,44 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Game } from "../../../common/src/game";
+import { Game, SerializedGame } from "../../../common/src/game";
 import { GameComponent } from "../components/Game";
 import { Position, PromotionType } from "../../../common/src/models";
 import { getApiBase } from "../getApiBase";
+import { io } from "socket.io-client";
+
+const socket = io(getApiBase());
 
 export function Play() {
 	const { id } = useParams();
 	const [game, setGame] = useState<Game | null>(null);
+	const [isConnected, setIsConnected] = useState(socket.connected);
+
+	console.log({ isConnected });
+
+	useEffect(() => {
+		function onConnect() {
+			setIsConnected(true);
+		}
+
+		function onDisconnect() {
+			setIsConnected(false);
+		}
+
+		function onGameUpdateEvent(g: SerializedGame) {
+			console.log({ g });
+			setGame(Game.fromJsonObject(g));
+		}
+
+		socket.on("connect", onConnect);
+		socket.on("disconnect", onDisconnect);
+		socket.on("gameUpdate", onGameUpdateEvent);
+
+		return () => {
+			socket.off("connect", onConnect);
+			socket.off("disconnect", onDisconnect);
+			socket.off("gameUpdate", onGameUpdateEvent);
+		};
+	}, []);
 
 	async function makeMove(
 		from: Position,
