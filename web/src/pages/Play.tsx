@@ -4,16 +4,30 @@ import { Game, SerializedGame } from "../../../common/src/game";
 import { GameComponent } from "../components/Game";
 import { Position, PromotionType } from "../../../common/src/models";
 import { getApiBase } from "../getApiBase";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
-const socket = io(getApiBase());
+// const socket = io(getApiBase(), {
+// 	auth: {
+// 		gameId: "wibble123",
+// 	},
+// });
+
+let socket: Socket | null = null;
 
 export function Play() {
 	const { id } = useParams();
 	const [game, setGame] = useState<Game | null>(null);
-	const [isConnected, setIsConnected] = useState(socket.connected);
+	const [isConnected, setIsConnected] = useState(false);
 
 	console.log({ isConnected });
+
+	if (!socket) {
+		socket = io(getApiBase(), {
+			auth: {
+				gameId: id,
+			},
+		});
+	}
 
 	useEffect(() => {
 		function onConnect() {

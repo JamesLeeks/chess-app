@@ -33,7 +33,7 @@ export class GamesController extends Controller {
 
 		const newGameJson = newGame.toJsonObject();
 		const io = getServer();
-		io.emit("gameUpdate", newGameJson);
+		io.to(`game-${gameId}`).emit("gameUpdate", newGameJson);
 
 		return newGameJson;
 	}
