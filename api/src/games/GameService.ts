@@ -7,9 +7,14 @@ export class GameService {
 	private games: Record<string, Game> = {};
 
 	public create(): Game {
-		const game = new Game();
-		this.games[game.id] = game;
-		return game;
+		for (let index = 0; index < 5; index++) {
+			const game = new Game();
+			if (!this.games[game.id]) {
+				this.games[game.id] = game;
+				return game;
+			}
+		}
+		throw new Error("Game id should be unique");
 	}
 
 	public get(id: string): Game | undefined {
