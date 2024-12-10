@@ -64,7 +64,7 @@ jobs:
             az login --service-principal --username ${ARM_CLIENT_ID} --password ${ARM_CLIENT_SECRET} --tenant ${ARM_TENANT_ID}
          name: Deploy API
          env:
-            ARM_CLIENT_SECRET=${{ secrets.ARM_CLIENT_SECRET }}
+            ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
    
 
       -  name: Build And Deploy
