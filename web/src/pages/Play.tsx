@@ -30,6 +30,9 @@ export function Play() {
 	}
 
 	useEffect(() => {
+		if (!socket) {
+			throw new Error("Socket should not be null");
+		}
 		function onConnect() {
 			setIsConnected(true);
 		}
@@ -48,9 +51,11 @@ export function Play() {
 		socket.on("gameUpdate", onGameUpdateEvent);
 
 		return () => {
-			socket.off("connect", onConnect);
-			socket.off("disconnect", onDisconnect);
-			socket.off("gameUpdate", onGameUpdateEvent);
+			if (socket) {
+				socket.off("connect", onConnect);
+				socket.off("disconnect", onDisconnect);
+				socket.off("gameUpdate", onGameUpdateEvent);
+			}
 		};
 	}, []);
 
