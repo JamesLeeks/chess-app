@@ -39,7 +39,8 @@ jobs:
             lfs: false
 
       -  run: |
-            echo "IMAGE_TAG=v${{ github.run_id }}" >> "${GITHUB_ENV}"
+            export IMAGE_TAG=v${{ github.run_id }}
+            echo "IMAGE_TAG=v${IMAGE_TAG}" >> "${GITHUB_ENV}"
             echo "IMAGE_NAME=${IMAGE_NAME@L}:${IMAGE_TAG}" >> "${GITHUB_ENV}"
          name: Force repository and image to lowercase
 
