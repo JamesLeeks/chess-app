@@ -40,7 +40,7 @@ jobs:
 
       -  run: |
             export IMAGE_TAG=v${{ github.run_id }}
-            echo "IMAGE_TAG=v${IMAGE_TAG}" >> "${GITHUB_ENV}"
+            echo "IMAGE_TAG=${IMAGE_TAG}" >> "${GITHUB_ENV}"
             echo "IMAGE_NAME=${IMAGE_NAME@L}:${IMAGE_TAG}" >> "${GITHUB_ENV}"
          name: Force repository and image to lowercase
 
@@ -62,11 +62,12 @@ jobs:
       -  run: |
             set -e
             az login --service-principal --username "${ARM_CLIENT_ID}" --password "${ARM_CLIENT_SECRET}" --tenant "${ARM_TENANT_ID}"
+            az containerapp update -n chess-api -g chess-app --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
          name: Deploy API
          env:
             ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-            ARM_CLIENT_ID: ${{ env.ARM_CLIENT_ID }}
-            ARM_TENANT_ID: ${{ env.ARM_TENANT_ID }}
+            ARM_CLIENT_ID: ${{ vars.ARM_CLIENT_ID }}
+            ARM_TENANT_ID: ${{ vars.ARM_TENANT_ID }}
    
 
       -  name: Build And Deploy
