@@ -4,9 +4,9 @@ import { Game } from "../../../common/src/game";
 import { Position, PromotionType } from "../../../common/src/models";
 
 export class GameService {
-	private games: Record<string, Game> = {};
+	private games: Record<string, Game> = {}; // DUMMY DATABASE
 
-	public create(): Game {
+	public async create(): Promise<Game> {
 		for (let index = 0; index < 5; index++) {
 			const game = new Game();
 			if (!this.games[game.id]) {
@@ -17,12 +17,12 @@ export class GameService {
 		throw new Error("Game id should be unique");
 	}
 
-	public get(id: string): Game | undefined {
+	public async get(id: string): Promise<Game | undefined> {
 		return this.games[id];
 	}
 
-	public makeMove(gameId: string, from: Position, to: Position, promotionType?: PromotionType): Game {
-		const game = this.get(gameId);
+	public async makeMove(gameId: string, from: Position, to: Position, promotionType?: PromotionType): Promise<Game> {
+		const game = await this.get(gameId);
 		if (!game) {
 			throw new Error("TODO: THINK ABOUT IT Game not found");
 		}
