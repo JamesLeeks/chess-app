@@ -34,6 +34,10 @@ export class GamesController extends Controller {
 	public async makeMove(@Path() gameId: string, @Body() move: MakeMoveBody): Promise<SerializedGame> {
 		const newGame = await gameService.makeMove(gameId, move.from, move.to, move.promotionType);
 
+		if (!newGame) {
+			throw new Error("TODO: 404 not found");
+		}
+
 		const newGameJson = newGame.toJsonObject();
 		const io = getServer();
 		io.to(`game-${gameId}`).emit("gameUpdate", newGameJson);

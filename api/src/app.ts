@@ -2,6 +2,8 @@ import express, { json, urlencoded, Response as ExResponse, Request as ExRequest
 import { RegisterRoutes } from "../build/routes";
 import swaggerUi from "swagger-ui-express";
 import cors from "cors";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 export const app = express();
 
