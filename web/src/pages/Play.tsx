@@ -18,6 +18,7 @@ export function Play() {
 	const { id } = useParams();
 	const [game, setGame] = useState<Game | null>(null);
 	const [isConnected, setIsConnected] = useState(false);
+	const [responseStatus, setResponseStatus] = useState<number | null>(null);
 
 	console.log({ isConnected });
 
@@ -33,6 +34,7 @@ export function Play() {
 		if (!socket) {
 			throw new Error("Socket should not be null");
 		}
+
 		function onConnect() {
 			setIsConnected(true);
 		}
@@ -81,13 +83,24 @@ export function Play() {
 			method: "GET",
 		});
 		const responseBody = await response.json();
+		setResponseStatus(response.status);
+		if (!response.ok) {
+			return;
+		}
 		const game = Game.fromJsonObject(responseBody);
 		setGame(game);
 	}
+
 	useEffect(function () {
 		getGame();
 	}, []);
 
+	if (responseStatus === 404) {
+		return <>404 Game not found.</>;
+	}
+	if (responseStatus && responseStatus >= 300) {
+		return <>Error code {responseStatus}</>;
+	}
 	if (!game) {
 		return <>loading...</>;
 	}

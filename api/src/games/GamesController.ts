@@ -4,6 +4,7 @@ import { SerializedGame } from "../../../common/src/game";
 import { gameService } from "./GameService";
 import { Position, PromotionType } from "../../../common/src/models";
 import { getServer } from "../socket";
+import { NotFoundError } from "../../errorMiddleware";
 
 interface MakeMoveBody {
 	from: Position;
@@ -25,8 +26,9 @@ export class GamesController extends Controller {
 	public async getGame(@Path() gameId: string): Promise<SerializedGame> {
 		const game = await gameService.get(gameId);
 		if (!game) {
-			throw new Error("TODO: 404 not found");
+			throw new NotFoundError();
 		}
+
 		return game.toJsonObject();
 	}
 
@@ -35,7 +37,7 @@ export class GamesController extends Controller {
 		const newGame = await gameService.makeMove(gameId, move.from, move.to, move.promotionType);
 
 		if (!newGame) {
-			throw new Error("TODO: 404 not found");
+			throw new NotFoundError();
 		}
 
 		const newGameJson = newGame.toJsonObject();

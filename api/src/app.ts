@@ -3,6 +3,7 @@ import { RegisterRoutes } from "../build/routes";
 import swaggerUi from "swagger-ui-express";
 import cors from "cors";
 import * as dotenv from "dotenv";
+import { RegisterErrorMiddleware } from "../errorMiddleware";
 dotenv.config();
 
 export const app = express();
@@ -21,3 +22,4 @@ app.use("/docs", swaggerUi.serve, async (_req: ExRequest, res: ExResponse) => {
 });
 
 RegisterRoutes(app);
+RegisterErrorMiddleware(app);
