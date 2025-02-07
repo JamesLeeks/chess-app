@@ -1,22 +1,33 @@
-import { useNavigate } from "react-router-dom";
-import { getApiBase } from "../getApiBase";
+import { Link } from "react-router-dom";
+import "../Home.css";
 
 export function Home() {
-	const navigate = useNavigate();
-	async function onClick() {
-		const response = await fetch(`${getApiBase()}/games`, {
-			method: "POST",
-		});
-		const responseBody = await response.json();
-		const id = responseBody.id;
-		console.log({ id });
-
-		navigate(`/play/${id}`);
-		return;
-	}
 	return (
 		<>
-			<button onClick={onClick}>New Game</button>
+			<div className="container">
+				<ul className="home-actions">
+					<li>
+						<Link className="button" to="/play/new">
+							new game
+						</Link>
+					</li>
+					<li>
+						<Link className="button" to="">
+							my games
+						</Link>
+					</li>
+					<li>
+						<Link className="button" to="/play/local">
+							local game
+						</Link>
+					</li>
+					<li>
+						<a className="button" href="/">
+							wibble
+						</a>
+					</li>
+				</ul>
+			</div>
 		</>
 	);
 }
