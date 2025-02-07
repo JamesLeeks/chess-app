@@ -5,6 +5,7 @@ import { GameComponent } from "../components/Game";
 import { Position, PromotionType } from "../../../common/src/models";
 import { getApiBase } from "../getApiBase";
 import { io, Socket } from "socket.io-client";
+import { getAuthorizationHeader } from "./getAuthorizationHeader";
 
 // const socket = io(getApiBase(), {
 // 	auth: {
@@ -22,43 +23,48 @@ export function Play() {
 
 	console.log({ isConnected });
 
-	if (!socket) {
-		socket = io(getApiBase(), {
-			auth: {
-				gameId: id,
-			},
-		});
-	}
-
 	useEffect(() => {
-		if (!socket) {
-			throw new Error("Socket should not be null");
-		}
-
-		function onConnect() {
-			setIsConnected(true);
-		}
-
-		function onDisconnect() {
-			setIsConnected(false);
-		}
-
-		function onGameUpdateEvent(g: SerializedGame) {
-			console.log({ g });
-			setGame(Game.fromJsonObject(g));
-		}
-
-		socket.on("connect", onConnect);
-		socket.on("disconnect", onDisconnect);
-		socket.on("gameUpdate", onGameUpdateEvent);
-
-		return () => {
-			if (socket) {
-				socket.off("connect", onConnect);
-				socket.off("disconnect", onDisconnect);
-				socket.off("gameUpdate", onGameUpdateEvent);
+		async function doIt() {
+			if (!socket) {
+				const authHeader = await getAuthorizationHeader();
+				if (!authHeader) {
+					throw new Error("401");
+				}
+				socket = io(getApiBase(), {
+					// transports: ["polling"],
+					extraHeaders: { authorization: authHeader },
+					auth: {
+						gameId: id,
+					},
+				});
 			}
-		};
+
+			function onConnect() {
+				setIsConnected(true);
+			}
+
+			function onDisconnect() {
+				setIsConnected(false);
+			}
+
+			function onGameUpdateEvent(g: SerializedGame) {
+				console.log({ g });
+				setGame(Game.fromJsonObject(g));
+			}
+
+			socket.on("connect", onConnect);
+			socket.on("disconnect", onDisconnect);
+			socket.on("gameUpdate", onGameUpdateEvent);
+
+			return () => {
+				if (socket) {
+					socket.off("connect", onConnect);
+					socket.off("disconnect", onDisconnect);
+					socket.off("gameUpdate", onGameUpdateEvent);
+				}
+			};
+		}
+		doIt();
 	}, []);
 
 	async function makeMove(
@@ -66,11 +72,16 @@ export function Play() {
 		to: Position,
 		promotionType?: PromotionType
 	) {
+		const authHeader = await getAuthorizationHeader();
+		if (!authHeader) {
+			return;
+		}
 		const response = await fetch(`${getApiBase()}/games/${id}/moves`, {
 			method: "POST",
 			body: JSON.stringify({ from, to, promotionType }),
 			headers: {
 				"content-type": "application/json",
+				Authorization: authHeader,
 			},
 		});
 		const responseBody = await response.json();
@@ -79,7 +90,12 @@ export function Play() {
 	}
 
 	async function getGame() {
+		const authHeader = await getAuthorizationHeader();
+		if (!authHeader) {
+			return;
+		}
 		const response = await fetch(`${getApiBase()}/games/${id}`, {
+			headers: { Authorization: authHeader },
 			method: "GET",
 		});
 		const responseBody = await response.json();

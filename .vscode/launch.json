@@ -17,6 +17,14 @@
 			"internalConsoleOptions": "neverOpen",
 			"disableOptimisticBPs": true,
 			"program": "${workspaceFolder}\\common\\node_modules\\jest\\bin\\jest"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Debug API",
+			"runtimeArgs": ["-r", "ts-node/register"],
+			"args": ["${workspaceFolder}/api/src/server.ts"],
+			"cwd": "${workspaceFolder}/api"
 		}
 	]
 }

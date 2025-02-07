@@ -1,6 +1,6 @@
 import { getStartingBoard } from "../src/board";
 import { Game } from "../src/game";
-import { compareHistories, getGame } from "./testHelpers";
+import { compareHistoryMoves, getGame } from "./testHelpers";
 
 test("2 move game history test", () => {
 	const initialBoard = getStartingBoard();
@@ -11,7 +11,7 @@ test("2 move game history test", () => {
 	const gameC = gameB.makeMove({ row: 1, column: 4 }, { row: 2, column: 4 });
 	const gameD = gameC.makeMove({ row: 6, column: 6 }, { row: 4, column: 6 });
 	const gameE = gameD.makeMove({ row: 0, column: 3 }, { row: 4, column: 7 });
-	compareHistories(gameFromString.history, gameE.history);
+	compareHistoryMoves(gameFromString.history, gameE.history);
 	expect(gameE.historyToString()).toEqual(historyString);
 });
 
@@ -28,7 +28,7 @@ test("check and en passant test", () => {
 		.makeMove({ row: 6, column: 6 }, { row: 5, column: 6 }) /* g3 */
 		.makeMove({ row: 1, column: 6 }, { row: 3, column: 6 }) /* g5 */
 		.makeMove({ row: 3, column: 5 }, { row: 2, column: 6 }); /* fxg6 */
-	compareHistories(gameFromString.history, gameB.history);
+	compareHistoryMoves(gameFromString.history, gameB.history);
 	expect(gameB.historyToString()).toEqual(historyString);
 });
 
@@ -45,6 +45,6 @@ test("castling", () => {
 		.makeMove({ row: 7, column: 5 }, { row: 6, column: 4 }) // Be2
 		.makeMove({ row: 3, column: 0 }, { row: 4, column: 0 }) // a4
 		.makeMove({ row: 7, column: 4 }, { row: 7, column: 6 }); // O-O
-	compareHistories(gameFromString.history, gameB.history);
+	compareHistoryMoves(gameFromString.history, gameB.history);
 	expect(gameB.historyToString()).toEqual(historyString);
 });

@@ -3,4 +3,7 @@ module.exports = {
 	//     '^.+\\.(ts|tsx)$': 'ts-jest',
 	// },
 	setupFilesAfterEnv: ["./setupTests.ts"],
+	typeAcquisition: {
+		include: ["jest"],
+	},
 };

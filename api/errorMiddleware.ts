@@ -9,6 +9,11 @@ export function RegisterErrorMiddleware(app: express.Application) {
 		res: express.Response,
 		next: express.NextFunction
 	) {
+		if (err instanceof UnauthorizedError) {
+			return res.status(401).json({
+				message: "Unauthorized",
+			});
+		}
 		if (err instanceof NotFoundError) {
 			return res.status(404).json({
 				message: "Not Found",
@@ -18,3 +23,5 @@ export function RegisterErrorMiddleware(app: express.Application) {
 		next();
 	});
 }
+
+export class UnauthorizedError extends Error {}

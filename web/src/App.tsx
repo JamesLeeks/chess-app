@@ -1,17 +1,37 @@
-import { Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { Home } from "./pages/Home";
+import { CreateGame } from "./pages/CreateGame";
 import { Play } from "./pages/Play";
 import { LocalGame } from "./pages/LocalGame";
+import { Home } from "./pages/Home";
+import { MsalAuthenticationTemplate, MsalProvider } from "@azure/msal-react";
+import { InteractionType, PublicClientApplication } from "@azure/msal-browser";
 
-function App() {
+function App({ instance }: { instance: PublicClientApplication }) {
 	return (
 		<>
-			<Routes>
-				<Route path="/home" element={<Home />} />
-				<Route path="/" element={<LocalGame />} />
-				<Route path="/play/:id" element={<Play />} />
-			</Routes>
+			<MsalProvider instance={instance}>
+				<Routes>
+					{/* Unauthenticated pages */}
+					<Route path="/" element={<Home />} />
+					<Route path="/play/local" element={<LocalGame />} />
+
+					{/* Pages that need the user signed in */}
+					<Route
+						element={
+							<MsalAuthenticationTemplate
+								interactionType={InteractionType.Redirect}
+							>
+								<Outlet />
+							</MsalAuthenticationTemplate>
+						}
+					>
+						{/* <Route path="/play/" element={<ListGames />} /> */}
+						<Route path="/play/new" element={<CreateGame />} />
+						<Route path="/play/:id" element={<Play />} />
+					</Route>
+				</Routes>
+			</MsalProvider>
 		</>
 	);
 }

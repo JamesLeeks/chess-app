@@ -16,8 +16,21 @@ import { MoveParser } from "./moveParser";
 import { toNotation, toNotationSeperate } from "./position";
 import { nanoid } from "nanoid";
 
+export interface GameOptions {
+	board?: Board;
+	history?: HistoryItem[];
+	currentTurn?: PieceColour;
+	whiteTime?: number;
+	blackTime?: number;
+	whiteTimeRemainingAtStartOfTurn?: number;
+	blackTimeRemainingAtStartOfTurn?: number;
+	id?: string;
+	ownerId?: string;
+}
+
 export interface SerializedGame {
 	id: string;
+	ownerId: string;
 	moves: {
 		move: string;
 		time: number;
@@ -40,22 +53,17 @@ export class Game {
 	private _blackTimeRemainingAtStartOfTurn: number;
 	private _gameResult: GameResultFull | undefined;
 	private _id: string;
+	private _ownerId: string | undefined;
 
-	constructor(
-		board?: Board,
-		history?: HistoryItem[],
-		currentTurn?: PieceColour,
-		whiteTime?: number,
-		blackTime?: number,
-		id?: string
-	) {
-		this._board = board ?? getStartingBoard();
-		this._history = history ?? [];
-		this._currentTurn = currentTurn ?? "white";
-		this._whiteTimeRemainingAtStartOfTurn = whiteTime ?? 45;
-		this._blackTimeRemainingAtStartOfTurn = blackTime ?? 45;
+	constructor(gameOptions?: GameOptions) {
+		this._board = gameOptions?.board ?? getStartingBoard();
+		this._history = gameOptions?.history ?? [];
+		this._currentTurn = gameOptions?.currentTurn ?? "white";
+		this._whiteTimeRemainingAtStartOfTurn = gameOptions?.whiteTime ?? 45;
+		this._blackTimeRemainingAtStartOfTurn = gameOptions?.blackTime ?? 45;
 		this._gameResult = this.getGameResult();
-		this._id = id ?? nanoid();
+		this._id = gameOptions?.id ?? nanoid();
+		this._ownerId = gameOptions?.ownerId;
 	}
 
 	public get id(): string {
@@ -96,6 +104,10 @@ export class Game {
 			return Math.max(timeRemaining, 0);
 		}
 		return this._blackTimeRemainingAtStartOfTurn;
+	}
+
+	public get ownerId(): string | undefined {
+		return this._ownerId;
 	}
 
 	private isThreeFoldRepetition(): boolean {
@@ -348,14 +360,14 @@ export class Game {
 		}
 
 		const boardString = boardToString(boardAfterMove);
-		const tempGame = new Game(
-			boardAfterMove,
-			[
+		const tempGame = new Game({
+			board: boardAfterMove,
+			history: [
 				...this._history,
 				{ boardAfterMove, from, to, player: currentTurn, notation: "NOT A REAL VALUE", boardString, timePlayed: 0 },
 			],
-			opponentColour
-		);
+			currentTurn: opponentColour,
+		});
 		if (isInCheckmate(tempGame)) {
 			check = "#";
 		}
@@ -429,7 +441,7 @@ export class Game {
 	}
 
 	public static getGameFromString(historyString: string): Game {
-		let game = new Game(getStartingBoard());
+		let game = new Game({ board: getStartingBoard() });
 		const notationArray = historyString.split(" ");
 		for (let index = 0; index < notationArray.length; index++) {
 			const notation = notationArray[index];
@@ -450,8 +462,12 @@ export class Game {
 			const timePlayed = historyItem.timePlayed;
 			moves.push({ move: historyItem.notation, time: timePlayed });
 		}
+		if (!this.ownerId) {
+			throw new Error("Must have user id to serialize");
+		}
 		const serialisedGame: SerializedGame = {
 			id: this.id,
+			ownerId: this.ownerId,
 			moves,
 			players: {
 				white: { timeRemainingAtStartOfTurn: this._whiteTimeRemainingAtStartOfTurn },
@@ -477,14 +493,14 @@ export class Game {
 		const moves = jsonGame.moves;
 		const whiteTimeRemainingAtStartOfTurn = jsonGame.players.white.timeRemainingAtStartOfTurn;
 		const blackTimeRemainingAtStartOfTurn = jsonGame.players.black.timeRemainingAtStartOfTurn;
-		let game = new Game(
-			getStartingBoard(),
-			undefined,
-			undefined,
+		const ownerId = jsonGame.ownerId;
+		let game = new Game({
+			board: getStartingBoard(),
 			whiteTimeRemainingAtStartOfTurn,
 			blackTimeRemainingAtStartOfTurn,
-			id
-		);
+			id,
+			ownerId,
+		});
 
 		for (let index = 0; index < moves.length; index++) {
 			const moveString = moves[index].move;
@@ -589,7 +605,15 @@ export class Game {
 		const newTurn: PieceColour = this.currentTurn === "white" ? "black" : "white";
 		const whiteTimeRemaining = moveTime ? this._whiteTimeRemainingAtStartOfTurn : this.whiteTime;
 		const blackTimeRemaining = moveTime ? this._blackTimeRemainingAtStartOfTurn : this.blackTime;
-		const newGame = new Game(newBoard, newHistory, newTurn, whiteTimeRemaining, blackTimeRemaining, this.id);
+		const newGame = new Game({
+			board: newBoard,
+			history: newHistory,
+			currentTurn: newTurn,
+			whiteTime: whiteTimeRemaining,
+			blackTime: blackTimeRemaining,
+			id: this.id,
+			ownerId: this.ownerId,
+		});
 
 		// return updated game
 		return newGame;

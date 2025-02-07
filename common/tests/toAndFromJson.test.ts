@@ -1,10 +1,10 @@
 import { getStartingBoard } from "../src/board";
 import { Game } from "../src/game";
-import { getGame, compareHistories } from "./testHelpers";
+import { getGame, compareHistoryMoves } from "./testHelpers";
 
 test("castling", () => {
 	const initialBoard = getStartingBoard();
-	const gameA = getGame(initialBoard)
+	const gameA = getGame(initialBoard, undefined, undefined, undefined, "FAKE_ID")
 		.makeMoveFromNotation("Nf3")
 		.makeMoveFromNotation("a6")
 		.makeMoveFromNotation("e3")
@@ -14,6 +14,6 @@ test("castling", () => {
 		.makeMoveFromNotation("O-O");
 
 	const gameB = Game.fromJson(gameA.toJsonString());
-	compareHistories(gameA.history, gameB.history);
+	compareHistoryMoves(gameA.history, gameB.history);
 	expect(gameA.id).toEqual(gameB.id);
 });

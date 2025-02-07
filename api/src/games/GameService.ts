@@ -30,17 +30,17 @@ export class GameService {
 		return container;
 	}
 
-	public async create(): Promise<Game> {
+	public async create(ownerId: string): Promise<Game> {
 		const container = await this.getContainer();
 
-		const game = new Game();
+		const game = new Game({ ownerId });
 
 		await container.items.create(game.toJsonObject());
 
 		return game;
 	}
 
-	public async get(id: string): Promise<Game | undefined> {
+	public async get(id: string): Promise<{ game: Game; etag: string } | undefined> {
 		const container = await this.getContainer();
 		const partitionKey = id;
 
@@ -50,31 +50,27 @@ export class GameService {
 			return undefined;
 		}
 
-		return Game.fromJsonObject(response.resource);
+		return {
+			game: Game.fromJsonObject(response.resource),
+			etag: response.etag,
+		};
 	}
 
 	public async makeMove(
-		gameId: string,
+		game: Game,
+		etag: string,
 		from: Position,
 		to: Position,
 		promotionType?: PromotionType
 	): Promise<Game | undefined> {
 		const container = await this.getContainer();
-		const partitionKey = gameId;
 
-		const response: ItemResponse<SerializedGame> = await container.item(gameId, partitionKey).read<SerializedGame>();
-
-		if (!response.resource) {
-			return undefined;
-		}
-
-		const game = Game.fromJsonObject(response.resource);
 		const newGame = game.makeMove(from, to, promotionType);
 
 		await container.items.upsert(newGame.toJsonObject(), {
 			accessCondition: {
 				type: "IfMatch",
-				condition: response.etag,
+				condition: etag,
 			},
 		});
 
