@@ -1,0 +1,6 @@
+{
+	//Only including this here to get VSCode completion for jest functions such as text/expect
+	"compilerOptions": {
+		"types": ["node", "jest"]
+	}
+}

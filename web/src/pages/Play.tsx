@@ -18,10 +18,8 @@ let socket: Socket | null = null;
 export function Play() {
 	const { id } = useParams();
 	const [game, setGame] = useState<Game | null>(null);
-	const [isConnected, setIsConnected] = useState(false);
+	// const [isConnected, setIsConnected] = useState(false);
 	const [responseStatus, setResponseStatus] = useState<number | null>(null);
-
-	console.log({ isConnected });
 
 	useEffect(() => {
 		async function doIt() {
@@ -39,27 +37,27 @@ export function Play() {
 				});
 			}
 
-			function onConnect() {
-				setIsConnected(true);
-			}
+			// function onConnect() {
+			// 	setIsConnected(true);
+			// }
 
-			function onDisconnect() {
-				setIsConnected(false);
-			}
+			// function onDisconnect() {
+			// 	setIsConnected(false);
+			// }
 
 			function onGameUpdateEvent(g: SerializedGame) {
-				console.log({ g });
+				console.log("on game update", { g });
 				setGame(Game.fromJsonObject(g));
 			}
 
-			socket.on("connect", onConnect);
-			socket.on("disconnect", onDisconnect);
+			// socket.on("connect", onConnect);
+			// socket.on("disconnect", onDisconnect);
 			socket.on("gameUpdate", onGameUpdateEvent);
 
 			return () => {
 				if (socket) {
-					socket.off("connect", onConnect);
-					socket.off("disconnect", onDisconnect);
+					// socket.off("connect", onConnect);
+					// socket.off("disconnect", onDisconnect);
 					socket.off("gameUpdate", onGameUpdateEvent);
 				}
 			};
@@ -104,6 +102,10 @@ export function Play() {
 			return;
 		}
 		const game = Game.fromJsonObject(responseBody);
+		console.log("game loaded", {
+			whiteTime: game.whiteTime,
+			blackTime: game.blackTime,
+		});
 		setGame(game);
 	}
 

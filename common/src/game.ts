@@ -22,8 +22,6 @@ export interface GameOptions {
 	currentTurn?: PieceColour;
 	whiteTime?: number;
 	blackTime?: number;
-	whiteTimeRemainingAtStartOfTurn?: number;
-	blackTimeRemainingAtStartOfTurn?: number;
 	id?: string;
 	ownerId?: string;
 }
@@ -449,6 +447,7 @@ export class Game {
 		}
 		return game;
 	}
+
 	public toJsonString(): string {
 		const serialisedShape = this.toJsonObject();
 
@@ -463,7 +462,7 @@ export class Game {
 			moves.push({ move: historyItem.notation, time: timePlayed });
 		}
 		if (!this.ownerId) {
-			throw new Error("Must have user id to serialize");
+			throw new Error("Must have owner id to serialize");
 		}
 		const serialisedGame: SerializedGame = {
 			id: this.id,
@@ -496,8 +495,8 @@ export class Game {
 		const ownerId = jsonGame.ownerId;
 		let game = new Game({
 			board: getStartingBoard(),
-			whiteTimeRemainingAtStartOfTurn,
-			blackTimeRemainingAtStartOfTurn,
+			whiteTime: whiteTimeRemainingAtStartOfTurn,
+			blackTime: blackTimeRemainingAtStartOfTurn,
 			id,
 			ownerId,
 		});
@@ -572,10 +571,12 @@ export class Game {
 			promotionType: parsedMove.promotionType,
 		};
 	}
+
 	makeMoveFromNotation(notation: string, moveTime?: number): Game {
 		const move = this.getMoveFromString(notation);
 		return this.makeMove(move.from, move.to, move.promotionType, moveTime);
 	}
+
 	makeMove(from: Position, to: Position, promotionType?: PromotionType, moveTime?: number): Game {
 		const options = this.getMoveOptions(from);
 		const findItem = options.find((option) => option.row === to.row && option.column === to.column);
