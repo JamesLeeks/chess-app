@@ -1,10 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { getApiBase } from "../getApiBase";
 import { getAuthorizationHeader } from "./getAuthorizationHeader";
+import { useState } from "react";
 
 export function CreateGame() {
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+
 	const navigate = useNavigate();
+
 	async function onClick() {
+		setIsLoading(true);
+
 		// call api
 		const authHeader = await getAuthorizationHeader();
 		if (!authHeader) {
@@ -21,10 +27,14 @@ export function CreateGame() {
 		navigate(`/play/${id}`);
 		return;
 	}
+
 	return (
 		<>
 			<p>TODO - add game settings here</p>
-			<button onClick={onClick}>New Game</button>
+			<div>{isLoading ? "Loading..." : ""}</div>
+			<button onClick={onClick} disabled={isLoading}>
+				New Game
+			</button>
 		</>
 	);
 }
