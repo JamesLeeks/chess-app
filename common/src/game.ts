@@ -91,6 +91,11 @@ export class Game {
 			const timeRemaining = this._whiteTimeRemainingAtStartOfTurn - timeSinceTurnStart;
 			return Math.max(timeRemaining, 0);
 		}
+
+		if (this._gameResult?.reason === "whiteTimeOut") {
+			return 0;
+		}
+
 		return this._whiteTimeRemainingAtStartOfTurn;
 	}
 
@@ -101,6 +106,11 @@ export class Game {
 			const timeRemaining = this._blackTimeRemainingAtStartOfTurn - timeSinceTurnStart;
 			return Math.max(timeRemaining, 0);
 		}
+
+		if (this._gameResult?.reason === "blackTimeOut") {
+			return 0;
+		}
+
 		return this._blackTimeRemainingAtStartOfTurn;
 	}
 

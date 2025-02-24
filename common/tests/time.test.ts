@@ -27,7 +27,7 @@ test("make moves and check time", async () => {
 	expect(game.blackTime).toBeLessThan(44);
 }, 10000 /*10s timeout */);
 
-test("make moves and check time?", async () => {
+test("make moves and check time from game state", async () => {
 	let game = getGame(getStartingBoard(), undefined, undefined, "white", "FAKEID");
 	game = game.makeMove(position("e2"), position("e4")); // white
 	game = game.makeMove(position("e7"), position("e5")); // black
@@ -35,6 +35,7 @@ test("make moves and check time?", async () => {
 	game = game.makeMove(position("d2"), position("d4")); // white
 	game = game.makeMove(position("d7"), position("d5")); // black
 	expect(game.whiteTime).toBeLessThan(44);
+	expect(game.whiteTime).toBeGreaterThan(42);
 
 	const gameState = game.toJsonString();
 	await delay(2000);
@@ -42,4 +43,17 @@ test("make moves and check time?", async () => {
 
 	game = Game.fromJson(gameState);
 	expect(game.whiteTime).toBeLessThan(42);
+}, 10000 /*10s timeout */);
+
+test("make moves and check time from game state when time is zero", async () => {
+	let game = getGame(getStartingBoard(), 2, undefined, "white", "FAKEID");
+	game = game.makeMove(position("e2"), position("e4")); // white
+	game = game.makeMove(position("e7"), position("e5")); // black
+	await delay(2000);
+	expect(game.whiteTime).toBeLessThanOrEqual(0);
+
+	const gameState = game.toJsonString();
+	game = Game.fromJson(gameState);
+
+	expect(game.whiteTime).toBeLessThanOrEqual(0);
 }, 10000 /*10s timeout */);
