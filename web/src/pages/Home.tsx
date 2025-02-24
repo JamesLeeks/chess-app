@@ -21,11 +21,6 @@ export function Home() {
 							local game
 						</Link>
 					</li>
-					<li>
-						<a className="button" href="/">
-							wibble
-						</a>
-					</li>
 				</ul>
 			</div>
 		</>
