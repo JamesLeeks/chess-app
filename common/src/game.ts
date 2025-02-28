@@ -24,6 +24,7 @@ export interface GameOptions {
 	blackTime?: number;
 	id?: string;
 	ownerId?: string;
+	startingTime?: number;
 }
 
 export interface SerializedGame {
@@ -47,6 +48,7 @@ export class Game {
 	private _board: Board;
 	private _history: HistoryItem[];
 	private _currentTurn: PieceColour;
+	private _startingTime: number;
 	private _whiteTimeRemainingAtStartOfTurn: number;
 	private _blackTimeRemainingAtStartOfTurn: number;
 	private _gameResult: GameResultFull | undefined;
@@ -57,8 +59,9 @@ export class Game {
 		this._board = gameOptions?.board ?? getStartingBoard();
 		this._history = gameOptions?.history ?? [];
 		this._currentTurn = gameOptions?.currentTurn ?? "white";
-		this._whiteTimeRemainingAtStartOfTurn = gameOptions?.whiteTime ?? 45;
-		this._blackTimeRemainingAtStartOfTurn = gameOptions?.blackTime ?? 45;
+		this._startingTime = gameOptions?.startingTime ?? 45;
+		this._whiteTimeRemainingAtStartOfTurn = gameOptions?.whiteTime ?? this._startingTime;
+		this._blackTimeRemainingAtStartOfTurn = gameOptions?.blackTime ?? this._startingTime;
 		this._gameResult = this.getGameResult();
 		this._id = gameOptions?.id ?? nanoid();
 		this._ownerId = gameOptions?.ownerId;

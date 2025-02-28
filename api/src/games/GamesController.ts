@@ -14,17 +14,24 @@ interface MakeMoveBody {
 	promotionType?: PromotionType;
 }
 
+interface AddGameOptions {
+	startingTime: number;
+}
+
 @Route("games")
 export class GamesController extends Controller {
 	@Security("AADB2C")
 	@Post()
 	public async addGame(
 		@Request()
-		req: express.Request
+		req: express.Request,
+		@Body()
+		options: AddGameOptions
 	): Promise<{ id: string }> {
 		const userId = ensureUserId(req);
+		// const startingTime = 9999;
 
-		const game = await gameService.create(userId);
+		const game = await gameService.create(userId, options.startingTime);
 		return {
 			id: game.id,
 		};

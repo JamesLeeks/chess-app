@@ -30,10 +30,10 @@ export class GameService {
 		return container;
 	}
 
-	public async create(ownerId: string): Promise<Game> {
+	public async create(ownerId: string, startingTime: number): Promise<Game> {
 		const container = await this.getContainer();
 
-		const game = new Game({ ownerId });
+		const game = new Game({ ownerId, startingTime: startingTime });
 
 		await container.items.create(game.toJsonObject());
 
