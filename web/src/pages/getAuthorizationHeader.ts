@@ -1,11 +1,9 @@
 import { InteractionRequiredAuthError } from "@azure/msal-browser";
 import { msalInstance } from "../main";
 
-function getMsalAccount() {
+export function getMsalAccount() {
 	const currentAccounts = msalInstance.getAllAccounts();
-	const filteredAccounts = currentAccounts.filter(
-		(a) => a.environment === "chessapp.b2clogin.com"
-	);
+	const filteredAccounts = currentAccounts.filter((a) => a.environment === "chessapp.b2clogin.com");
 
 	if (filteredAccounts.length === 0) {
 		return null;

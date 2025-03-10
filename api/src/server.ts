@@ -40,13 +40,13 @@ io.on("connection", (socket: Socket) => {
 		const gameId = socket.handshake.auth.gameId;
 		const reqAny = socket.request as any;
 		const user = reqAny.user;
-		console.log("User connected.", { gameId, user });
+		// console.log("User connected.", { gameId, user });
 		if (gameId) {
 			const response = await gameService.get(gameId);
-			if (user.id === response?.game.ownerId) {
+			if (user.id === response?.game.ownerId || user.id === response?.game.playerId) {
 				socket.join(`game-${gameId}`);
-			} else {
-				console.log("user not authorised to see game");
+			} else if (response?.game.playerId) {
+				console.log("from server.ts: user not authorised to see game", user.id, response?.game.playerId);
 			}
 		} else {
 			console.log("expected game id");

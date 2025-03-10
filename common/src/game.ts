@@ -1,3 +1,4 @@
+import { json } from "stream/consumers";
 import { boardToString, getBoardAfterMove, getStartingBoard } from "./board";
 import { getBaseMoveOptions } from "./getMoveOptions";
 import { isInCheck, isInCheckmate, isInStalemate } from "./isInCheck";
@@ -24,12 +25,15 @@ export interface GameOptions {
 	blackTime?: number;
 	id?: string;
 	ownerId?: string;
-	startingTime?: number;
+	playerId?: string;
+	ownerSide?: PieceColour;
 }
 
 export interface SerializedGame {
 	id: string;
 	ownerId: string;
+	playerId?: string;
+	ownerSide: PieceColour;
 	moves: {
 		move: string;
 		time: number;
@@ -48,23 +52,25 @@ export class Game {
 	private _board: Board;
 	private _history: HistoryItem[];
 	private _currentTurn: PieceColour;
-	private _startingTime: number;
 	private _whiteTimeRemainingAtStartOfTurn: number;
 	private _blackTimeRemainingAtStartOfTurn: number;
 	private _gameResult: GameResultFull | undefined;
-	private _id: string;
-	private _ownerId: string | undefined;
+	private _id: string; // game id
+	private _ownerId: string | undefined; // id of 1st (owner) player
+	private _playerId: string | undefined; // id of 2nd player
+	private _ownerSide: PieceColour;
 
 	constructor(gameOptions?: GameOptions) {
 		this._board = gameOptions?.board ?? getStartingBoard();
 		this._history = gameOptions?.history ?? [];
 		this._currentTurn = gameOptions?.currentTurn ?? "white";
-		this._startingTime = gameOptions?.startingTime ?? 45;
-		this._whiteTimeRemainingAtStartOfTurn = gameOptions?.whiteTime ?? this._startingTime;
-		this._blackTimeRemainingAtStartOfTurn = gameOptions?.blackTime ?? this._startingTime;
+		this._whiteTimeRemainingAtStartOfTurn = gameOptions?.whiteTime ?? 45;
+		this._blackTimeRemainingAtStartOfTurn = gameOptions?.blackTime ?? 45;
 		this._gameResult = this.getGameResult();
 		this._id = gameOptions?.id ?? nanoid();
 		this._ownerId = gameOptions?.ownerId;
+		this._ownerSide = gameOptions?.ownerSide ?? "white";
+		this._playerId = gameOptions?.playerId;
 	}
 
 	public get id(): string {
@@ -119,6 +125,14 @@ export class Game {
 
 	public get ownerId(): string | undefined {
 		return this._ownerId;
+	}
+
+	public get ownerSide(): PieceColour | undefined {
+		return this._ownerSide;
+	}
+
+	public get playerId(): string | undefined {
+		return this._playerId;
 	}
 
 	private isThreeFoldRepetition(): boolean {
@@ -480,6 +494,8 @@ export class Game {
 		const serialisedGame: SerializedGame = {
 			id: this.id,
 			ownerId: this.ownerId,
+			playerId: this._playerId ?? undefined,
+			ownerSide: this._ownerSide,
 			moves,
 			players: {
 				white: { timeRemainingAtStartOfTurn: this._whiteTimeRemainingAtStartOfTurn },
@@ -503,6 +519,8 @@ export class Game {
 	public static fromJsonObject(jsonGame: SerializedGame) {
 		const id = jsonGame.id;
 		const moves = jsonGame.moves;
+		const playerId = jsonGame.playerId;
+		const ownerSide = jsonGame.ownerSide;
 		const whiteTimeRemainingAtStartOfTurn = jsonGame.players.white.timeRemainingAtStartOfTurn;
 		const blackTimeRemainingAtStartOfTurn = jsonGame.players.black.timeRemainingAtStartOfTurn;
 		const ownerId = jsonGame.ownerId;
@@ -512,6 +530,8 @@ export class Game {
 			blackTime: blackTimeRemainingAtStartOfTurn,
 			id,
 			ownerId,
+			playerId,
+			ownerSide,
 		});
 
 		for (let index = 0; index < moves.length; index++) {
@@ -591,12 +611,15 @@ export class Game {
 	}
 
 	makeMove(from: Position, to: Position, promotionType?: PromotionType, moveTime?: number): Game {
+		// get a list of all possible move options
 		const options = this.getMoveOptions(from);
+		// find the move option in options, and check that it exists (which means the move is valid)
 		const findItem = options.find((option) => option.row === to.row && option.column === to.column);
 		if (!findItem) {
 			throw new Error(`Piece cannot move from ${toNotation(from)} to ${toNotation(to)}`);
 		}
-		// create a new game after move
+
+		// create a new board after move
 		const newBoard = getBoardAfterMove(this._board, from, to, { promotionType });
 		// create a blank history
 		const newHistory = [];
@@ -627,6 +650,7 @@ export class Game {
 			blackTime: blackTimeRemaining,
 			id: this.id,
 			ownerId: this.ownerId,
+			playerId: this.playerId,
 		});
 
 		// return updated game

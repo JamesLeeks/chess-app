@@ -53,16 +53,16 @@ export function GameComponent(params: GameComponentParams) {
 		if (selectedSquare) {
 			// there's a selected piece - move it
 			if (game.board[row][column]?.colour === game.currentTurn) {
-				// if it's their turn:
-				// update selected square and move options for new selected piece
+				// switch selected square - player has clicked on a different piece of their own colour
 				const newSelectedSquare = { row: row, column: column };
 				setSelectedSquare({ row: row, column: column });
 				setMoveOptions(game.getMoveOptions(newSelectedSquare));
 			} else {
-				// not their turn
+				// player has clicked on an empty square or opponent's piece
 				const foundMoveOption = moveOptions.find(
 					(pos) => pos.row === row && pos.column === column
 				);
+
 				if (foundMoveOption) {
 					// clicked on a move option for the selected piece => move it!
 					const promotionRow = game.currentTurn === "black" ? 7 : 0;

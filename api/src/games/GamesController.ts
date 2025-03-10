@@ -3,7 +3,7 @@ import { Game } from "./models";
 import * as express from "express";
 import { SerializedGame } from "../../../common/src/game";
 import { gameService } from "./GameService";
-import { Position, PromotionType } from "../../../common/src/models";
+import { PieceColour, Position, PromotionType } from "../../../common/src/models";
 import { getServer } from "../socket";
 import { NotFoundError, UnauthorizedError } from "../../errorMiddleware";
 import { ensureUserId, getUserIdFromRequest } from "../../authentication";
@@ -16,6 +16,7 @@ interface MakeMoveBody {
 
 interface AddGameOptions {
 	startingTime: number;
+	ownerSide: PieceColour;
 }
 
 @Route("games")
@@ -29,9 +30,27 @@ export class GamesController extends Controller {
 		options: AddGameOptions
 	): Promise<{ id: string }> {
 		const userId = ensureUserId(req);
-		// const startingTime = 9999;
 
-		const game = await gameService.create(userId, options.startingTime);
+		const game = await gameService.create(userId, options.startingTime, options.ownerSide);
+		return {
+			id: game.id,
+		};
+	}
+
+	@Security("AADB2C")
+	@Post("{gameId}/addPlayer")
+	public async addPlayer(
+		@Request()
+		req: express.Request,
+		@Path()
+		gameId: string
+		// @Body()
+		// options: AddGameOptions
+	): Promise<{ id: string }> {
+		const userId = ensureUserId(req);
+
+		// const game = await gameService.create(userId, options.startingTime, options.ownerSide);
+		const game = await gameService.addPlayer(gameId, userId);
 		return {
 			id: game.id,
 		};
@@ -48,8 +67,15 @@ export class GamesController extends Controller {
 		const userId = ensureUserId(req);
 
 		const response = await gameService.get(gameId);
-		if (!response || userId !== response.game.ownerId) {
+		if (!response) {
+			console.log("from GamesController.ts: ACTUAL NOT FOUND ERROR");
 			throw new NotFoundError();
+		}
+		if (response.game.playerId) {
+			if (userId !== response.game.ownerId && userId !== response.game.playerId) {
+				console.log("from GamesController.ts: help");
+				throw new NotFoundError();
+			}
 		}
 
 		return response.game.toJsonObject();
@@ -68,7 +94,8 @@ export class GamesController extends Controller {
 		const userId = ensureUserId(req);
 
 		const response = await gameService.get(gameId);
-		if (!response || userId !== response.game.ownerId) {
+
+		if (!response || (userId !== response.game.ownerId && userId !== response.game.playerId)) {
 			throw new NotFoundError();
 		}
 

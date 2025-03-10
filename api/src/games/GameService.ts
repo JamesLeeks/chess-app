@@ -1,6 +1,6 @@
 import { DefaultAzureCredential, TokenCredential } from "@azure/identity";
 import { Game, SerializedGame } from "../../../common/src/game";
-import { Position, PromotionType } from "../../../common/src/models";
+import { PieceColour, Position, PromotionType } from "../../../common/src/models";
 import { Container, CosmosClient, ItemResponse } from "@azure/cosmos";
 
 export class GameService {
@@ -30,14 +30,50 @@ export class GameService {
 		return container;
 	}
 
-	public async create(ownerId: string, startingTime: number): Promise<Game> {
+	public async create(ownerId: string, startingTime: number, ownerSide: PieceColour): Promise<Game> {
 		const container = await this.getContainer();
 
-		const game = new Game({ ownerId, startingTime: startingTime });
+		const game = new Game({ ownerId, whiteTime: startingTime, blackTime: startingTime, ownerSide });
 
 		await container.items.create(game.toJsonObject());
 
 		return game;
+	}
+
+	public async addPlayer(gameId: string, playerId: string): Promise<Game> {
+		const container = await this.getContainer();
+
+		// const game = new Game({ ownerId, whiteTime: startingTime, blackTime: startingTime, ownerSide });
+		const response = await this.get(gameId);
+
+		if (!response) {
+			throw new Error("404 not found");
+		}
+
+		// TODO: only do this if player id is not set
+
+		const game = new Game({
+			blackTime: response.game.blackTime,
+			whiteTime: response.game.whiteTime,
+			board: response.game.board,
+			currentTurn: response.game.currentTurn,
+			history: response.game.history,
+			id: response.game.id,
+			ownerId: response.game.ownerId,
+			ownerSide: response.game.ownerSide,
+			playerId: playerId,
+		});
+
+		console.log("gammee id", game.playerId);
+
+		await container.items.upsert(game.toJsonObject(), {
+			accessCondition: {
+				type: "IfMatch",
+				condition: response.etag,
+			},
+		});
+
+		return response.game;
 	}
 
 	public async get(id: string): Promise<{ game: Game; etag: string } | undefined> {

@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Game, SerializedGame } from "../../../common/src/game";
 import { GameComponent } from "../components/Game";
 import { Position, PromotionType } from "../../../common/src/models";
 import { getApiBase } from "../getApiBase";
 import { io, Socket } from "socket.io-client";
-import { getAuthorizationHeader } from "./getAuthorizationHeader";
+import {
+	getAuthorizationHeader,
+	getMsalAccount,
+} from "./getAuthorizationHeader";
 
 // const socket = io(getApiBase(), {
 // 	auth: {
@@ -20,10 +23,14 @@ export function Play() {
 	const [game, setGame] = useState<Game | null>(null);
 	// const [isConnected, setIsConnected] = useState(false);
 	const [responseStatus, setResponseStatus] = useState<number | null>(null);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const userId = getMsalAccount()?.localAccountId;
 
 	useEffect(() => {
 		async function doIt() {
 			if (!socket) {
+				const game = await getGame();
+
 				const authHeader = await getAuthorizationHeader();
 				if (!authHeader) {
 					throw new Error("401");
@@ -35,6 +42,14 @@ export function Play() {
 						gameId: id,
 					},
 				});
+				console.log("socket setup", { game });
+				if (
+					game?.playerId &&
+					userId !== game?.playerId &&
+					userId !== game?.ownerId
+				) {
+					throw new Error("401");
+				}
 			}
 
 			// function onConnect() {
@@ -107,11 +122,37 @@ export function Play() {
 			blackTime: game.blackTime,
 		});
 		setGame(game);
+		return game;
 	}
 
-	useEffect(function () {
-		getGame();
-	}, []);
+	const navigate = useNavigate();
+
+	async function onclick() {
+		setIsLoading(true);
+
+		// call api
+		const authHeader = await getAuthorizationHeader();
+		if (!authHeader) {
+			return;
+		}
+
+		const response = await fetch(
+			`${getApiBase()}/games/${game?.id}/addPlayer`,
+			{
+				headers: {
+					"content-type": "application/json",
+					Authorization: authHeader,
+				},
+				method: "POST",
+			}
+		);
+		const responseBody = await response.json();
+		const id = responseBody.id;
+		console.log({ id });
+
+		navigate(`/play/${id}`);
+		return;
+	}
 
 	if (responseStatus === 404) {
 		return <>404 Game not found.</>;
@@ -122,5 +163,16 @@ export function Play() {
 	if (!game) {
 		return <>loading...</>;
 	}
-	return <GameComponent game={game} makeMove={makeMove} />;
+
+	if (userId === game.ownerId || userId === game.playerId) {
+		return <GameComponent game={game} makeMove={makeMove} />;
+	} else {
+		return (
+			<>
+				<button onClick={onclick} disabled={isLoading}>
+					TODO: on click make api call to add player to game
+				</button>
+			</>
+		);
+	}
 }

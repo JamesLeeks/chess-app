@@ -6,9 +6,9 @@ import { useState } from "react";
 export function CreateGame() {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [startingTime, setStartingTime] = useState<number>(600);
-	// const [side, setSide] = useState<string>("black");
+	const [ownerSide, setOwnerSide] = useState<string>("black");
 
-	// console.log(side);
+	console.log(ownerSide);
 
 	const navigate = useNavigate();
 
@@ -25,7 +25,10 @@ export function CreateGame() {
 				"content-type": "application/json",
 				Authorization: authHeader,
 			},
-			body: JSON.stringify({ startingTime: startingTime }),
+			body: JSON.stringify({
+				startingTime: startingTime,
+				ownerSide: ownerSide,
+			}),
 			method: "POST",
 		});
 		const responseBody = await response.json();
@@ -44,16 +47,15 @@ export function CreateGame() {
 				value={startingTime}
 				onChange={(e) => setStartingTime(e.target.valueAsNumber)}
 			/>
-			{/* <input type="string" value={"TODO: username"} disabled={true} /> */}
-			{/* <select>
-				<option value="black" onChange={() => setSide("black")}>
+			<input type="string" value={"TODO: username"} disabled={true} />
+			<select>
+				<option value="black" onChange={() => setOwnerSide("black")}>
 					Black
 				</option>
-				<option value="white" onChange={() => setSide("white")}>
+				<option value="white" onChange={() => setOwnerSide("white")}>
 					White
 				</option>
-				{/* <option value="random">Random</option> */}
-			{/*</></select> */}
+			</select>
 			<div>{isLoading ? "Loading..." : ""}</div>
 			<button onClick={onClick} disabled={isLoading}>
 				New Game
