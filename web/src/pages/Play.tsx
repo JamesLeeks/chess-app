@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Game, SerializedGame } from "../../../common/src/game";
 import { GameComponent } from "../components/Game";
 import { Position, PromotionType } from "../../../common/src/models";
@@ -125,8 +125,6 @@ export function Play() {
 		return game;
 	}
 
-	const navigate = useNavigate();
-
 	async function onclick() {
 		setIsLoading(true);
 
@@ -147,10 +145,9 @@ export function Play() {
 			}
 		);
 		const responseBody = await response.json();
-		const id = responseBody.id;
-		console.log({ id });
-
-		navigate(`/play/${id}`);
+		const game2 = Game.fromJsonObject(responseBody);
+		console.log("game loaded", game2);
+		setGame(game2);
 		return;
 	}
 
@@ -164,13 +161,14 @@ export function Play() {
 		return <>loading...</>;
 	}
 
+	console.log("Render", { game, userId });
 	if (userId === game.ownerId || userId === game.playerId) {
 		return <GameComponent game={game} makeMove={makeMove} />;
 	} else {
 		return (
 			<>
 				<button onClick={onclick} disabled={isLoading}>
-					TODO: on click make api call to add player to game
+					Join Game
 				</button>
 			</>
 		);

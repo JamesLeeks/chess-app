@@ -73,7 +73,7 @@ export class GameService {
 			},
 		});
 
-		return response.game;
+		return game;
 	}
 
 	public async get(id: string): Promise<{ game: Game; etag: string } | undefined> {

@@ -51,9 +51,7 @@ export class GamesController extends Controller {
 
 		// const game = await gameService.create(userId, options.startingTime, options.ownerSide);
 		const game = await gameService.addPlayer(gameId, userId);
-		return {
-			id: game.id,
-		};
+		return game.toJsonObject();
 	}
 
 	@Security("AADB2C")
