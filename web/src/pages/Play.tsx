@@ -10,75 +10,54 @@ import {
 	getMsalAccount,
 } from "./getAuthorizationHeader";
 
-// const socket = io(getApiBase(), {
-// 	auth: {
-// 		gameId: "wibble123",
-// 	},
-// });
-
 let socket: Socket | null = null;
 
 export function Play() {
 	const { id } = useParams();
 	const [game, setGame] = useState<Game | null>(null);
-	// const [isConnected, setIsConnected] = useState(false);
 	const [responseStatus, setResponseStatus] = useState<number | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const userId = getMsalAccount()?.localAccountId;
 
 	useEffect(() => {
 		async function doIt() {
-			if (!socket) {
-				const game = await getGame();
-
-				const authHeader = await getAuthorizationHeader();
-				if (!authHeader) {
-					throw new Error("401");
-				}
-				socket = io(getApiBase(), {
-					// transports: ["polling"],
-					extraHeaders: { authorization: authHeader },
-					auth: {
-						gameId: id,
-					},
-				});
-				console.log("socket setup", { game });
-				if (
-					game?.playerId &&
-					userId !== game?.playerId &&
-					userId !== game?.ownerId
-				) {
-					throw new Error("401");
-				}
+			const game = await getGame();
+			if (userId === game?.ownerId || userId === game?.playerId) {
+				await setUpSocket(game);
 			}
+		}
+		doIt();
+	}, []);
 
-			// function onConnect() {
-			// 	setIsConnected(true);
-			// }
-
-			// function onDisconnect() {
-			// 	setIsConnected(false);
-			// }
+	async function setUpSocket(game: Game | undefined) {
+		if (!socket) {
+			const authHeader = await getAuthorizationHeader();
+			if (!authHeader) {
+				throw new Error("401");
+			}
+			socket = io(getApiBase(), {
+				extraHeaders: { authorization: authHeader },
+				auth: {
+					gameId: id,
+				},
+			});
+			console.log("socket setup", { game });
+			if (
+				game?.playerId &&
+				userId !== game?.playerId &&
+				userId !== game?.ownerId
+			) {
+				throw new Error("401");
+			}
 
 			function onGameUpdateEvent(g: SerializedGame) {
 				console.log("on game update", { g });
 				setGame(Game.fromJsonObject(g));
 			}
 
-			// socket.on("connect", onConnect);
-			// socket.on("disconnect", onDisconnect);
 			socket.on("gameUpdate", onGameUpdateEvent);
-
-			return () => {
-				if (socket) {
-					// socket.off("connect", onConnect);
-					// socket.off("disconnect", onDisconnect);
-					socket.off("gameUpdate", onGameUpdateEvent);
-				}
-			};
 		}
-		doIt();
-	}, []);
+	}
 
 	async function makeMove(
 		from: Position,
@@ -148,6 +127,8 @@ export function Play() {
 		const game2 = Game.fromJsonObject(responseBody);
 		console.log("game loaded", game2);
 		setGame(game2);
+
+		await setUpSocket(game2);
 		return;
 	}
 
