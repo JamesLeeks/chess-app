@@ -19,6 +19,12 @@ export function RegisterErrorMiddleware(app: express.Application) {
 				message: "Not Found",
 			});
 		}
+		if (err) {
+			console.log("Unhandled error", err);
+			return res.status(500).json({
+				message: "Error occurred",
+			});
+		}
 
 		next();
 	});
