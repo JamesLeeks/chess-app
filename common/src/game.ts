@@ -694,4 +694,17 @@ export class Game {
 		}
 		return pieces;
 	}
+
+	getUserColour(userId: string) {
+		if (!this.ownerSide) {
+			throw new Error("Owner side not set");
+		}
+		let playerColour: PieceColour | null = null;
+		if (userId === this.ownerId) {
+			playerColour = this.ownerSide;
+		} else if (userId == this.playerId) {
+			playerColour = this.ownerSide === "white" ? "black" : "white";
+		}
+		return playerColour;
+	}
 }

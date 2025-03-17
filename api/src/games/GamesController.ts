@@ -98,7 +98,7 @@ export class GamesController extends Controller {
 		}
 
 		const game = response.game;
-		const playerColour = this.getUserColour(game, userId);
+		const playerColour = game.getUserColour(userId);
 		if (game.currentTurn !== playerColour) {
 			throw new BadRequestError("not your turn");
 		}
@@ -114,18 +114,5 @@ export class GamesController extends Controller {
 		io.to(`game-${gameId}`).emit("gameUpdate", newGameJson);
 
 		return newGameJson;
-	}
-
-	private getUserColour(game: Game, userId: string) {
-		if (!game.ownerSide) {
-			throw new Error("Owner side not set");
-		}
-		let playerColour: PieceColour | null = null;
-		if (userId === game.ownerId) {
-			playerColour = game.ownerSide;
-		} else if (userId == game.playerId) {
-			playerColour = game.ownerSide === "white" ? "black" : "white";
-		}
-		return playerColour;
 	}
 }
