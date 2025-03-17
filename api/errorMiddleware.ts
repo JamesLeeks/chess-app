@@ -1,6 +1,8 @@
 import * as express from "express";
 
+export class BadRequestError extends Error {}
 export class NotFoundError extends Error {}
+export class UnauthorizedError extends Error {}
 
 export function RegisterErrorMiddleware(app: express.Application) {
 	app.use(function errorHandler(
@@ -9,6 +11,11 @@ export function RegisterErrorMiddleware(app: express.Application) {
 		res: express.Response,
 		next: express.NextFunction
 	) {
+		if (err instanceof BadRequestError) {
+			return res.status(400).json({
+				message: err.message,
+			});
+		}
 		if (err instanceof UnauthorizedError) {
 			return res.status(401).json({
 				message: "Unauthorized",
@@ -29,5 +36,3 @@ export function RegisterErrorMiddleware(app: express.Application) {
 		next();
 	});
 }
-
-export class UnauthorizedError extends Error {}

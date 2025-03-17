@@ -5,7 +5,7 @@
 	"main": "dist/src/server.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "node dist/src/server.js",
+		"xxxstart": "node dist/src/server.js",
 		"build": "tsoa spec-and-routes && tsc",
 		"dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\""
 	},

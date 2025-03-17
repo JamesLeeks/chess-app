@@ -43,37 +43,40 @@ export class GameService {
 	public async addPlayer(gameId: string, playerId: string): Promise<Game> {
 		const container = await this.getContainer();
 
-		// const game = new Game({ ownerId, whiteTime: startingTime, blackTime: startingTime, ownerSide });
 		const response = await this.get(gameId);
 
 		if (!response) {
 			throw new Error("404 not found");
 		}
 
-		// TODO: only do this if player id is not set
+		if (!response.game.playerId) {
+			// TODO: check that this doesn't happen if playerId is already set
+			const game = new Game({
+				blackTime: response.game.blackTime,
+				whiteTime: response.game.whiteTime,
+				board: response.game.board,
+				currentTurn: response.game.currentTurn,
+				history: response.game.history,
+				id: response.game.id,
+				ownerId: response.game.ownerId,
+				ownerSide: response.game.ownerSide,
+				playerId: playerId,
+			});
 
-		const game = new Game({
-			blackTime: response.game.blackTime,
-			whiteTime: response.game.whiteTime,
-			board: response.game.board,
-			currentTurn: response.game.currentTurn,
-			history: response.game.history,
-			id: response.game.id,
-			ownerId: response.game.ownerId,
-			ownerSide: response.game.ownerSide,
-			playerId: playerId,
-		});
+			console.log("from GameService.ts: game id - ", game.playerId);
 
-		console.log("gammee id", game.playerId);
+			await container.items.upsert(game.toJsonObject(), {
+				accessCondition: {
+					type: "IfMatch",
+					condition: response.etag,
+				},
+			});
 
-		await container.items.upsert(game.toJsonObject(), {
-			accessCondition: {
-				type: "IfMatch",
-				condition: response.etag,
-			},
-		});
-
-		return game;
+			return game;
+		} else {
+			// NOTE: at some point in the future we may allow spectators
+			throw new Error("Game already has player");
+		}
 	}
 
 	public async get(id: string): Promise<{ game: Game; etag: string } | undefined> {

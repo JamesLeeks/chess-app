@@ -1,11 +1,10 @@
 import { Route, Controller, Get, Path, Post, Body, Security, Request } from "tsoa";
-import { Game } from "./models";
 import * as express from "express";
-import { SerializedGame } from "../../../common/src/game";
+import { Game, SerializedGame } from "../../../common/src/game";
 import { gameService } from "./GameService";
 import { PieceColour, Position, PromotionType } from "../../../common/src/models";
 import { getServer } from "../socket";
-import { NotFoundError, UnauthorizedError } from "../../errorMiddleware";
+import { BadRequestError, NotFoundError, UnauthorizedError } from "../../errorMiddleware";
 import { ensureUserId, getUserIdFromRequest } from "../../authentication";
 
 interface MakeMoveBody {
@@ -93,8 +92,15 @@ export class GamesController extends Controller {
 
 		const response = await gameService.get(gameId);
 
+		// check that there is a response, and that the user is the owner/player on the game
 		if (!response || (userId !== response.game.ownerId && userId !== response.game.playerId)) {
 			throw new NotFoundError();
+		}
+
+		const game = response.game;
+		const playerColour = this.getUserColour(game, userId);
+		if (game.currentTurn !== playerColour) {
+			throw new BadRequestError("not your turn");
 		}
 
 		const newGame = await gameService.makeMove(response.game, response.etag, move.from, move.to, move.promotionType);
@@ -108,5 +114,18 @@ export class GamesController extends Controller {
 		io.to(`game-${gameId}`).emit("gameUpdate", newGameJson);
 
 		return newGameJson;
+	}
+
+	private getUserColour(game: Game, userId: string) {
+		if (!game.ownerSide) {
+			throw new Error("Owner side not set");
+		}
+		let playerColour: PieceColour | null = null;
+		if (userId === game.ownerId) {
+			playerColour = game.ownerSide;
+		} else if (userId == game.playerId) {
+			playerColour = game.ownerSide === "white" ? "black" : "white";
+		}
+		return playerColour;
 	}
 }
