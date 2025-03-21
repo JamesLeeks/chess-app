@@ -9,6 +9,7 @@ import {
 import { HistoryComponent } from "./History";
 import { ClockComponent } from "./Clock";
 import { ResultComponent } from "./Result";
+import { getMsalAccount } from "../pages/getAuthorizationHeader";
 
 export type GameComponentParams = {
 	game: Game;
@@ -30,6 +31,10 @@ export function GameComponent(params: GameComponentParams) {
 	const [selectedHistoryItem, setSelectedHistoryItem] =
 		useState<HistoryItem | null>(null);
 	const [timerUpdate, setTimeUpdate] = useState(0);
+	const userId = getMsalAccount()?.localAccountId;
+	if (!userId) {
+		throw new Error("User should be logged in");
+	}
 
 	function makeMove(
 		from: Position,
@@ -41,6 +46,10 @@ export function GameComponent(params: GameComponentParams) {
 	}
 
 	function handleClick(row: number, column: number) {
+		if (!userId) {
+			throw new Error("User should be logged in");
+		}
+
 		if (!game.isActive()) {
 			setSelectedSquare(null);
 			setMoveOptions([]);
@@ -50,13 +59,17 @@ export function GameComponent(params: GameComponentParams) {
 			return;
 		}
 		setPromotionSquare(null);
+		// TODO: FIND EVERYWHERE WE ARE SELECTING A SQUARE AND PUT IN A CHECK TO MAKE SURE THAT THE PIECE BELONGS TO THE PLAYER
 		if (selectedSquare) {
-			// there's a selected piece - move it
+			// there's a selected piece
 			if (game.board[row][column]?.colour === game.currentTurn) {
 				// switch selected square - player has clicked on a different piece of their own colour
-				const newSelectedSquare = { row: row, column: column };
-				setSelectedSquare({ row: row, column: column });
-				setMoveOptions(game.getMoveOptions(newSelectedSquare));
+				if (game.getUserColour(userId) === game.currentTurn) {
+					// if the piece belongs to the player
+					const newSelectedSquare = { row: row, column: column };
+					setSelectedSquare({ row: row, column: column });
+					setMoveOptions(game.getMoveOptions(newSelectedSquare));
+				}
 			} else {
 				// player has clicked on an empty square or opponent's piece
 				const foundMoveOption = moveOptions.find(
@@ -81,15 +94,22 @@ export function GameComponent(params: GameComponentParams) {
 			}
 		} else {
 			// picking a piece
-			// if there is a piece on this square and it's their turn
+			console.log("picking a piece", {
+				currentTurn: game.currentTurn,
+				userColour: game.getUserColour(userId),
+			});
 			if (
-				game.board[row][column] &&
-				game.currentTurn === game.board[row][column]?.colour
+				game.board[row][column] && // has piece on this square
+				game.currentTurn === game.board[row][column]?.colour // piece for the current turn
 			) {
+				// if there is a piece on this square and it's their turn:
 				// set selected square and show move options
-				const newSelectedSquare = { row: row, column: column };
-				setSelectedSquare(newSelectedSquare);
-				setMoveOptions(game.getMoveOptions(newSelectedSquare));
+				if (game.getUserColour(userId) === game.currentTurn) {
+					// if the piece belongs to the player
+					const newSelectedSquare = { row: row, column: column };
+					setSelectedSquare(newSelectedSquare);
+					setMoveOptions(game.getMoveOptions(newSelectedSquare));
+				}
 			} else {
 				// clear selected piece and move options
 				setSelectedSquare(null);

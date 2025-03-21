@@ -8,6 +8,7 @@ export type BoardComponentParams = {
 	selectedSquare: Position | null;
 	moveOptions: Position[];
 };
+
 export function BoardComponent({
 	board,
 	handleClick,

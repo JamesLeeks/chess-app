@@ -651,6 +651,7 @@ export class Game {
 			id: this.id,
 			ownerId: this.ownerId,
 			playerId: this.playerId,
+			ownerSide: this.ownerSide,
 		});
 
 		// return updated game

@@ -50,10 +50,10 @@ export function CreateGame() {
 			<input type="string" value={"TODO: username"} disabled={true} />
 			<select>
 				<option value="black" onChange={() => setOwnerSide("black")}>
-					Black
+					OWNER SIDE: Black
 				</option>
 				<option value="white" onChange={() => setOwnerSide("white")}>
-					White
+					OWNER SIDE: White
 				</option>
 			</select>
 			<div>{isLoading ? "Loading..." : ""}</div>
