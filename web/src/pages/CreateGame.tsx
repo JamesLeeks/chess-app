@@ -3,12 +3,14 @@ import { getApiBase } from "../getApiBase";
 import { getAuthorizationHeader } from "./getAuthorizationHeader";
 import { useState } from "react";
 
+function pickRandomSide() {
+	return Math.random() < 0.5 ? "black" : "white";
+}
+
 export function CreateGame() {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [startingTime, setStartingTime] = useState<number>(600);
 	const [ownerSide, setOwnerSide] = useState<string>("black");
-
-	console.log(ownerSide);
 
 	const navigate = useNavigate();
 
@@ -27,13 +29,15 @@ export function CreateGame() {
 			},
 			body: JSON.stringify({
 				startingTime: startingTime,
-				ownerSide: ownerSide,
+				ownerSide:
+					ownerSide === "white" || ownerSide === "black"
+						? ownerSide
+						: pickRandomSide(),
 			}),
 			method: "POST",
 		});
 		const responseBody = await response.json();
 		const id = responseBody.id;
-		console.log({ id });
 
 		navigate(`/play/${id}`);
 		return;
@@ -48,13 +52,13 @@ export function CreateGame() {
 				onChange={(e) => setStartingTime(e.target.valueAsNumber)}
 			/>
 			<input type="string" value={"TODO: username"} disabled={true} />
-			<select>
-				<option value="black" onChange={() => setOwnerSide("black")}>
-					OWNER SIDE: Black
-				</option>
-				<option value="white" onChange={() => setOwnerSide("white")}>
-					OWNER SIDE: White
-				</option>
+			<select
+				value={ownerSide} // ...force the select's value to match the state variable...
+				onChange={(e) => setOwnerSide(e.target.value)}
+			>
+				<option value="black">OWNER SIDE: Black</option>
+				<option value="white">OWNER SIDE: White</option>
+				<option value="random">OWNER SIDE: Random</option>
 			</select>
 			<div>{isLoading ? "Loading..." : ""}</div>
 			<button onClick={onClick} disabled={isLoading}>
