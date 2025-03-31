@@ -164,17 +164,20 @@ export function GameComponent(params: GameComponentParams) {
 		throw new Error("user should have side");
 	}
 
+	const clock1Time = userSide === "white" ? game.whiteTime : game.blackTime;
+	const clock2Time = userSide === "white" ? game.blackTime : game.whiteTime;
+
 	return (
 		<>
 			<div className="game">
 				<div className="clock-panel">
 					<ClockComponent
-						time={game.blackTime}
-						isActive={game.currentTurn === "black"}
+						time={clock1Time}
+						isActive={game.currentTurn !== userSide}
 					/>
 					<ClockComponent
-						time={game.whiteTime}
-						isActive={game.currentTurn === "white"}
+						time={clock2Time}
+						isActive={game.currentTurn === userSide}
 					/>
 				</div>
 				<div className={`board-panel ${game.getUserColour(userId)}`}>
