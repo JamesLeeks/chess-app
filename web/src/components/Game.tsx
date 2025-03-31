@@ -159,6 +159,11 @@ export function GameComponent(params: GameComponentParams) {
 		? selectedHistoryItem.boardAfterMove
 		: game.board;
 
+	const userSide = game.getUserColour(userId);
+	if (!userSide) {
+		throw new Error("user should have side");
+	}
+
 	return (
 		<>
 			<div className="game">
@@ -172,12 +177,13 @@ export function GameComponent(params: GameComponentParams) {
 						isActive={game.currentTurn === "white"}
 					/>
 				</div>
-				<div className="board-panel">
+				<div className={`board-panel ${game.getUserColour(userId)}`}>
 					<BoardComponent
 						board={boardToUse}
 						handleClick={handleClick}
 						moveOptions={moveOptions}
 						selectedSquare={selectedSquare}
+						side={userSide}
 					/>
 					{selectedSquare && promotionSquare && (
 						<div>

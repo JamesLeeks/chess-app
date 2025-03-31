@@ -1,12 +1,15 @@
 import { Square } from "./Square";
-import { Board, Position } from "../../../common/src/models";
+import { Board, PieceColour, Position } from "../../../common/src/models";
 
 export type BoardComponentParams = {
 	board: Board;
-	// TODO: get row and column from square: Position
-	handleClick: (row: number, column: number) => void;
+	handleClick: (
+		row: number,
+		column: number /* TODO: get row and column from square: Position */
+	) => void;
 	selectedSquare: Position | null;
 	moveOptions: Position[];
+	side: PieceColour;
 };
 
 export function BoardComponent({
@@ -14,6 +17,7 @@ export function BoardComponent({
 	handleClick,
 	selectedSquare,
 	moveOptions,
+	side,
 }: BoardComponentParams) {
 	const boardContent = [];
 	// for each row:
@@ -35,6 +39,8 @@ export function BoardComponent({
 					selected={isSelected}
 					moveOption={isMoveOption}
 					onSquareClick={() => handleClick(rowIndex, columnIndex)}
+					position={{ column: columnIndex, row: rowIndex }}
+					side={side}
 				/>
 			);
 			// add square to boardContent

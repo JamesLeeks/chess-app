@@ -10,7 +10,7 @@ function pickRandomSide() {
 export function CreateGame() {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [startingTime, setStartingTime] = useState<number>(600);
-	const [ownerSide, setOwnerSide] = useState<string>("black");
+	const [ownerSide, setOwnerSide] = useState<string>("white");
 
 	const navigate = useNavigate();
 
@@ -50,11 +50,13 @@ export function CreateGame() {
 				type="number"
 				value={startingTime}
 				onChange={(e) => setStartingTime(e.target.valueAsNumber)}
+				disabled={isLoading}
 			/>
 			<input type="string" value={"TODO: username"} disabled={true} />
 			<select
 				value={ownerSide} // ...force the select's value to match the state variable...
 				onChange={(e) => setOwnerSide(e.target.value)}
+				disabled={isLoading}
 			>
 				<option value="black">OWNER SIDE: Black</option>
 				<option value="white">OWNER SIDE: White</option>

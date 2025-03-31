@@ -1,10 +1,13 @@
-import { ChessPiece } from "../../../common/src/models";
+import { ChessPiece, PieceColour, Position } from "../../../common/src/models";
+import { toNotation } from "../../../common/src/position";
 
 interface SquareProps {
 	chessPiece?: ChessPiece;
 	selected?: boolean;
 	moveOption?: boolean;
 	onSquareClick: () => void;
+	position: Position;
+	side: PieceColour;
 }
 
 export function Square(props: SquareProps) {
@@ -23,10 +26,17 @@ export function Square(props: SquareProps) {
 	}
 
 	const squareContent = chessPiece ? (
-		<div className={`piece ${pieceClass}`}></div>
+		<div
+			className={`${
+				props.side === props.chessPiece?.colour ? "pointer" : ""
+			} piece ${pieceClass} ${toNotation(props.position)}`}
+		></div>
 	) : undefined;
 	return (
-		<div className={`square ${displayType}`} onClick={onSquareClick}>
+		<div
+			className={`square ${displayType} ${toNotation(props.position)}`}
+			onClick={onSquareClick}
+		>
 			{squareContent}
 		</div>
 	);
