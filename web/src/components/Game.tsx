@@ -23,6 +23,21 @@ export type GameComponentParams = {
 	allowedSides: PieceColour[];
 };
 
+function getUserSide(
+	game: Game,
+	defaultSide: PieceColour | undefined
+): PieceColour | null {
+	const userId = getMsalAccount()?.localAccountId;
+
+	if (defaultSide) {
+		return defaultSide;
+	}
+	if (!userId) {
+		throw new Error("User should be logged in");
+	}
+	return game.getUserColour(userId);
+}
+
 export function GameComponent(params: GameComponentParams) {
 	// game state properties
 	const game = params.game;
@@ -37,10 +52,12 @@ export function GameComponent(params: GameComponentParams) {
 		useState<HistoryItem | null>(null);
 	const [timerUpdate, setTimeUpdate] = useState(0);
 	const userId = getMsalAccount()?.localAccountId;
+
 	if (!userId && !defaultSide) {
 		throw new Error("User should be logged in");
 	}
-	const userSide = userId ? game.getUserColour(userId) : defaultSide ?? null;
+	const userSide = getUserSide(game, defaultSide);
+
 	// function isUsersTurn(): boolean {
 	// 	return !!allowedSides.find((s) => s === game.currentTurn);
 	// }
@@ -179,19 +196,19 @@ export function GameComponent(params: GameComponentParams) {
 		? selectedHistoryItem.boardAfterMove
 		: game.board;
 
-	const clock1Time = userSide === "white" ? game.whiteTime : game.blackTime;
-	const clock2Time = userSide === "white" ? game.blackTime : game.whiteTime;
+	const playerTime = userSide === "white" ? game.whiteTime : game.blackTime;
+	const opponentTime = userSide === "white" ? game.blackTime : game.whiteTime;
 
 	return (
 		<>
 			<div className="game">
 				<div className="clock-panel">
 					<ClockComponent
-						time={clock1Time}
+						time={opponentTime}
 						isActive={game.currentTurn !== userSide}
 					/>
 					<ClockComponent
-						time={clock2Time}
+						time={playerTime}
 						isActive={game.currentTurn === userSide}
 					/>
 				</div>
