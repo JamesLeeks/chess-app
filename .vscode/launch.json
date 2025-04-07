@@ -25,6 +25,12 @@
 			"runtimeArgs": ["-r", "ts-node/register"],
 			"args": ["${workspaceFolder}/api/src/server.ts"],
 			"cwd": "${workspaceFolder}/api"
+		},
+		{
+			"type": "msedge",
+			"request": "launch",
+			"name": "Debug UI",
+			"url": "http://localhost:5173"
 		}
 	]
 }
