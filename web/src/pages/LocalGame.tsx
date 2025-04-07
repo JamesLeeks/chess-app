@@ -18,7 +18,12 @@ export function LocalGame() {
 	}
 	return (
 		<>
-			<GameComponent makeMove={makeMove} game={game} />
+			<GameComponent
+				makeMove={makeMove}
+				game={game}
+				defaultSide="white"
+				allowedSides={["white", "black"]}
+			/>
 		</>
 	);
 }

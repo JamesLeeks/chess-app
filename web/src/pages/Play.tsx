@@ -18,6 +18,9 @@ export function Play() {
 	const [responseStatus, setResponseStatus] = useState<number | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const userId = getMsalAccount()?.localAccountId;
+	if (!userId) {
+		throw new Error("User should be logged in");
+	}
 
 	useEffect(() => {
 		async function doIt() {
@@ -144,7 +147,17 @@ export function Play() {
 
 	console.log("Render", { game, userId });
 	if (userId === game.ownerId || userId === game.playerId) {
-		return <GameComponent game={game} makeMove={makeMove} />;
+		const userSide = game.getUserColour(userId);
+		if (!userSide) {
+			throw new Error("user should have side");
+		}
+		return (
+			<GameComponent
+				game={game}
+				makeMove={makeMove}
+				allowedSides={[userSide]}
+			/>
+		);
 	} else {
 		return (
 			<>

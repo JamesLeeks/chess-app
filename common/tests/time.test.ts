@@ -4,7 +4,7 @@ import { getGame, delay } from "./testHelpers";
 import { Game } from "../src/game";
 
 test("make moves and check time", async () => {
-	let game = getGame(getStartingBoard(), undefined, undefined, "white", "FAKEID");
+	let game = getGame(getStartingBoard(), 45, 45, "white", "FAKEID");
 	game = game.makeMove(position("e2"), position("e4")); // white
 	game = game.makeMove(position("e7"), position("e5")); // black
 	await delay(2000);
@@ -28,7 +28,7 @@ test("make moves and check time", async () => {
 }, 10000 /*10s timeout */);
 
 test("make moves and check time from game state", async () => {
-	let game = getGame(getStartingBoard(), undefined, undefined, "white", "FAKEID");
+	let game = getGame(getStartingBoard(), 45, 45, "white", "FAKEID");
 	game = game.makeMove(position("e2"), position("e4")); // white
 	game = game.makeMove(position("e7"), position("e5")); // black
 	await delay(2000);

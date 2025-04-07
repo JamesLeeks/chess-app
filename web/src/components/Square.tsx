@@ -7,7 +7,7 @@ interface SquareProps {
 	moveOption?: boolean;
 	onSquareClick: () => void;
 	position: Position;
-	side: PieceColour;
+	movableSide: PieceColour | null;
 }
 
 export function Square(props: SquareProps) {
@@ -28,7 +28,7 @@ export function Square(props: SquareProps) {
 	const squareContent = chessPiece ? (
 		<div
 			className={`${
-				props.side === props.chessPiece?.colour ? "pointer" : ""
+				props.movableSide === props.chessPiece?.colour ? "pointer" : ""
 			} piece ${pieceClass} ${toNotation(props.position)}`}
 		></div>
 	) : undefined;

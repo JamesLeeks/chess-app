@@ -3,6 +3,7 @@ import { BoardComponent } from "./Board";
 import { Game } from "../../../common/src/game";
 import {
 	HistoryItem,
+	PieceColour,
 	Position,
 	PromotionType,
 } from "../../../common/src/models";
@@ -18,11 +19,15 @@ export type GameComponentParams = {
 		to: Position,
 		promotionType?: PromotionType
 	) => void;
+	defaultSide?: PieceColour;
+	allowedSides: PieceColour[];
 };
 
 export function GameComponent(params: GameComponentParams) {
 	// game state properties
 	const game = params.game;
+	const defaultSide = params.defaultSide;
+	const allowedSides = params.allowedSides;
 	const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
 	const [moveOptions, setMoveOptions] = useState<Position[]>([]);
 	const [promotionSquare, setPromotionSquare] = useState<Position | null>(
@@ -32,8 +37,27 @@ export function GameComponent(params: GameComponentParams) {
 		useState<HistoryItem | null>(null);
 	const [timerUpdate, setTimeUpdate] = useState(0);
 	const userId = getMsalAccount()?.localAccountId;
-	if (!userId) {
+	if (!userId && !defaultSide) {
 		throw new Error("User should be logged in");
+	}
+	const userSide = userId ? game.getUserColour(userId) : defaultSide ?? null;
+	// function isUsersTurn(): boolean {
+	// 	return !!allowedSides.find((s) => s === game.currentTurn);
+	// }
+	// function getMovableSide(): PieceColour | null {
+	// 	// return current turn if the user is allowed to play for that side
+	// 	if (game.currentTurn && isUsersTurn()) {
+	// 		return game.currentTurn;
+	// 	}
+	// 	return null;
+	// }
+
+	function getMovableSide() {
+		return allowedSides.find((s) => s === game.currentTurn) ?? null;
+	}
+
+	function isUsersTurn(): boolean {
+		return !!getMovableSide();
 	}
 
 	function makeMove(
@@ -46,10 +70,6 @@ export function GameComponent(params: GameComponentParams) {
 	}
 
 	function handleClick(row: number, column: number) {
-		if (!userId) {
-			throw new Error("User should be logged in");
-		}
-
 		if (!game.isActive()) {
 			setSelectedSquare(null);
 			setMoveOptions([]);
@@ -64,7 +84,7 @@ export function GameComponent(params: GameComponentParams) {
 			// there's a selected piece
 			if (game.board[row][column]?.colour === game.currentTurn) {
 				// switch selected square - player has clicked on a different piece of their own colour
-				if (game.getUserColour(userId) === game.currentTurn) {
+				if (isUsersTurn()) {
 					// if the piece belongs to the player
 					const newSelectedSquare = { row: row, column: column };
 					setSelectedSquare({ row: row, column: column });
@@ -96,7 +116,7 @@ export function GameComponent(params: GameComponentParams) {
 			// picking a piece
 			console.log("picking a piece", {
 				currentTurn: game.currentTurn,
-				userColour: game.getUserColour(userId),
+				userColour: userSide,
 			});
 			if (
 				game.board[row][column] && // has piece on this square
@@ -104,7 +124,7 @@ export function GameComponent(params: GameComponentParams) {
 			) {
 				// if there is a piece on this square and it's their turn:
 				// set selected square and show move options
-				if (game.getUserColour(userId) === game.currentTurn) {
+				if (isUsersTurn()) {
 					// if the piece belongs to the player
 					const newSelectedSquare = { row: row, column: column };
 					setSelectedSquare(newSelectedSquare);
@@ -159,11 +179,6 @@ export function GameComponent(params: GameComponentParams) {
 		? selectedHistoryItem.boardAfterMove
 		: game.board;
 
-	const userSide = game.getUserColour(userId);
-	if (!userSide) {
-		throw new Error("user should have side");
-	}
-
 	const clock1Time = userSide === "white" ? game.whiteTime : game.blackTime;
 	const clock2Time = userSide === "white" ? game.blackTime : game.whiteTime;
 
@@ -180,13 +195,13 @@ export function GameComponent(params: GameComponentParams) {
 						isActive={game.currentTurn === userSide}
 					/>
 				</div>
-				<div className={`board-panel ${game.getUserColour(userId)}`}>
+				<div className={`board-panel ${userSide}`}>
 					<BoardComponent
 						board={boardToUse}
 						handleClick={handleClick}
 						moveOptions={moveOptions}
 						selectedSquare={selectedSquare}
-						side={userSide}
+						movableSide={getMovableSide()}
 					/>
 					{selectedSquare && promotionSquare && (
 						<div>

@@ -64,8 +64,8 @@ export class Game {
 		this._board = gameOptions?.board ?? getStartingBoard();
 		this._history = gameOptions?.history ?? [];
 		this._currentTurn = gameOptions?.currentTurn ?? "white";
-		this._whiteTimeRemainingAtStartOfTurn = gameOptions?.whiteTime ?? 45;
-		this._blackTimeRemainingAtStartOfTurn = gameOptions?.blackTime ?? 45;
+		this._whiteTimeRemainingAtStartOfTurn = gameOptions?.whiteTime ?? 600;
+		this._blackTimeRemainingAtStartOfTurn = gameOptions?.blackTime ?? 600;
 		this._gameResult = this.getGameResult();
 		this._id = gameOptions?.id ?? nanoid();
 		this._ownerId = gameOptions?.ownerId;

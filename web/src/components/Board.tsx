@@ -9,7 +9,7 @@ export type BoardComponentParams = {
 	) => void;
 	selectedSquare: Position | null;
 	moveOptions: Position[];
-	side: PieceColour;
+	movableSide: PieceColour | null;
 };
 
 export function BoardComponent({
@@ -17,7 +17,7 @@ export function BoardComponent({
 	handleClick,
 	selectedSquare,
 	moveOptions,
-	side,
+	movableSide,
 }: BoardComponentParams) {
 	const boardContent = [];
 	// for each row:
@@ -40,7 +40,7 @@ export function BoardComponent({
 					moveOption={isMoveOption}
 					onSquareClick={() => handleClick(rowIndex, columnIndex)}
 					position={{ column: columnIndex, row: rowIndex }}
-					side={side}
+					movableSide={movableSide}
 				/>
 			);
 			// add square to boardContent
