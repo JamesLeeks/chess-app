@@ -178,6 +178,25 @@ export class Game {
 		return undefined;
 	}
 
+	public getGameResultMessage() {
+		if (isInCheckmate(this)) {
+			return this.currentTurn === "white" ? "Black wins by checkmate" : "White wins by checkmate";
+		}
+		if (isInStalemate(this)) {
+			return "Draw due to stalemate";
+		}
+		if (this.whiteTime <= 0) {
+			return this.sideCanCheckMate("white") ? "Black wins due to white timeout" : "Draw due to white timeout";
+		}
+		if (this.blackTime <= 0) {
+			return this.sideCanCheckMate("white") ? "White wins due to black timeout" : "Draw due to black timeout";
+		}
+		if (this.isThreeFoldRepetition()) {
+			return "Draw by threefold repetition";
+		}
+		return undefined;
+	}
+
 	public sideCanCheckMate(sideColour: PieceColour) {
 		// return true if the side has pawns
 		if (this.sideHasPawns(sideColour)) {

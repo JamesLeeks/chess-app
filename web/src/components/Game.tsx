@@ -264,7 +264,7 @@ export function GameComponent(params: GameComponentParams) {
 				<div className="history-panel">
 					{!game.isActive() && (
 						<ResultComponent
-							gameResult={game.getGameResult()}
+							gameResult={game.getGameResultMessage()}
 						></ResultComponent>
 					)}
 					<HistoryComponent

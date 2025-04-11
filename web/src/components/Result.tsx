@@ -1,7 +1,5 @@
-import { GameResultFull } from "../../../common/src/models";
-
 export type ResultProps = {
-	gameResult: GameResultFull | undefined;
+	gameResult: string | undefined;
 };
 
 export function ResultComponent(props: ResultProps) {
@@ -9,9 +7,7 @@ export function ResultComponent(props: ResultProps) {
 		return (
 			<>
 				<div className="result history-panel-item">
-					<div className="result-text">
-						{props.gameResult.result} due to {props.gameResult.reason}
-					</div>
+					<div className="result-text">{props.gameResult}</div>
 					<div className="result-button-container">
 						<button className="result-button">Home</button>{" "}
 						<button className="result-button">Rematch</button>
