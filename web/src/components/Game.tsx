@@ -196,8 +196,11 @@ export function GameComponent(params: GameComponentParams) {
 		? selectedHistoryItem.boardAfterMove
 		: game.board;
 
-	const playerTime = userSide === "white" ? game.whiteTime : game.blackTime;
-	const opponentTime = userSide === "white" ? game.blackTime : game.whiteTime;
+	const effectiveSide = userSide ?? "white";
+	const playerTime =
+		effectiveSide === "white" ? game.whiteTime : game.blackTime;
+	const opponentTime =
+		effectiveSide === "white" ? game.blackTime : game.whiteTime;
 
 	return (
 		<>
@@ -205,11 +208,11 @@ export function GameComponent(params: GameComponentParams) {
 				<div className="clock-panel">
 					<ClockComponent
 						time={opponentTime}
-						isActive={game.currentTurn !== userSide}
+						isActive={game.currentTurn !== effectiveSide}
 					/>
 					<ClockComponent
 						time={playerTime}
-						isActive={game.currentTurn === userSide}
+						isActive={game.currentTurn === effectiveSide}
 					/>
 				</div>
 				<div className={`board-panel ${userSide}`}>

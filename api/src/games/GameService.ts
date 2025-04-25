@@ -1,6 +1,6 @@
 import { DefaultAzureCredential, TokenCredential } from "@azure/identity";
 import { Game, SerializedGame } from "../../../common/src/game";
-import { PieceColour, Position, PromotionType } from "../../../common/src/models";
+import { allowSpectators, PieceColour, Position, PromotionType } from "../../../common/src/models";
 import { Container, CosmosClient, ItemResponse } from "@azure/cosmos";
 
 export class GameService {
@@ -30,10 +30,15 @@ export class GameService {
 		return container;
 	}
 
-	public async create(ownerId: string, startingTime: number, ownerSide: PieceColour): Promise<Game> {
+	public async create(
+		ownerId: string,
+		startingTime: number,
+		ownerSide: PieceColour,
+		allowSpectators: allowSpectators
+	): Promise<Game> {
 		const container = await this.getContainer();
 
-		const game = new Game({ ownerId, whiteTime: startingTime, blackTime: startingTime, ownerSide });
+		const game = new Game({ ownerId, whiteTime: startingTime, blackTime: startingTime, ownerSide, allowSpectators });
 
 		await container.items.create(game.toJsonObject());
 
@@ -61,6 +66,7 @@ export class GameService {
 				ownerId: response.game.ownerId,
 				ownerSide: response.game.ownerSide,
 				playerId: playerId,
+				allowSpectators: response.game.allowSpectators,
 			});
 
 			console.log("from GameService.ts: game id - ", game.playerId);

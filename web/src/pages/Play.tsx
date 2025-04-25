@@ -23,13 +23,23 @@ export function Play() {
 	}
 
 	useEffect(() => {
-		async function doIt() {
+		// async function doIt() {
+		// 	const game = await getGame();
+		// 	if (userId === game?.ownerId || userId === game?.playerId) {
+		// 		await setUpSocket(game);
+		// 	}
+		// }
+		// doIt();
+		(async function () {
 			const game = await getGame();
-			if (userId === game?.ownerId || userId === game?.playerId) {
+			if (
+				userId === game?.ownerId ||
+				userId === game?.playerId ||
+				game?.allowSpectators === "public"
+			) {
 				await setUpSocket(game);
 			}
-		}
-		doIt();
+		})();
 	}, []);
 
 	async function setUpSocket(game: Game | undefined) {
@@ -48,7 +58,8 @@ export function Play() {
 			if (
 				game?.playerId &&
 				userId !== game?.playerId &&
-				userId !== game?.ownerId
+				userId !== game?.ownerId &&
+				game.allowSpectators !== "public"
 			) {
 				throw new Error("401");
 			}
@@ -158,13 +169,23 @@ export function Play() {
 				allowedSides={[userSide]}
 			/>
 		);
-	} else {
+	} else if (!game.playerId) {
 		return (
 			<>
 				<button onClick={onclick} disabled={isLoading}>
 					Join Game
 				</button>
 			</>
+		);
+	} else if (game.allowSpectators === "public") {
+		return (
+			<GameComponent
+				game={game}
+				makeMove={() => {
+					console.log("Shouldn't make a move in spectator mode");
+				}}
+				allowedSides={[]}
+			/>
 		);
 	}
 }

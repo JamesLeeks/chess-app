@@ -3,6 +3,7 @@ import { boardToString, getBoardAfterMove, getStartingBoard } from "./board";
 import { getBaseMoveOptions } from "./getMoveOptions";
 import { isInCheck, isInCheckmate, isInStalemate } from "./isInCheck";
 import {
+	allowSpectators,
 	Board,
 	ChessPiece,
 	GameResultFull,
@@ -27,6 +28,7 @@ export interface GameOptions {
 	ownerId?: string;
 	playerId?: string;
 	ownerSide?: PieceColour;
+	allowSpectators?: allowSpectators;
 }
 
 export interface SerializedGame {
@@ -34,6 +36,7 @@ export interface SerializedGame {
 	ownerId: string;
 	playerId?: string;
 	ownerSide: PieceColour;
+	allowSpectators?: allowSpectators;
 	moves: {
 		move: string;
 		time: number;
@@ -56,9 +59,10 @@ export class Game {
 	private _blackTimeRemainingAtStartOfTurn: number;
 	private _gameResult: GameResultFull | undefined;
 	private _id: string; // game id
-	private _ownerId: string | undefined; // id of 1st (owner) player
+	private _ownerId: string | undefined; // id of 1st player (owner)
 	private _playerId: string | undefined; // id of 2nd player
 	private _ownerSide: PieceColour;
+	private _allowSpectators: allowSpectators;
 
 	constructor(gameOptions?: GameOptions) {
 		this._board = gameOptions?.board ?? getStartingBoard();
@@ -71,6 +75,7 @@ export class Game {
 		this._ownerId = gameOptions?.ownerId;
 		this._ownerSide = gameOptions?.ownerSide ?? "white";
 		this._playerId = gameOptions?.playerId;
+		this._allowSpectators = gameOptions?.allowSpectators ?? "private"; // private, public, users
 	}
 
 	public get id(): string {
@@ -133,6 +138,10 @@ export class Game {
 
 	public get playerId(): string | undefined {
 		return this._playerId;
+	}
+
+	public get allowSpectators(): allowSpectators {
+		return this._allowSpectators;
 	}
 
 	private isThreeFoldRepetition(): boolean {
@@ -515,18 +524,13 @@ export class Game {
 			ownerId: this.ownerId,
 			playerId: this._playerId ?? undefined,
 			ownerSide: this._ownerSide,
+			allowSpectators: this.allowSpectators,
 			moves,
 			players: {
 				white: { timeRemainingAtStartOfTurn: this._whiteTimeRemainingAtStartOfTurn },
 				black: { timeRemainingAtStartOfTurn: this._blackTimeRemainingAtStartOfTurn },
 			},
 		};
-		// const serialisedGame = {
-		// 	id: "TODO",
-		// 	moves: this.history.map((historyItem) => {
-		// 		return { move: historyItem.notation, time: "TODO" };
-		// 	}),
-		// };
 		return serialisedGame;
 	}
 
@@ -543,6 +547,8 @@ export class Game {
 		const whiteTimeRemainingAtStartOfTurn = jsonGame.players.white.timeRemainingAtStartOfTurn;
 		const blackTimeRemainingAtStartOfTurn = jsonGame.players.black.timeRemainingAtStartOfTurn;
 		const ownerId = jsonGame.ownerId;
+		const allowSpectators = jsonGame.allowSpectators;
+
 		let game = new Game({
 			board: getStartingBoard(),
 			whiteTime: whiteTimeRemainingAtStartOfTurn,
@@ -551,6 +557,7 @@ export class Game {
 			ownerId,
 			playerId,
 			ownerSide,
+			allowSpectators,
 		});
 
 		for (let index = 0; index < moves.length; index++) {
@@ -558,6 +565,7 @@ export class Game {
 			const time = moves[index].time;
 			game = game.makeMoveFromNotation(moveString, time);
 		}
+
 		return game;
 	}
 
@@ -671,6 +679,7 @@ export class Game {
 			ownerId: this.ownerId,
 			playerId: this.playerId,
 			ownerSide: this.ownerSide,
+			allowSpectators: this.allowSpectators,
 		});
 
 		// return updated game

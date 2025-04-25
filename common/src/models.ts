@@ -7,6 +7,8 @@ export type PromotionType = "rook" | "knight" | "bishop" | "queen";
 
 export type GameResultFull = { reason: GameEndReason; result: GameEndType };
 
+export type allowSpectators = "private" | "public" | "users";
+
 export type GameEndReason =
 	| "whiteInCheckmate"
 	| "whiteInStalemate"

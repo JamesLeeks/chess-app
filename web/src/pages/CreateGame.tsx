@@ -11,6 +11,7 @@ export function CreateGame() {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [startingTime, setStartingTime] = useState<number>(600);
 	const [ownerSide, setOwnerSide] = useState<string>("white");
+	const [allowSpectators, setAllowSpectators] = useState<string>("private");
 
 	const navigate = useNavigate();
 
@@ -22,6 +23,8 @@ export function CreateGame() {
 		if (!authHeader) {
 			return;
 		}
+
+		// goes to GamesController.ts, line 21
 		const response = await fetch(`${getApiBase()}/games`, {
 			headers: {
 				"content-type": "application/json",
@@ -33,6 +36,7 @@ export function CreateGame() {
 					ownerSide === "white" || ownerSide === "black"
 						? ownerSide
 						: pickRandomSide(),
+				allowSpectators: allowSpectators,
 			}),
 			method: "POST",
 		});
@@ -53,6 +57,17 @@ export function CreateGame() {
 				disabled={isLoading}
 			/>
 			<input type="string" value={"TODO: username"} disabled={true} />
+			<select
+				value={allowSpectators}
+				onChange={(e) => setAllowSpectators(e.target.value)}
+				disabled={isLoading}
+			>
+				<option value={"private"}>Don't allow public spectating</option>
+				<option value={"public"}>Allow public spectating</option>
+				<option value={"users"} disabled={true}>
+					Allow specified users to spectate
+				</option>
+			</select>
 			<select
 				value={ownerSide} // ...force the select's value to match the state variable...
 				onChange={(e) => setOwnerSide(e.target.value)}

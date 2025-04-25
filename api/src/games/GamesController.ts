@@ -2,7 +2,7 @@ import { Route, Controller, Get, Path, Post, Body, Security, Request } from "tso
 import * as express from "express";
 import { Game, SerializedGame } from "../../../common/src/game";
 import { gameService } from "./GameService";
-import { PieceColour, Position, PromotionType } from "../../../common/src/models";
+import { allowSpectators, PieceColour, Position, PromotionType } from "../../../common/src/models";
 import { getServer } from "../socket";
 import { BadRequestError, NotFoundError, UnauthorizedError } from "../../errorMiddleware";
 import { ensureUserId, getUserIdFromRequest } from "../../authentication";
@@ -16,6 +16,7 @@ interface MakeMoveBody {
 interface AddGameOptions {
 	startingTime: number;
 	ownerSide: PieceColour;
+	allowSpectators: allowSpectators;
 }
 
 @Route("games")
@@ -30,7 +31,7 @@ export class GamesController extends Controller {
 	): Promise<{ id: string }> {
 		const userId = ensureUserId(req);
 
-		const game = await gameService.create(userId, options.startingTime, options.ownerSide);
+		const game = await gameService.create(userId, options.startingTime, options.ownerSide, options.allowSpectators);
 		return {
 			id: game.id,
 		};
@@ -69,7 +70,11 @@ export class GamesController extends Controller {
 			throw new NotFoundError();
 		}
 		if (response.game.playerId) {
-			if (userId !== response.game.ownerId && userId !== response.game.playerId) {
+			if (
+				userId !== response.game.ownerId &&
+				userId !== response.game.playerId &&
+				response.game.allowSpectators !== "public"
+			) {
 				console.log("from GamesController.ts: help");
 				throw new NotFoundError();
 			}

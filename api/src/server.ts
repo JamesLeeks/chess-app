@@ -43,7 +43,11 @@ io.on("connection", (socket: Socket) => {
 		// console.log("User connected.", { gameId, user });
 		if (gameId) {
 			const response = await gameService.get(gameId);
-			if (user.id === response?.game.ownerId || user.id === response?.game.playerId) {
+			if (
+				user.id === response?.game.ownerId ||
+				user.id === response?.game.playerId ||
+				response?.game.allowSpectators === "public"
+			) {
 				socket.join(`game-${gameId}`);
 			} else if (response?.game.playerId) {
 				console.log("from server.ts: user not authorised to see game", user.id, response?.game.playerId);
