@@ -7,6 +7,7 @@ import { Home } from "./pages/Home";
 import { MsalAuthenticationTemplate, MsalProvider } from "@azure/msal-react";
 import { InteractionType, PublicClientApplication } from "@azure/msal-browser";
 import { Profile } from "./pages/Profile";
+import { CreateAccount } from "./pages/CreateUser";
 
 function App({ instance }: { instance: PublicClientApplication }) {
 	return (
@@ -23,14 +24,21 @@ function App({ instance }: { instance: PublicClientApplication }) {
 							<MsalAuthenticationTemplate
 								interactionType={InteractionType.Redirect}
 							>
+								{/* <RequireAccount> */}{" "}
+								{/* TODO: add RequireAccount component */}
 								<Outlet />
+								{/* </RequireAccount> */}
 							</MsalAuthenticationTemplate>
 						}
 					>
 						{/* <Route path="/play/" element={<ListGames />} /> */}
 						<Route path="/play/new" element={<CreateGame />} />
 						<Route path="/play/:id" element={<Play />} />
-						<Route path="/profile" element={<Profile />}></Route>
+						<Route path="/account" element={<Profile />}></Route>
+						<Route
+							path="/account/new"
+							element={<CreateAccount />}
+						></Route>
 					</Route>
 				</Routes>
 			</MsalProvider>

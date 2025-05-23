@@ -1,7 +1,7 @@
 import { Route, Controller, Get, Path, Post, Body, Security, Request } from "tsoa";
 import * as express from "express";
 import { Game, SerializedGame } from "../../../common/src/game";
-import { gameService } from "./GameService";
+import { gameService } from "../services/GameService";
 import { allowSpectators, PieceColour, Position, PromotionType } from "../../../common/src/models";
 import { getServer } from "../socket";
 import { BadRequestError, NotFoundError, UnauthorizedError } from "../../errorMiddleware";
@@ -20,7 +20,7 @@ interface AddGameOptions {
 }
 
 @Route("games")
-export class GamesController extends Controller {
+export class GameController extends Controller {
 	@Security("AADB2C")
 	@Post()
 	public async addGame(
@@ -66,7 +66,7 @@ export class GamesController extends Controller {
 
 		const response = await gameService.get(gameId);
 		if (!response) {
-			console.log("from GamesController.ts: ACTUAL NOT FOUND ERROR");
+			console.log("from GameController.ts: ACTUAL NOT FOUND ERROR");
 			throw new NotFoundError();
 		}
 		if (response.game.playerId) {
@@ -75,7 +75,7 @@ export class GamesController extends Controller {
 				userId !== response.game.playerId &&
 				response.game.allowSpectators !== "public"
 			) {
-				console.log("from GamesController.ts: help");
+				console.log("from GameController.ts: help");
 				throw new NotFoundError();
 			}
 		}

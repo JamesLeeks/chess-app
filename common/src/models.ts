@@ -21,17 +21,6 @@ export type GameEndReason =
 
 export type GameEndType = "whiteWins" | "blackWins" | "draw" | undefined;
 
-export type Foo =
-	| {
-			result: "win";
-			winningColour: PieceColour;
-			reason: "checkmate" | "opponentResigned" | "opponentRanOutOfTime";
-	  }
-	| {
-			result: "draw";
-			reason: "stalemate" | "threefoldRepetition" | "fiftyMoveRule"; // add other reasons
-	  };
-
 export interface Position {
 	row: number;
 	column: number;
@@ -55,3 +44,13 @@ export interface HistoryItem {
 	boardString: string;
 	timePlayed: number;
 }
+
+export type Account = {
+	username: string;
+};
+
+export type User = {
+	id: string;
+	username: string;
+	type: "user";
+};

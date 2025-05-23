@@ -1,4 +1,5 @@
 import * as express from "express";
+import { ValidateError } from "tsoa";
 
 export class BadRequestError extends Error {}
 export class NotFoundError extends Error {}
@@ -24,6 +25,17 @@ export function RegisterErrorMiddleware(app: express.Application) {
 		if (err instanceof NotFoundError) {
 			return res.status(404).json({
 				message: "Not Found",
+			});
+		}
+		if (err instanceof ValidateError) {
+			console.log("Convert ValidateError to 422 response");
+			res.status(422).json({
+				errors: Object.keys(err.fields).map((fieldName) => {
+					console.log("Field name:", fieldName);
+					const unprefixedFieldName = fieldName.substring(fieldName.indexOf(".") + 1);
+					const field = err.fields[fieldName];
+					return { propertyName: unprefixedFieldName, errorMessage: field.message };
+				}),
 			});
 		}
 		if (err) {

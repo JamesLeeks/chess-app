@@ -118,7 +118,7 @@ export function Play() {
 		return game;
 	}
 
-	async function onclick() {
+	async function joinGame() {
 		setIsLoading(true);
 
 		// call api
@@ -172,7 +172,7 @@ export function Play() {
 	} else if (!game.playerId) {
 		return (
 			<>
-				<button onClick={onclick} disabled={isLoading}>
+				<button onClick={joinGame} disabled={isLoading}>
 					Join Game
 				</button>
 			</>

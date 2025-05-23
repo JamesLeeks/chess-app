@@ -99,7 +99,7 @@ export async function expressAuthentication(
 
 export function getUserIdFromRequest(req: express.Request): string {
 	const user = req.user as any; // eslint-disable-line @typescript-eslint/no-explicit-any
-	const userId = user.id;
+	const userId = user?.id;
 	return userId;
 }
 export function ensureUserId(req: express.Request): string {

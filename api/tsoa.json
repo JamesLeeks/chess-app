@@ -5,7 +5,20 @@
 	"spec": {
 		"name": "chess.james.leeks.net",
 		"outputDirectory": "build",
-		"specVersion": 3
+		"specVersion": 3,
+		"securityDefinitions": {
+			"oauth-bearer": {
+				"type": "oauth2",
+				"authorizationUrl": "https://chessapp.b2clogin.com/chessapp.onmicrosoft.com/B2C_1_susi/oauth2/v2.0/authorize",
+				"tokenUrl": "https://chessapp.b2clogin.com/chessapp.onmicrosoft.com/B2C_1_susi/oauth2/v2.0/token",
+				"flow": "accessCode",
+				"scopes": {
+					"openid": "OpenID access",
+					"offline_access": "Offline access",
+					"https://chessapp.onmicrosoft.com/chess-app-api/Api.General": "General API Access"
+				}
+			}
+		}
 	},
 	"routes": {
 		"authenticationModule": "./authentication.ts",

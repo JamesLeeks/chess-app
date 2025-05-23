@@ -6,7 +6,7 @@ import { createServer } from "./socket";
 import { Socket } from "socket.io";
 import passport from "passport";
 import { registerStrategies } from "../authentication";
-import { gameService } from "./games/GameService";
+import { gameService } from "./services/GameService";
 
 const server = http.createServer(app);
 

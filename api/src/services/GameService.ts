@@ -23,7 +23,7 @@ export class GameService {
 		const client = new CosmosClient({ endpoint: url, aadCredentials: credential });
 
 		const { database } = await client.databases.createIfNotExists({ id: "chess-app" });
-		const { container } = await database.containers.createIfNotExists({ id: "games" });
+		const { container } = await database.containers.createIfNotExists({ id: "games", partitionKey: "/id" });
 
 		this.container = container;
 
