@@ -40,6 +40,7 @@ export function Play() {
 				await setUpSocket(game);
 			}
 		})();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	async function setUpSocket(game: Game | undefined) {

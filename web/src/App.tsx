@@ -36,7 +36,7 @@ function App({ instance }: { instance: PublicClientApplication }) {
 						<Route path="/play/:id" element={<Play />} />
 						<Route path="/account" element={<Profile />}></Route>
 						<Route
-							path="/account/new"
+							path="/account/update"
 							element={<CreateAccount />}
 						></Route>
 					</Route>

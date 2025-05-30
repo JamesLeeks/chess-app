@@ -26,7 +26,7 @@ export function Profile() {
 			setResponseStatus(response.status);
 			if (response.status === 404) {
 				console.log("TODO: get user to create username");
-				navigate("/account/new");
+				navigate("/account/update");
 				return;
 			}
 			if (!response.ok) {
@@ -36,7 +36,12 @@ export function Profile() {
 			console.log("user: ", { responseBody });
 			setUser(responseBody);
 		})();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	function onClick() {
+		navigate("/account/update");
+	}
 
 	if (responseStatus === 404) {
 		return <>404 User not found.</>;
@@ -51,6 +56,9 @@ export function Profile() {
 			{/* {" "}
 			Username: {user?.username} Email Address: {userEmail} */}
 			{user?.username}
+			<div>
+				<button onClick={onClick}>Edit User Profile</button>
+			</div>
 		</>
 	);
 }
