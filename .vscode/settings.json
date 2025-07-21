@@ -4,6 +4,20 @@
 	},
 	"editor.formatOnSave": true,
 	"liveSassCompile.settings.showOutputWindowOn": "Error",
+	"liveSassCompile.settings.formats": [
+		{
+			"format": "expanded",
+			"extensionName": ".css",
+			"savePath": "web/src/css",
+			"savePathReplacementPairs": null
+		},
+		{
+			"format": "compressed",
+			"extensionName": ".min.css",
+			"savePath": "web/src/css",
+			"savePathReplacementPairs": null
+		}
+	],
 	"jest.rootPath": "common",
 	"jest.jestCommandLine": "jest"
 }

@@ -1,13 +1,13 @@
 import { Outlet, Route, Routes } from "react-router-dom";
-import "./App.css";
+import "./css/App.css";
 import { CreateGame } from "./pages/CreateGame";
 import { Play } from "./pages/Play";
-import { LocalGame } from "./pages/LocalGame";
 import { Home } from "./pages/Home";
 import { MsalAuthenticationTemplate, MsalProvider } from "@azure/msal-react";
 import { InteractionType, PublicClientApplication } from "@azure/msal-browser";
 import { Profile } from "./pages/Profile";
 import { CreateAccount } from "./pages/CreateUser";
+import { BannerPage } from "./components/Banner";
 
 function App({ instance }: { instance: PublicClientApplication }) {
 	return (
@@ -16,7 +16,7 @@ function App({ instance }: { instance: PublicClientApplication }) {
 				<Routes>
 					{/* Unauthenticated pages */}
 					<Route path="/" element={<Home />} />
-					<Route path="/play/local" element={<LocalGame />} />
+					<Route path="/play/local" element={<BannerPage />} />
 
 					{/* Pages that need the user signed in */}
 					<Route

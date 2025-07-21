@@ -1,3 +1,74 @@
+body {
+  background-color: rgb(59, 59, 59);
+}
+
+.banner-grid {
+  display: grid;
+  grid-template-rows: 1fr 15fr;
+}
+
+body {
+  background-color: rgb(46, 46, 56);
+  font-size: 1vw;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+.container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  background-color: rgb(66, 66, 81);
+  border-radius: 0.6em;
+  border-color: rgb(66, 66, 81);
+  border-style: none;
+  padding: 2px;
+  text-decoration: none;
+  display: block;
+  color: white;
+  font-weight: 600;
+  height: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button:hover {
+  background-color: rgb(113, 113, 124);
+  border-color: rgb(113, 113, 124);
+}
+
+.button:active {
+  box-shadow: none;
+}
+
+.home-actions {
+  padding-inline-start: 0;
+}
+
+.home-actions > li {
+  list-style-type: none;
+  padding: 1em;
+  width: 15em;
+}
+
+@font-face {
+  /* <!-- https://www.dafont.com/g7-segment7-s5.font?fpp=200&l[]=10&l[]=1&text=12%3A34%3A56%3A78%3A90 --> */
+  font-family: "G7 Segment7 S5";
+  src: url("../G7Segment7S5.woff2") format("woff2"), url("../G7Segment7S5.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 .black .a1 {
   grid-area: cell-18;
 }
@@ -189,18 +260,6 @@
 }
 .black .h8 {
   grid-area: cell-81;
-}
-
-@font-face {
-  /* <!-- https://www.dafont.com/g7-segment7-s5.font?fpp=200&l[]=10&l[]=1&text=12%3A34%3A56%3A78%3A90 --> */
-  font-family: "G7 Segment7 S5";
-  src: url("G7Segment7S5.woff2") format("woff2"), url("G7Segment7S5.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-body {
-  background-color: rgb(59, 59, 59);
 }
 
 @media (min-width: 1327px) {
@@ -448,7 +507,7 @@ body {
 }
 
 .square {
-  background-image: url("images/darkSquares.png");
+  background-image: url("../images/darkSquares.png");
   padding-top: 100%;
   position: relative;
 }
@@ -461,11 +520,11 @@ body {
 .square:nth-of-type(16n + 12),
 .square:nth-of-type(16n + 14),
 .square:nth-of-type(16n + 16) {
-  background-image: url("images/lightSquares.png");
+  background-image: url("../images/lightSquares.png");
 }
 
 .square.selected {
-  background-image: url("images/darkSquareSelected.png");
+  background-image: url("../images/darkSquareSelected.png");
   cursor: pointer;
 }
 
@@ -477,11 +536,11 @@ body {
 .square.selected:nth-of-type(16n + 12),
 .square.selected:nth-of-type(16n + 14),
 .square.selected:nth-of-type(16n + 16) {
-  background-image: url("images/lightSquareSelected.png");
+  background-image: url("../images/lightSquareSelected.png");
 }
 
 .square.move-option {
-  background-image: url("images/darkSquareMoves.png");
+  background-image: url("../images/darkSquareMoves.png");
   cursor: pointer;
 }
 
@@ -493,7 +552,7 @@ body {
 .square.move-option:nth-of-type(16n + 12),
 .square.move-option:nth-of-type(16n + 14),
 .square.move-option:nth-of-type(16n + 16) {
-  background-image: url("images/lightSquareMoves.png");
+  background-image: url("../images/lightSquareMoves.png");
   cursor: pointer;
 }
 
@@ -510,49 +569,53 @@ body {
 }
 
 .black-rook {
-  content: url("images/blackRook.png");
+  content: url("../images/blackRook.png");
 }
 
 .black-knight {
-  content: url("images/blackKnight.png");
+  content: url("../images/blackKnight.png");
 }
 
 .black-bishop {
-  content: url("images/blackBishop.png");
+  content: url("../images/blackBishop.png");
 }
 
 .black-queen {
-  content: url("images/blackQueen.png");
+  content: url("../images/blackQueen.png");
 }
 
 .black-king {
-  content: url("images/blackKing.png");
+  content: url("../images/blackKing.png");
 }
 
 .black-pawn {
-  content: url("images/blackPawn.png");
+  content: url("../images/blackPawn.png");
 }
 
 .white-rook {
-  content: url("images/whiteRook.png");
+  content: url("../images/whiteRook.png");
 }
 
 .white-knight {
-  content: url("images/whiteKnight.png");
+  content: url("../images/whiteKnight.png");
 }
 
 .white-bishop {
-  content: url("images/whiteBishop.png");
+  content: url("../images/whiteBishop.png");
 }
 
 .white-queen {
-  content: url("images/whiteQueen.png");
+  content: url("../images/whiteQueen.png");
 }
 
 .white-king {
-  content: url("images/whiteKing.png");
+  content: url("../images/whiteKing.png");
 }
 
 .white-pawn {
-  content: url("images/whitePawn.png");
+  content: url("../images/whitePawn.png");
+}
+
+.banner {
+  background-color: rgb(136, 68, 163);
 }/*# sourceMappingURL=App.css.map */
