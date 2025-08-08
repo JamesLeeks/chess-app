@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Game, SerializedGame } from "../../../common/src/game";
 import { GameComponent } from "../components/Game";
 import { Position, PromotionType } from "../../../common/src/models";
@@ -165,21 +165,11 @@ export function Play() {
 		}
 		return (
 			<>
-				<div className="layout">
-					<div className="banner">
-						<Link className="button" to="/">
-							Home
-						</Link>
-						<Link className="button" to="/account">
-							Profile
-						</Link>
-					</div>
-					<GameComponent
-						game={game}
-						makeMove={makeMove}
-						allowedSides={[userSide]}
-					/>
-				</div>
+				<GameComponent
+					game={game}
+					makeMove={makeMove}
+					allowedSides={[userSide]}
+				/>
 			</>
 		);
 	} else if (!game.playerId) {
