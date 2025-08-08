@@ -1,5 +1,4 @@
 import { Outlet, Route, Routes } from "react-router-dom";
-import "./css/App.css";
 import { CreateGame } from "./pages/CreateGame";
 import { Play } from "./pages/Play";
 import { Home } from "./pages/Home";
@@ -7,7 +6,8 @@ import { MsalAuthenticationTemplate, MsalProvider } from "@azure/msal-react";
 import { InteractionType, PublicClientApplication } from "@azure/msal-browser";
 import { Profile } from "./pages/Profile";
 import { CreateAccount } from "./pages/CreateUser";
-import { BannerPage } from "./components/Banner";
+import { BannerPage } from "./pages/LocalBanner";
+import "./css/App.css";
 
 function App({ instance }: { instance: PublicClientApplication }) {
 	return (

@@ -16,6 +16,7 @@ export function HistoryComponent(props: HistoryProps) {
 		const historyItemB = history[index + 1];
 		historyElements.push(
 			<div className="history-item" key={`history-${index}`}>
+				{/* move number */}
 				{index / 2 + 1}.{" "}
 				<span
 					className={

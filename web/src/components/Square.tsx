@@ -34,7 +34,7 @@ export function Square(props: SquareProps) {
 	) : undefined;
 	return (
 		<div
-			className={`square ${displayType} ${toNotation(props.position)}`}
+			className={`square ${displayType} ${toNotation(props.position)}`} // TODO: remove ${toNotation(props.position)} ?????
 			onClick={onSquareClick}
 		>
 			{squareContent}

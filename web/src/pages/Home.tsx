@@ -7,17 +7,17 @@ export function Home() {
 			<div className="container">
 				<ul className="home-actions">
 					<li>
-						<Link className="button" to="/play/new">
+						<Link className="home-button" to="/play/new">
 							new game
 						</Link>
 					</li>
 					<li>
-						<Link className="button" to="">
+						<Link className="home-button" to="">
 							my games
 						</Link>
 					</li>
 					<li>
-						<Link className="button" to="/play/local">
+						<Link className="home-button" to="/play/local">
 							local game
 						</Link>
 					</li>

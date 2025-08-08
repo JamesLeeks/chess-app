@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Game, SerializedGame } from "../../../common/src/game";
 import { GameComponent } from "../components/Game";
 import { Position, PromotionType } from "../../../common/src/models";
@@ -164,11 +164,23 @@ export function Play() {
 			throw new Error("user should have side");
 		}
 		return (
-			<GameComponent
-				game={game}
-				makeMove={makeMove}
-				allowedSides={[userSide]}
-			/>
+			<>
+				<div className="layout">
+					<div className="banner">
+						<Link className="button" to="/">
+							Home
+						</Link>
+						<Link className="button" to="/account">
+							Profile
+						</Link>
+					</div>
+					<GameComponent
+						game={game}
+						makeMove={makeMove}
+						allowedSides={[userSide]}
+					/>
+				</div>
+			</>
 		);
 	} else if (!game.playerId) {
 		return (

@@ -1,18 +1,10 @@
-$purple: rgb(81, 32, 100);
-$lightPurple: rgb(136, 68, 163);
-$clockBorderWidth: 4px;
-$desktopDisplayBreakpoint: 1327px;
-$tabletDisplayBreakpoint: 554px;
-
-@font-face {
-	/* <!-- https://www.dafont.com/g7-segment7-s5.font?fpp=200&l[]=10&l[]=1&text=12%3A34%3A56%3A78%3A90 --> */
-	font-family: "G7 Segment7 S5";
-	src: url("../G7Segment7S5.woff2") format("woff2"),
-		url("../G7Segment7S5.woff") format("woff");
-	font-weight: normal;
-	font-style: normal;
-	font-display: swap;
-}
+// TODO LIST
+// ✅ change clock to match history
+// ✅ change history to be wider in mobile layout
+// ✅ move over to react
+// ✅ add selected squares etc.
+// ✅ fix history
+// ❌ add promotion menu
 
 .black {
 	.a1 {
@@ -190,7 +182,7 @@ $tabletDisplayBreakpoint: 554px;
 		grid-area: cell-71;
 	}
 
-	.a8 {
+	.square.a8 {
 		grid-area: cell-88;
 	}
 	.b8 {
@@ -216,274 +208,132 @@ $tabletDisplayBreakpoint: 554px;
 	}
 }
 
-// if width is greater than displayBreakpoint:
-// use desktop sizes
-@media (min-width: $desktopDisplayBreakpoint) {
-	.game {
-		grid-template-columns: 2fr 3fr 2fr;
-		position: absolute;
-		height: 100%;
-		width: 100%;
-	}
+$borderWidth: 0.2vw;
+$borderRadius: 0.8vw;
+
+html {
+	// set height to 100% so that body can use 100% of screen height
+	height: 100%;
+	background-color: rgb(38, 38, 38);
 }
 
-.game {
+body {
+	// set margin to zero so that layout can take up the whole screen
+	margin: 0;
+	// set height to 100% so that layout can use 100% of screen height
+	height: 100%;
+}
+
+#root {
+	margin: 0;
+	height: 100%;
+}
+
+.layout {
+	// set height to 100% so that layout takes up the entire screen
+	height: 100%;
+	background-color: rgb(65, 65, 65);
+	// row one is for the banner, row two is for the page content
 	display: grid;
+	grid-template-rows: 75fr 925fr;
 }
 
-.promotion-button {
-	border-width: 5px;
-	background-color: rgb(129, 129, 129);
+.banner {
+	background-color: rgb(29, 29, 29);
+	margin: 0;
+	display: inline-flex;
+	// border-top: 0;
+	// border-left: 0;
+	// border-right: 0;
+	// border-bottom: $borderWidth;
+	// border-style: solid;
+	// border-color: rgb(66, 66, 81);
 }
-
-.clock-panel {
-	// background-color: blue;
-	min-height: 3em;
+.button {
+	background-color: rgb(29, 29, 29);
+	color: rgb(214, 214, 214);
+	font-size: 200%;
+	font-weight: bold;
+	border-width: 0;
+	padding: 0.5vw;
+	margin: 0;
+	cursor: pointer;
+	text-decoration: none;
 	display: flex;
-	flex-direction: row;
 	justify-content: center;
 	align-items: center;
-	padding-top: 0.5em;
-	padding-bottom: 1em;
 }
 
-.clock {
-	background-color: rgb(108, 108, 108);
-	font-family: "G7 Segment7 S5";
-	font-weight: normal;
-	font-style: normal;
-	font-size: 8vw;
-	border-width: $clockBorderWidth/2;
-	border-color: black;
-	border-style: solid;
-	/* border: 1px solid cyan; */
-	width: 38vw;
-	text-align: center;
+// .button {
+// 	background-color: rgb(29, 29, 29);
+// 	color: rgb(214, 214, 214);
+// 	font-size: 200%;
+// 	font-weight: bold;
+// 	// border-top: 0;
+// 	// border-left: 0;
+// 	// border-right: 0;
+// 	// border-width: $borderWidth;
+// 	border-width: 0;
+// 	// border-style: solid;
+// 	// border-radius: $borderRadius;
+// 	// border-color: rgb(66, 66, 81);
+// 	padding: 0.5vw;
+// 	// padding: 1%;
+// 	// height: 100%;
+// 	// margin: 0.5vw;
+// 	margin: 0;
+// 	cursor: pointer;
+// 	text-decoration: none;
+// 	// display: inline-block;
+
+// 	// padding-block: 1px;
+// 	// appearance: auto;
+// 	// text-rendering: auto;
+// 	// letter-spacing: normal;
+// 	// word-spacing: normal;
+// 	// line-height: normal;
+// 	// text-transform: none;
+// 	// text-indent: 0px;
+// 	// text-shadow: none;
+// 	// display: inline-block;
+// 	// // display: block;
+// 	// text-align: center;
+// 	// cursor: default;
+// 	// box-sizing: border-box;
+// 	// margin: 0em;
+// 	// padding-block: 1px;
+// 	// padding-inline: 6px;
+// 	// border-width: 2px;
+// 	// border-style: outset;
+// 	// border-color: buttonborder;
+// 	// border-image: initial;
+// }
+// a.button {
+// 	padding-top: 1vw;
+// }
+
+.button:hover {
+	background-color: rgb(45, 45, 45);
 }
 
-.clock.active {
-	color: $purple;
-}
-
-@media (max-width: $desktopDisplayBreakpoint) {
-	.clock:not(:last-of-type) {
-		border-top-left-radius: 12px;
-		border-bottom-left-radius: 12px;
-	}
-
-	.clock:not(:first-of-type) {
-		border-left-width: 0px;
-		border-top-right-radius: 12px;
-		border-bottom-right-radius: 12px;
-	}
-}
-
-@media (max-width: $tabletDisplayBreakpoint) {
-	.clock:not(:last-of-type) {
-		border-top-left-radius: 8px;
-		border-bottom-left-radius: 8px;
-	}
-
-	.clock:not(:first-of-type) {
-		border-left-width: 0px;
-		border-top-right-radius: 8px;
-		border-bottom-right-radius: 8px;
-	}
-}
-
-// if width is greater than displayBreakpoint:
-// use desktop sizes
-@media (min-width: $desktopDisplayBreakpoint) {
-	.clock-panel {
-		padding-top: 0;
-		padding-bottom: 0;
-		flex-direction: column;
-	}
-
-	.clock {
-		font-size: 4vw;
-		border-width: $clockBorderWidth;
-		width: 20vw;
-	}
-
-	.clock:not(:last-of-type) {
-		border-bottom-width: calc($clockBorderWidth/2);
-		border-top-left-radius: 12px;
-		border-top-right-radius: 12px;
-	}
-
-	.clock:not(:first-of-type) {
-		border-left-width: $clockBorderWidth;
-		border-top-width: calc($clockBorderWidth/2);
-		border-bottom-left-radius: 12px;
-		border-bottom-right-radius: 12px;
-	}
-}
-
-// if width is greater than displayBreakpoint:
-// use tablet sizes
-@media (min-width: $tabletDisplayBreakpoint) {
-	.clock {
-		border-width: 4px;
-	}
+.button:active,
+.button:focus {
+	background-color: rgb(51, 51, 51);
 }
 
 .board-panel {
-	/* background-color: red; */
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-
-	align-items: center;
-}
-
-.history-panel {
-	/* background-color: green; */
 	display: flex;
 	flex-direction: column;
+	// lines 32-33 center panel content
 	justify-content: center;
 	align-items: center;
-	padding-top: 8px;
-}
-
-.history-panel-item {
-	border-color: black;
-	border-width: 4px;
-	border-style: solid;
-}
-
-.history {
-	background-color: rgb(108, 108, 108);
-	font-size: 4vw;
-	display: flex;
-	align-content: center;
-	flex-wrap: wrap;
-	width: 80vw;
-	text-align: center;
-	border-width: 2px;
-}
-
-.result {
-	background-color: rgb(108, 108, 108);
-	border-bottom: 0;
-	width: 80vw;
-	text-align: center;
-	border-width: 2px;
-}
-
-// if width is greater than displayBreakpoint:
-// use tablet sizes
-@media (min-width: $tabletDisplayBreakpoint) {
-	.history {
-		border-width: 4px;
-		font-size: 2.4vw;
-	}
-	.result {
-		border-width: 4px;
-		font-size: 2.4vw;
-	}
-}
-
-// if width is greater than displayBreakpoint:
-// use desktop sizes
-@media (min-width: $desktopDisplayBreakpoint) {
-	.history {
-		border-width: 4px;
-		font-size: 1.2vw;
-		width: 20vw;
-		border-radius: 12px;
-	}
-
-	.result {
-		border-width: 4px;
-		font-size: 1.2vw;
-		width: 20vw;
-		border-bottom: 0;
-	}
-
-	.history-panel-item:not(:last-of-type) {
-		border-top-left-radius: 12px;
-		border-top-right-radius: 12px;
-	}
-
-	.history-panel-item:not(:first-of-type) {
-		border-bottom-left-radius: 12px;
-		border-bottom-right-radius: 12px;
-		border-top-left-radius: 0;
-		border-top-right-radius: 0;
-	}
-}
-
-.history-panel-item:not(:last-of-type) {
-	border-top-left-radius: 12px;
-	border-top-right-radius: 12px;
-}
-
-.history-panel-item:not(:first-of-type) {
-	border-bottom-left-radius: 12px;
-	border-bottom-right-radius: 12px;
-	border-top-left-radius: 0;
-	border-top-right-radius: 0;
-}
-
-@media (max-width: $desktopDisplayBreakpoint) {
-	.history {
-		border-radius: 12px;
-	}
-}
-
-@media (max-width: $tabletDisplayBreakpoint) {
-	.history {
-		border-radius: 8px;
-	}
-}
-
-.history-item {
-	margin: 0.2em;
-	span {
-		cursor: pointer;
-	}
-}
-
-.selected-history-item {
-	color: $purple;
-	font-weight: bold;
-}
-
-.result-text {
-	font-size: 2em;
-}
-
-.result-button-container {
-	padding-bottom: 6px;
-}
-
-.result-button {
-	font-size: 1.5em;
-	cursor: pointer;
-	border-width: 3px;
-	border-style: solid;
-	border-radius: 6px;
-	background-color: rgb(129, 129, 129);
-}
-
-.result-button:hover {
-	background-color: rgb(119, 119, 119);
-	border-color: rgb(44, 44, 44);
-	color: rgb(81, 32, 100);
-	font-weight: bold;
-}
-
-.result-button:active {
-	background-color: rgb(134, 134, 134);
-	border-color: rgb(44, 44, 44);
-	color: rgb(126, 51, 155);
-	font-weight: bold;
 }
 
 .board {
 	display: grid;
+	// give the grid 8 equally sized columns
 	grid-template-columns: repeat(8, 1fr);
+	// make the board use all of the availible space (otherwise it won't show up)
 	grid-template-areas:
 		"cell-11 cell-12 cell-13 cell-14 cell-15 cell-16 cell-17 cell-18"
 		"cell-21 cell-22 cell-23 cell-24 cell-25 cell-26 cell-27 cell-28"
@@ -493,16 +343,21 @@ $tabletDisplayBreakpoint: 554px;
 		"cell-61 cell-62 cell-63 cell-64 cell-65 cell-66 cell-67 cell-68"
 		"cell-71 cell-72 cell-73 cell-74 cell-75 cell-76 cell-77 cell-78"
 		"cell-81 cell-82 cell-83 cell-84 cell-85 cell-86 cell-87 cell-88";
+	// set the cell locations for the board
 	width: 100%;
-	max-width: 800px;
+	// set max width
+	max-width: 380vw;
 }
 
 .square {
+	// set background image
 	background-image: url("../images/darkSquares.png");
+	// set padding (otherwise it won't show up)
 	padding-top: 100%;
-	position: relative;
+	position: relative; // TODO: relook at whether this needs to be here
 }
 
+// set every other square to white
 .square:nth-of-type(16n + 1),
 .square:nth-of-type(16n + 3),
 .square:nth-of-type(16n + 5),
@@ -547,15 +402,270 @@ $tabletDisplayBreakpoint: 554px;
 	cursor: pointer; // option
 }
 
+@font-face {
+	// Font from: https://www.dafont.com/g7-segment7-s5.font?fpp=200&l[]=10&l[]=1&text=12%3A34%3A56%3A78%3A90
+	font-family: "G7 Segment7 S5";
+	src: url("../G7Segment7S5.woff2") format("woff2"),
+		url("../G7Segment7S5.woff") format("woff");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+.clock {
+	// background-color: rgb(108, 108, 108);
+	// background-color: rgb(66, 66, 81);
+	// background-color: rgb(46, 46, 56);
+	// color: rgb(214, 214, 214);
+	background-color: rgb(52, 52, 52);
+	color: rgb(214, 214, 214);
+	font-family: "G7 Segment7 S5";
+	font-weight: normal;
+	font-style: normal;
+	font-size: 8vw;
+	border-width: calc($borderWidth/2);
+	// border-color: rgb(66, 66, 81);
+	border-color: rgb(52, 52, 52);
+	border-style: solid;
+	width: 38vw;
+	text-align: center;
+	cursor: default;
+}
+.clock div {
+	margin: 0.2vw;
+}
+
+.clock-active {
+	background-color: rgb(68, 68, 68);
+	border-width: calc($borderWidth/2);
+	border-color: rgb(68, 68, 68);
+	border-style: solid;
+	border-radius: $borderRadius;
+}
+
+.history-panel {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.history-panel-item {
+	border-radius: 0.8vw;
+}
+
+// result
+.history-panel-item:not(:last-of-type) {
+	border-top-left-radius: 0.8vw;
+	border-top-right-radius: 0.8vw;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+// history
+.history-panel-item:not(:first-of-type) {
+	border-bottom-left-radius: 0.8vw;
+	border-bottom-right-radius: 0.8vw;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+
+.result-old {
+	background-color: rgb(46, 46, 56);
+	color: rgb(214, 214, 214);
+	padding: 0.3vw;
+	border-color: rgb(66, 66, 81);
+	border-width: $borderWidth;
+	border-radius: $borderRadius;
+	border-color: rgb(66, 66, 81);
+	border-style: solid;
+	border-bottom: 0;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+		"Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+		"Helvetica Neue", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-size: 1.5vw;
+	margin-right: 0;
+	width: 20vw;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.history-old {
+	background-color: rgb(46, 46, 56);
+	color: rgb(214, 214, 214);
+	padding: 0.3vw;
+	border-color: rgb(66, 66, 81);
+	border-width: $borderWidth;
+	border-radius: $borderRadius;
+	border-color: rgb(66, 66, 81);
+	border-style: solid;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+		"Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+		"Helvetica Neue", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-size: 1.5vw;
+	margin-right: 0;
+	width: 20vw;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.result {
+	background-color: rgb(52, 52, 52);
+	color: rgb(214, 214, 214);
+	padding: 0.3vw;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+		"Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+		"Helvetica Neue", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-size: 1.5vw;
+	margin-right: 0;
+	width: 20vw;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: default;
+}
+
+.history {
+	background-color: rgb(52, 52, 52);
+	color: rgb(214, 214, 214);
+	padding: 0.3vw;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+		"Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+		"Helvetica Neue", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-size: 1.5vw;
+	margin-right: 0;
+	width: 20vw;
+	display: flex;
+	flex-wrap: wrap;
+	cursor: default;
+}
+
+.history-item {
+	margin: 0.2em;
+	span {
+		cursor: pointer;
+	}
+	display: block;
+}
+
+.history-item span:hover {
+	background-color: rgb(68, 68, 68);
+}
+
+.history-item span:active {
+	background-color: rgb(74, 74, 74);
+}
+
+.selected-history-item {
+	text-decoration: underline;
+}
+
+// .content {
+// 	background-color: darkorchid;
+// 	display: grid;
+// 	grid-template-columns: 2fr 3fr 2fr;
+// 	height: 92.5%;
+// }
+
+// mobile layout
+@media (max-aspect-ratio: 7/6) {
+	.content {
+		// TODO: add in page content and work out it will look
+		background-color: rgb(38, 38, 38);
+	}
+	.clock-panel {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+	.clock {
+		margin-bottom: 2vw;
+		margin-top: 2vw;
+		border-width: $borderWidth;
+	}
+	.clock:not(:last-of-type) {
+		border-top-left-radius: $borderRadius;
+		border-bottom-left-radius: $borderRadius;
+	}
+
+	.clock:not(:first-of-type) {
+		border-left-width: 0;
+		border-top-right-radius: $borderRadius;
+		border-bottom-right-radius: $borderRadius;
+	}
+	.result {
+		width: 80%;
+		margin-top: 4vw;
+		font-size: 200%;
+	}
+	.history {
+		width: 80%;
+		font-size: 150%;
+	}
+}
+
+// desktop layout
+@media (min-aspect-ratio: 7/6) {
+	.content {
+		// background-color: darkorchid;
+		// background-color: rgb(46, 46, 56);
+		background-color: rgb(38, 38, 38);
+		display: grid;
+		grid-template-columns: 2fr 3fr 2fr;
+		// height: 92.5%;
+	}
+
+	.clock-panel {
+		padding-top: 0;
+		padding-bottom: 0;
+		flex-direction: column;
+		display: flex;
+		// flex-direction: row;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.clock {
+		font-size: 4vw;
+		border-width: $borderWidth;
+		width: 20vw;
+	}
+
+	.clock:not(:last-of-type) {
+		border-bottom-width: calc($borderWidth/2);
+		border-top-left-radius: 0.8vw;
+		border-top-right-radius: 0.8vw;
+	}
+
+	.clock:not(:first-of-type) {
+		border-left-width: $borderWidth;
+		border-top-width: calc($borderWidth/2);
+		border-bottom-left-radius: 0.8vw;
+		border-bottom-right-radius: 0.8vw;
+	}
+}
+
 .piece {
 	position: absolute;
 	top: 0;
 	left: 0;
 	height: 100%;
 	width: 100%;
-}
-
-.pointer {
 	cursor: pointer;
 }
 

@@ -1,8 +1,10 @@
 // TODO LIST
 // ✅ change clock to match history
 // ✅ change history to be wider in mobile layout
+// ✅ move over to react
+// ✅ add selected squares etc.
+// ✅ fix history
 // ❌ add promotion menu
-// ❌ move over to react
 
 $borderWidth: 0.2vw;
 $borderRadius: 0.8vw;
@@ -20,12 +22,17 @@ body {
 	height: 100%;
 }
 
+#root {
+	margin: 0;
+	height: 100%;
+}
+
 .layout {
 	// set height to 100% so that layout takes up the entire screen
 	height: 100%;
 	background-color: rgb(65, 65, 65);
-	display: grid;
 	// row one is for the banner, row two is for the page content
+	display: grid;
 	grid-template-rows: 75fr 925fr;
 }
 
@@ -88,7 +95,7 @@ body {
 
 .square {
 	// set background image
-	background-image: url("../web/src/images/darkSquares.png");
+	background-image: url("../images/darkSquares.png");
 	// set padding (otherwise it won't show up)
 	padding-top: 100%;
 	position: relative; // TODO: relook at whether this needs to be here
@@ -103,14 +110,47 @@ body {
 .square:nth-of-type(16n + 12),
 .square:nth-of-type(16n + 14),
 .square:nth-of-type(16n + 16) {
-	background-image: url("../web/src/images/lightSquares.png");
+	background-image: url("../images/lightSquares.png");
+}
+
+.square.selected {
+	background-image: url("../images/darkSquareSelected.png");
+	cursor: pointer;
+}
+
+.square.selected:nth-of-type(16n + 1),
+.square.selected:nth-of-type(16n + 3),
+.square.selected:nth-of-type(16n + 5),
+.square.selected:nth-of-type(16n + 7),
+.square.selected:nth-of-type(16n + 10),
+.square.selected:nth-of-type(16n + 12),
+.square.selected:nth-of-type(16n + 14),
+.square.selected:nth-of-type(16n + 16) {
+	background-image: url("../images/lightSquareSelected.png");
+}
+
+.square.move-option {
+	background-image: url("../images/darkSquareMoves.png");
+	cursor: pointer; // option
+}
+
+.square.move-option:nth-of-type(16n + 1),
+.square.move-option:nth-of-type(16n + 3),
+.square.move-option:nth-of-type(16n + 5),
+.square.move-option:nth-of-type(16n + 7),
+.square.move-option:nth-of-type(16n + 10),
+.square.move-option:nth-of-type(16n + 12),
+.square.move-option:nth-of-type(16n + 14),
+.square.move-option:nth-of-type(16n + 16) {
+	background-image: url("../images/lightSquareMoves.png");
+	cursor: pointer; // option
 }
 
 @font-face {
 	// Font from: https://www.dafont.com/g7-segment7-s5.font?fpp=200&l[]=10&l[]=1&text=12%3A34%3A56%3A78%3A90
 	font-family: "G7 Segment7 S5";
-	src: url("../web/src/G7Segment7S5.woff2") format("woff2"),
-		url("../web/src/G7Segment7S5.woff") format("woff");
+	src: url("../G7Segment7S5.woff2") format("woff2"),
+		url("../G7Segment7S5.woff") format("woff");
 	font-weight: normal;
 	font-style: normal;
 	font-display: swap;
@@ -127,7 +167,7 @@ body {
 	font-weight: normal;
 	font-style: normal;
 	font-size: 8vw;
-	border-width: $borderWidth/2;
+	border-width: calc($borderWidth/2);
 	// border-color: rgb(66, 66, 81);
 	border-color: rgb(52, 52, 52);
 	border-style: solid;
@@ -135,14 +175,16 @@ body {
 	text-align: center;
 	cursor: default;
 }
+.clock div {
+	margin: 0.2vw;
+}
 
 .clock-active {
 	background-color: rgb(68, 68, 68);
-	border-width: $borderWidth/2;
+	border-width: calc($borderWidth/2);
 	border-color: rgb(68, 68, 68);
 	border-style: solid;
 	border-radius: $borderRadius;
-	margin: 0.3vw;
 }
 
 .history-panel {
@@ -152,11 +194,19 @@ body {
 	align-items: center;
 }
 
+.history-panel-item {
+	border-radius: 0.8vw;
+}
+
+// result
 .history-panel-item:not(:last-of-type) {
 	border-top-left-radius: 0.8vw;
 	border-top-right-radius: 0.8vw;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
 }
 
+// history
 .history-panel-item:not(:first-of-type) {
 	border-bottom-left-radius: 0.8vw;
 	border-bottom-right-radius: 0.8vw;
@@ -265,6 +315,10 @@ body {
 	background-color: rgb(74, 74, 74);
 }
 
+.selected-history-item {
+	text-decoration: underline;
+}
+
 // .content {
 // 	background-color: darkorchid;
 // 	display: grid;
@@ -356,52 +410,53 @@ body {
 	left: 0;
 	height: 100%;
 	width: 100%;
+	cursor: pointer;
 }
 
 .black-rook {
-	content: url("../web/src/images/blackRook.png");
+	content: url("../images/blackRook.png");
 }
 
 .black-knight {
-	content: url("../web/src/images/blackKnight.png");
+	content: url("../images/blackKnight.png");
 }
 
 .black-bishop {
-	content: url("../web/src/images/blackBishop.png");
+	content: url("../images/blackBishop.png");
 }
 
 .black-queen {
-	content: url("../web/src/images/blackQueen.png");
+	content: url("../images/blackQueen.png");
 }
 
 .black-king {
-	content: url("../web/src/images/blackKing.png");
+	content: url("../images/blackKing.png");
 }
 
 .black-pawn {
-	content: url("../web/src/images/blackPawn.png");
+	content: url("../images/blackPawn.png");
 }
 
 .white-rook {
-	content: url("../web/src/images/whiteRook.png");
+	content: url("../images/whiteRook.png");
 }
 
 .white-knight {
-	content: url("../web/src/images/whiteKnight.png");
+	content: url("../images/whiteKnight.png");
 }
 
 .white-bishop {
-	content: url("../web/src/images/whiteBishop.png");
+	content: url("../images/whiteBishop.png");
 }
 
 .white-queen {
-	content: url("../web/src/images/whiteQueen.png");
+	content: url("../images/whiteQueen.png");
 }
 
 .white-king {
-	content: url("../web/src/images/whiteKing.png");
+	content: url("../images/whiteKing.png");
 }
 
 .white-pawn {
-	content: url("../web/src/images/whitePawn.png");
+	content: url("../images/whitePawn.png");
 }

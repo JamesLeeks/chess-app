@@ -1,50 +1,23 @@
-body {
-	background-color: rgb(46, 46, 56);
-	font-size: 1vw;
+html {
+	// set height to 100% so that body can use 100% of screen height
+	height: 100%;
+	background-color: rgb(38, 38, 38);
+	// background-color: red;
 }
 
-html,
-body,
-#root {
-	// this means that the html, body and <div>s with the id "root" (which is the <> </> in the react return)
-	height: 100%;
-	margin: 0;
-}
+// body {
+// 	// set margin to zero so that layout can take up the whole screen
+// 	margin: 0;
+// 	// set height to 100% so that layout can use 100% of screen height
+// 	height: 100%;
+// 	font-size: 1.5vw;
+// }
 
 .container {
 	height: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
-
-.button {
-	background-color: rgb(66, 66, 81);
-	// border-radius: 5px;
-	border-radius: 0.6em;
-	border-color: rgb(66, 66, 81);
-	border-style: none;
-	padding: 2px;
-	text-decoration: none;
-	display: block;
-	color: white;
-	font-weight: 600;
-	// text-align: center;
-	// box-shadow: 2px 2px 2px black;
-	height: 2em;
-
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-.button:hover {
-	background-color: rgb(113, 113, 124);
-	border-color: rgb(113, 113, 124);
-}
-
-.button:active {
-	box-shadow: none;
 }
 
 .home-actions {
@@ -54,5 +27,8 @@ body,
 .home-actions > li {
 	list-style-type: none;
 	padding: 1em;
-	width: 15em;
+	width: 10em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

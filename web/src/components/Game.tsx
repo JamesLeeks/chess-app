@@ -204,7 +204,7 @@ export function GameComponent(params: GameComponentParams) {
 
 	return (
 		<>
-			<div className="game">
+			<div className="content">
 				<div className="clock-panel">
 					<ClockComponent
 						time={opponentTime}

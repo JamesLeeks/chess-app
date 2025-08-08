@@ -1,13 +1,14 @@
-@use "layout";
+// @use "layout";
 @use "Game";
+@use "Home";
 
-$purple: rgb(81, 32, 100);
-$lightPurple: rgb(136, 68, 163);
-$clockBorderWidth: 4px;
-$desktopDisplayBreakpoint: 1327px;
-$tabletDisplayBreakpoint: 554px;
+// $purple: rgb(81, 32, 100);
+// $lightPurple: rgb(136, 68, 163);
+// $clockBorderWidth: 4px;
+// $desktopDisplayBreakpoint: 1327px;
+// $tabletDisplayBreakpoint: 554px;
 
-.banner {
-	background-color: $lightPurple;
-	// min-height: 3em;
-}
+// .banner {
+// 	background-color: $lightPurple;
+// 	// min-height: 3em;
+// }

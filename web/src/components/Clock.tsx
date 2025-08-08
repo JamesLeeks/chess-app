@@ -23,20 +23,26 @@ export function ClockComponent(props: ClockProps) {
 	// 	seconds = time % 60;
 	// 	// arange like this: minutes:seconds
 	// }
-	// TODO: when time low show milliseconds
-	const classString = isActive ? "clock active" : "clock";
+	// when time low show milliseconds
+	const classString = isActive ? "clock-active" : "";
 	if (time > 30) {
 		return (
-			<div className={classString}>
-				{String(hours).padStart(2, "0")}:{String(minutes).padStart(2, "0")}:
-				{String(seconds).padStart(2, "0")}
+			<div className="clock">
+				<div className={classString}>
+					{String(hours).padStart(2, "0")}:
+					{String(minutes).padStart(2, "0")}:
+					{String(seconds).padStart(2, "0")}
+				</div>
 			</div>
 		);
 	}
 	return (
-		<div className={classString}>
-			{String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}.
-			{String(milliseconds).padStart(2, "0")}
+		<div className="clock">
+			<div className={classString}>
+				{String(minutes).padStart(2, "0")}:
+				{String(seconds).padStart(2, "0")}.
+				{String(milliseconds).padStart(2, "0")}
+			</div>
 		</div>
 	);
 }

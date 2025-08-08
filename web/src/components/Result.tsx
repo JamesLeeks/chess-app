@@ -7,11 +7,12 @@ export function ResultComponent(props: ResultProps) {
 		return (
 			<>
 				<div className="result history-panel-item">
-					<div className="result-text">{props.gameResult}</div>
-					<div className="result-button-container">
+					{props.gameResult}
+					{/* <div className="result-text">{props.gameResult}</div> */}
+					{/* <div className="result-button-container">
 						<button className="result-button">Home</button>{" "}
 						<button className="result-button">Rematch</button>
-					</div>
+					</div> */}
 				</div>
 			</>
 		);
