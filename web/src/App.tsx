@@ -6,6 +6,7 @@ import { MsalAuthenticationTemplate, MsalProvider } from "@azure/msal-react";
 import { InteractionType, PublicClientApplication } from "@azure/msal-browser";
 import { Profile } from "./pages/Profile";
 import { CreateAccount } from "./pages/CreateUser";
+import { ConfirmEmail } from "./pages/ConfirmEmail";
 import "./css/App.css";
 import { LocalGame } from "./pages/LocalGame";
 
@@ -49,6 +50,10 @@ function App({ instance }: { instance: PublicClientApplication }) {
 							<Route
 								path="/account/update"
 								element={<CreateAccount />}
+							></Route>
+							<Route
+								path="/account/confirm"
+								element={<ConfirmEmail />}
 							></Route>
 						</Route>
 					</Routes>

@@ -1,9 +1,9 @@
-import { Get, Path, Route, Security, Request, Post, Controller, Body } from "tsoa";
+import { Get, Path, Route, Security, Request, Post, Controller, Body, Put } from "tsoa";
 import * as express from "express";
 import { ensureUserId } from "../../authentication";
 import { NotFoundError } from "../../errorMiddleware";
 import { userService } from "../services/UserService";
-import { Account } from "../../../common/src/models";
+import { Account, AccountCreate } from "../../../common/src/models";
 
 @Route("account")
 export class UserController extends Controller {
@@ -23,22 +23,62 @@ export class UserController extends Controller {
 			throw new NotFoundError();
 		}
 
-		return { username: response.username };
+		return { username: response.username, email: response.email };
 	}
+
+	// @Security("AADB2C") // TODO: ADD THIS BACK
+	// @Post()
+	// public async addUser(
+	// 	@Request()
+	// 	req: express.Request,
+	// 	@Body()
+	// 	account: AccountCreate
+	// ): Promise<{ id: string }> {
+	// 	const userId = ensureUserId(req);
+
+	// 	const game = await userService.create(userId, account.username, account.email);
+	// 	return {
+	// 		id: game.id,
+	// 	};
+	// }
 
 	@Security("AADB2C")
 	@Post()
-	public async addGame(
+	public async updateUser(
 		@Request()
 		req: express.Request,
 		@Body()
-		account: Account
+		account: AccountCreate
 	): Promise<{ id: string }> {
 		const userId = ensureUserId(req);
 
-		const game = await userService.create(userId, account.username);
+		const response = await userService.get(userId);
+		if (!response) {
+			console.log(response);
+			throw new NotFoundError();
+		}
+
+		const game = await userService.update(userId, account.username, account.email, response.email);
 		return {
 			id: game.id,
 		};
 	}
+
+	@Security("AADB2C")
+	@Post("/confirm/{token}")
+	public async confirmEmail(
+		@Request()
+		req: express.Request,
+		@Path()
+		token: string
+	) {
+		const userId = ensureUserId(req);
+
+		console.log(`controller - ${token}`);
+
+		const foo = await userService.confirmEmail(userId, token);
+		// call UserService.confirmEmail
+		// for more info see https://github.com/JamesLeeks/chess-app/issues/15
+	}
 }
+// TODO: CHANGE THE FUNCTION CALLED WHEN EDITING PROFILE FROM CREATE USER TO UPDATE USER (DIFFERENT FILE FROM CREATEUSER.TSX?)

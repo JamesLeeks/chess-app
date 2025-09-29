@@ -1,0 +1,90 @@
+@use "Variables" as variables;
+
+.profile-container {
+	display: grid;
+	grid-template-columns: 1fr 2fr 1fr;
+	grid-template-areas: "left content right";
+	// background-image: linear-gradient(rgb(84, 189, 123), rgb(82, 91, 223));
+	background-image: radial-gradient(
+		circle,
+		variables.$background-gradient,
+		variables.$background
+	);
+	// background-color: rgb(47, 47, 47);
+}
+
+.profile-content {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	grid-area: content;
+	background-color: variables.$background;
+}
+
+.profile-field-info {
+	background-color: variables.$banner;
+	border-width: 0.2vw;
+	border-color: variables.$banner;
+	border-style: solid;
+	border-radius: 0.3vw;
+	margin: 0.2vw;
+	padding: 0.1vw;
+	cursor: default;
+	font-size: 0.8vw;
+	color: variables.$text;
+}
+
+.profile-field {
+	background-color: variables.$banner;
+	border-width: 0.2vw;
+	border-color: variables.$banner;
+	border-style: solid;
+	border-radius: 0.3vw;
+	margin: 0.2vw;
+	padding: 0.1vw;
+	cursor: cursor;
+	font-size: 0.8vw;
+	color: variables.$text;
+}
+
+.profile-button {
+	background-color: variables.$banner-button-hover;
+	// background-color: variables.$banner;
+	border-width: 0.2vw;
+	border-color: variables.$banner-button-hover;
+	border-style: solid;
+	border-radius: 0.3vw;
+	margin: 0.2vw;
+	color: variables.$text;
+	cursor: pointer;
+	font-size: 0.8vw;
+	box-shadow: 0 0.25vw variables.$banner;
+	// box-shadow: 0 0.2vw;
+}
+
+.profile-button:hover {
+	background-color: variables.$banner-button-active;
+	border-color: variables.$banner-button-active;
+}
+
+.profile-button:active,
+.profile-button:focus {
+	background-color: variables.$profile-button-active;
+	border-color: variables.$profile-button-active;
+	box-shadow: 0 0.15vw variables.$banner;
+}
+
+.input-text {
+	font-weight: 500;
+}
+
+.input-text-red {
+	color: rgb(255, 82, 82);
+	font-style: italic;
+}
+
+.error-message {
+	color: red;
+	font-size: xx-large;
+}

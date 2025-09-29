@@ -47,10 +47,36 @@ export interface HistoryItem {
 
 export type Account = {
 	username: string;
+	email?: string; // optional because email wasn't enforced originally
 };
+
+export type AccountCreate = {
+	username: string;
+	email: string; // email forced when creating or updating account
+};
+
+export type UserEmailRequest = {
+	id: string;
+	username: string;
+	email?: string;
+	emailRequest: {
+		email?: string;
+		token: string;
+	};
+	type: "user";
+};
+
+// export type UserEmailConfirmation = {
+// 	id: string;
+// 	username: string;
+// 	email: string;
+// 	emailRequest: undefined;
+// 	type: "user";
+// };
 
 export type User = {
 	id: string;
 	username: string;
+	email?: string;
 	type: "user";
 };

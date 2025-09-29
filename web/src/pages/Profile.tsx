@@ -19,10 +19,12 @@ export function Profile() {
 			if (!authHeader) {
 				return;
 			}
+
 			const response = await fetch(`${getApiBase()}/account`, {
 				headers: { Authorization: authHeader },
 				method: "GET",
 			});
+
 			setResponseStatus(response.status);
 			if (response.status === 404) {
 				console.log("TODO: get user to create username");
@@ -32,9 +34,14 @@ export function Profile() {
 			if (!response.ok) {
 				return;
 			}
+
 			const responseBody = await response.json();
 			console.log("user: ", { responseBody });
 			setUser(responseBody);
+
+			if (!responseBody?.email) {
+				navigate("/account/update");
+			}
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -55,9 +62,16 @@ export function Profile() {
 		<>
 			{/* {" "}
 			Username: {user?.username} Email Address: {userEmail} */}
-			{user?.username}
-			<div>
-				<button onClick={onClick}>Edit User Profile</button>
+			<div className="profile-container">
+				<div className="profile-content">
+					<div className="profile-field-info">{user?.username}</div>
+					<div className="profile-field-info">{user?.email}</div>
+					<div>
+						<button className="profile-button" onClick={onClick}>
+							Edit User Profile
+						</button>
+					</div>
+				</div>
 			</div>
 		</>
 	);

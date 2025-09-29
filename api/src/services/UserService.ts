@@ -1,9 +1,10 @@
 import { Container, CosmosClient, ItemResponse } from "@azure/cosmos";
 import { TokenCredential, DefaultAzureCredential } from "@azure/identity";
 import { Game, SerializedGame } from "../../../common/src/game";
-import { User } from "../../../common/src/models";
+import { User, UserEmailRequest } from "../../../common/src/models";
 import { stringify } from "querystring";
 import { FieldErrors, ValidateError } from "tsoa";
+import { nanoid } from "nanoid";
 
 export class UserService {
 	private container: Container | null = null;
@@ -54,31 +55,126 @@ export class UserService {
 			return undefined;
 		}
 
-		return { id: response.resource.id, username: response.resource.username, type: "user" };
+		return {
+			id: response.resource.id,
+			username: response.resource.username,
+			email: response.resource.email,
+			type: "user",
+		};
 	}
 
-	public async create(userId: string, username: string): Promise<User> {
+	// initial creation function to use values from azure adb2c
+	public async create(userId: string, username: string, email: string): Promise<User> {
 		const container = await this.getContainer();
 
 		console.log("create user", { userId, username });
-		const user: User = { id: userId, username: username, type: "user" };
+		const user: User = { id: userId, username: username, type: "user", email: email };
 
 		try {
 			// await container.items.create(user);
-			await container.items.upsert(user);
+			await container.items.upsert(user); // TODO: look at whether this should be a create
 			return user;
 		} catch (error) {
 			const errorWithCode = error as { code?: number };
 			if (errorWithCode.code === 409) {
-				console.log("WARRRRR");
 				// TODO: revisit where we throw this error
-				// if we get to this point we know it's the username that's not unique because if it's the id the upsert will just update the item
 				const fieldErrors: FieldErrors = {
+					// if we get to this point we know it's the username that's not unique because if it's the id the upsert will just update the item
 					name: { message: `Chosen username already in use` },
 				};
 				throw new ValidateError(fieldErrors, "");
 			}
 			throw error;
+		}
+	}
+
+	// function to update username and email (email confirmation function still needed) TODO
+	public async update(
+		userId: string,
+		username: string,
+		enteredEmail: string,
+		email?: string
+	): Promise<UserEmailRequest> {
+		const container = await this.getContainer();
+
+		const token = nanoid();
+		console.log(`localhost:5173/account/confirm/?token=${token}`);
+
+		console.log("update user", { userId, username, token });
+
+		const user: UserEmailRequest = {
+			id: userId,
+			username: username,
+			email: email,
+			type: "user",
+			emailRequest: { email: enteredEmail, token: token },
+		};
+
+		try {
+			await container.items.upsert(user);
+			return user;
+		} catch (error) {
+			const errorWithCode = error as { code?: number };
+			if (errorWithCode.code === 409) {
+				// TODO: revisit where we throw this error
+				const fieldErrors: FieldErrors = {
+					// if we get to this point we know it's the username that's not unique because if it's the id the upsert will just update the item
+					name: { message: `Chosen username already in use` },
+				};
+				throw new ValidateError(fieldErrors, "");
+			}
+			throw error;
+		}
+	}
+
+	public async confirmEmail(userId: string, token: string) {
+		// get user by id
+		const container = await this.getContainer();
+		const partitionKey = userId;
+
+		const response: ItemResponse<UserEmailRequest> = await container.item(userId, "user").read<UserEmailRequest>();
+
+		if (!response.resource) {
+			throw new Error("couldn't get user");
+		}
+
+		if (!response.resource.emailRequest) {
+			const fieldErrors: FieldErrors = {
+				name: { message: `Token not valid` },
+			};
+			throw new ValidateError(fieldErrors, "");
+		}
+
+		// if the token on the user matches the one passed in:
+		if (response.resource.emailRequest.token === token) {
+			// update user: change email and remove emailRequest block
+			console.log(
+				`token from get request: ${response.resource.emailRequest.token}, token from query string: ${token}`
+			);
+			const user: User = {
+				id: userId,
+				username: response.resource.username,
+				email: response.resource.emailRequest.email,
+				type: "user",
+			};
+
+			try {
+				await container.items.upsert(user);
+				return user;
+			} catch (error) {
+				const errorWithCode = error as { code?: number };
+				if (errorWithCode.code === 409) {
+					// TODO: revisit where we throw this error
+					const fieldErrors: FieldErrors = {
+						// if we get to this point we know it's the username or the email that's not unique because if it's the id the upsert will just update the item
+						name: { message: `Chosen username/email already in use` },
+					};
+					throw new ValidateError(fieldErrors, "");
+				}
+				throw error;
+			}
+		} else {
+			console.log("Token didn't match");
 		}
 	}
 }

@@ -6,6 +6,8 @@
 // ✅ fix history
 // ❌ add promotion menu
 
+@use "Variables" as variables;
+
 .black {
 	.a1 {
 		grid-area: cell-18;
@@ -211,107 +213,6 @@
 $borderWidth: 0.2vw;
 $borderRadius: 0.8vw;
 
-html {
-	// set height to 100% so that body can use 100% of screen height
-	height: 100%;
-	background-color: rgb(38, 38, 38);
-}
-
-body {
-	// set margin to zero so that layout can take up the whole screen
-	margin: 0;
-	// set height to 100% so that layout can use 100% of screen height
-	height: 100%;
-}
-
-#root {
-	margin: 0;
-	height: 100%;
-}
-
-.layout {
-	// set height to 100% so that layout takes up the entire screen
-	height: 100%;
-	background-color: rgb(65, 65, 65);
-	// row one is for the banner, row two is for the page content
-	display: grid;
-	grid-template-rows: 75fr 925fr;
-}
-
-.banner {
-	background-color: rgb(29, 29, 29);
-	margin: 0;
-	display: inline-flex;
-	// border-top: 0;
-	// border-left: 0;
-	// border-right: 0;
-	// border-bottom: $borderWidth;
-	// border-style: solid;
-	// border-color: rgb(66, 66, 81);
-}
-.button {
-	background-color: rgb(29, 29, 29);
-	color: rgb(214, 214, 214);
-	font-size: 200%;
-	font-weight: bold;
-	border-width: 0;
-	padding: 0.5vw;
-	margin: 0;
-	cursor: pointer;
-	text-decoration: none;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-// .button {
-// 	background-color: rgb(29, 29, 29);
-// 	color: rgb(214, 214, 214);
-// 	font-size: 200%;
-// 	font-weight: bold;
-// 	// border-top: 0;
-// 	// border-left: 0;
-// 	// border-right: 0;
-// 	// border-width: $borderWidth;
-// 	border-width: 0;
-// 	// border-style: solid;
-// 	// border-radius: $borderRadius;
-// 	// border-color: rgb(66, 66, 81);
-// 	padding: 0.5vw;
-// 	// padding: 1%;
-// 	// height: 100%;
-// 	// margin: 0.5vw;
-// 	margin: 0;
-// 	cursor: pointer;
-// 	text-decoration: none;
-// 	// display: inline-block;
-
-// 	// padding-block: 1px;
-// 	// appearance: auto;
-// 	// text-rendering: auto;
-// 	// letter-spacing: normal;
-// 	// word-spacing: normal;
-// 	// line-height: normal;
-// 	// text-transform: none;
-// 	// text-indent: 0px;
-// 	// text-shadow: none;
-// 	// display: inline-block;
-// 	// // display: block;
-// 	// text-align: center;
-// 	// cursor: default;
-// 	// box-sizing: border-box;
-// 	// margin: 0em;
-// 	// padding-block: 1px;
-// 	// padding-inline: 6px;
-// 	// border-width: 2px;
-// 	// border-style: outset;
-// 	// border-color: buttonborder;
-// 	// border-image: initial;
-// }
-// a.button {
-// 	padding-top: 1vw;
-// }
-
 .button:hover {
 	background-color: rgb(45, 45, 45);
 }
@@ -413,10 +314,6 @@ body {
 }
 
 .clock {
-	// background-color: rgb(108, 108, 108);
-	// background-color: rgb(66, 66, 81);
-	// background-color: rgb(46, 46, 56);
-	// color: rgb(214, 214, 214);
 	background-color: rgb(52, 52, 52);
 	color: rgb(214, 214, 214);
 	font-family: "G7 Segment7 S5";
@@ -424,7 +321,6 @@ body {
 	font-style: normal;
 	font-size: 8vw;
 	border-width: calc($borderWidth/2);
-	// border-color: rgb(66, 66, 81);
 	border-color: rgb(52, 52, 52);
 	border-style: solid;
 	width: 38vw;
@@ -575,18 +471,16 @@ body {
 	text-decoration: underline;
 }
 
-// .content {
-// 	background-color: darkorchid;
-// 	display: grid;
-// 	grid-template-columns: 2fr 3fr 2fr;
-// 	height: 92.5%;
-// }
-
 // mobile layout
 @media (max-aspect-ratio: 7/6) {
 	.content {
 		// TODO: add in page content and work out it will look
 		background-color: rgb(38, 38, 38);
+		// background-image: radial-gradient(
+		// 	circle,
+		// 	variables.$background-gradient,
+		// 	variables.$background
+		// );
 	}
 	.clock-panel {
 		display: flex;
@@ -628,6 +522,11 @@ body {
 		display: grid;
 		grid-template-columns: 2fr 3fr 2fr;
 		// height: 92.5%;
+		// background-image: radial-gradient(
+		// 	circle,
+		// 	variables.$background-gradient,
+		// 	variables.$background
+		// );
 	}
 
 	.clock-panel {
