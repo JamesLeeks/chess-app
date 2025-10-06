@@ -5,6 +5,8 @@ import { User, UserEmailRequest } from "../../../common/src/models";
 import { stringify } from "querystring";
 import { FieldErrors, ValidateError } from "tsoa";
 import { nanoid } from "nanoid";
+import "dotenv/config";
+import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 
 export class UserService {
 	private container: Container | null = null;
@@ -100,6 +102,35 @@ export class UserService {
 		const token = nanoid();
 		console.log(`localhost:5173/account/confirm/?token=${token}`);
 
+		if (!process.env.API_KEY) {
+			throw new Error("should have api key");
+		}
+
+		// send email
+		const mailerSend = new MailerSend({
+			apiKey: process.env.API_KEY,
+		});
+
+		const sentFrom = new Sender("email@chess.james.leeks.net", "Chess App");
+
+		const recipients = [new Recipient(enteredEmail, "Your Client")];
+
+		const emailParams = new EmailParams()
+			.setFrom(sentFrom)
+			.setTo(recipients)
+			.setReplyTo(sentFrom)
+			.setSubject("Email confirmation")
+			.setHtml(
+				`<div style="display: flex; justify-content: center; align-items: center; flex-direction: column; grid-area: content;"> <div>The account ${username} has made a request to change their notifications email adress. If this is not you, you may safely ignore this email.</div> <div>Click here to confirm your email adress:</div> <a style="background-color: green; padding: 0.3vw; text-decoration: none; font-weight: bold; border-color: green; border-radius: 0.5vw; border-width: 0.1vw; border-style: solid; color: white;" href="http://localhost:5173/account/confirm/?token=${token}">confirm</a> <div style="color: red; font-style: italic;">IMPORTANT: this will not change the email address used for your login, only where we send notifications if you have opted into them.</div> </div>`
+			)
+			.setText(
+				`The account ${username} has made a request to change their notifications email adress. If this is not you, you may safely ignore this email. \nClick here to confirm your email adress: http://localhost:5173/account/confirm/?token=${token} \nIMPORTANT: this will not change the email address used for your login, only where we send notifications if you have opted into them.`
+			);
+
+		await mailerSend.email.send(emailParams);
+
+		//
+
 		console.log("update user", { userId, username, token });
 
 		const user: UserEmailRequest = {
@@ -148,9 +179,6 @@ export class UserService {
 		// if the token on the user matches the one passed in:
 		if (response.resource.emailRequest.token === token) {
 			// update user: change email and remove emailRequest block
-			console.log(
-				`token from get request: ${response.resource.emailRequest.token}, token from query string: ${token}`
-			);
 			const user: User = {
 				id: userId,
 				username: response.resource.username,
