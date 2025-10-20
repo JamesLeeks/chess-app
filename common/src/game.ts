@@ -181,6 +181,9 @@ export class Game {
 				? { reason: "blackTimeOut", result: "whiteWins" }
 				: { reason: "blackTimeOut", result: "draw" };
 		}
+		if (!this.sideCanCheckMate("white") && !this.sideCanCheckMate("black")) {
+			return { reason: "insufficientMaterial", result: "draw" };
+		}
 		if (this.isThreeFoldRepetition()) {
 			return { reason: "threeFoldRepetition", result: "draw" };
 		}
@@ -199,6 +202,9 @@ export class Game {
 		}
 		if (this.blackTime <= 0) {
 			return this.sideCanCheckMate("white") ? "White wins due to black timeout" : "Draw due to black timeout";
+		}
+		if (!this.sideCanCheckMate("white") && !this.sideCanCheckMate("black")) {
+			return "Draw due to insufficient material";
 		}
 		if (this.isThreeFoldRepetition()) {
 			return "Draw by threefold repetition";

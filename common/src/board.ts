@@ -1,11 +1,4 @@
-import {
-	Board,
-	BoardSquare,
-	PieceColour,
-	PieceType,
-	Position,
-	PromotionType,
-} from "./models";
+import { Board, BoardSquare, PieceColour, PieceType, Position, PromotionType } from "./models";
 
 export function getStartingBoard(): Board {
 	return parseBoard(`
@@ -22,9 +15,7 @@ export function getStartingBoard(): Board {
 
 export function parseBoard(boardString: string): Board {
 	const trimmedBoard = boardString.trim();
-	const boardRows = trimmedBoard
-		.split("\n")
-		.map((rowString) => rowString.trim()); // trim each row
+	const boardRows = trimmedBoard.split("\n").map((rowString) => rowString.trim()); // trim each row
 
 	// if the board does not have 8 rows: throw an error
 	if (boardRows.length !== 8) {
@@ -54,11 +45,7 @@ export function boardToString(board: Board): string {
 	for (let rowIndex = 0; rowIndex < board.length; rowIndex++) {
 		let rowString = "";
 		let spacer = "";
-		for (
-			let columnIndex = 0;
-			columnIndex < board[rowIndex].length;
-			columnIndex++
-		) {
+		for (let columnIndex = 0; columnIndex < board[rowIndex].length; columnIndex++) {
 			const chessPiece = board[rowIndex][columnIndex];
 			const squareNotation = getStringFromPiece(chessPiece);
 			rowString += spacer + squareNotation;
@@ -212,11 +199,7 @@ export function getBoardAfterMove(
 
 	// set the destination to have the value of the promotionType
 	const promotionRow = fromSquare.colour === "white" ? 0 : 7;
-	if (
-		!options?.skipPromotion &&
-		fromSquare.type === "pawn" &&
-		to.row === promotionRow
-	) {
+	if (!options?.skipPromotion && fromSquare.type === "pawn" && to.row === promotionRow) {
 		if (!options?.promotionType) {
 			throw new Error("Promotion should have type");
 		}

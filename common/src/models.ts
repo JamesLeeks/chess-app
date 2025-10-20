@@ -17,6 +17,7 @@ export type GameEndReason =
 	| "blackInStalemate"
 	| "blackTimeOut"
 	| "threeFoldRepetition"
+	| "insufficientMaterial"
 	| undefined;
 
 export type GameEndType = "whiteWins" | "blackWins" | "draw" | undefined;
