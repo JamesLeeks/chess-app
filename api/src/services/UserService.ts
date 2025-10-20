@@ -65,7 +65,7 @@ export class UserService {
 		};
 	}
 
-	// initial creation function to use values from azure adb2c
+	// initial creation function
 	public async create(userId: string, username: string, email: string): Promise<User> {
 		const container = await this.getContainer();
 
@@ -73,15 +73,12 @@ export class UserService {
 		const user: User = { id: userId, username: username, type: "user", email: email };
 
 		try {
-			// await container.items.create(user);
-			await container.items.upsert(user); // TODO: look at whether this should be a create
+			await container.items.create(user);
 			return user;
 		} catch (error) {
 			const errorWithCode = error as { code?: number };
 			if (errorWithCode.code === 409) {
-				// TODO: revisit where we throw this error
 				const fieldErrors: FieldErrors = {
-					// if we get to this point we know it's the username that's not unique because if it's the id the upsert will just update the item
 					name: { message: `Chosen username already in use` },
 				};
 				throw new ValidateError(fieldErrors, "");
@@ -90,55 +87,58 @@ export class UserService {
 		}
 	}
 
-	// function to update username and email (email confirmation function still needed) TODO
+	// function to update username and email (email still to be confirmed at this point)
 	public async update(
 		userId: string,
 		username: string,
 		enteredEmail: string,
 		email?: string
-	): Promise<UserEmailRequest> {
+	): Promise<UserEmailRequest | User> {
 		const container = await this.getContainer();
 
 		const token = nanoid();
-		console.log(`localhost:5173/account/confirm/?token=${token}`);
 
-		if (!process.env.API_KEY) {
-			throw new Error("should have api key");
+		if (enteredEmail !== email) {
+			console.log(`localhost:5173/account/confirm/?token=${token}`);
+
+			if (!process.env.API_KEY) {
+				throw new Error("should have api key");
+			}
+
+			// send email
+			const mailerSend = new MailerSend({
+				apiKey: process.env.API_KEY,
+			});
+
+			const sentFrom = new Sender("email@chess.james.leeks.net", "Chess App");
+			const recipients = [new Recipient(enteredEmail, "Your Client")];
+			const emailParams = new EmailParams()
+				.setFrom(sentFrom)
+				.setTo(recipients)
+				.setReplyTo(sentFrom)
+				.setSubject("Email confirmation")
+				.setHtml(
+					`<div style="display: flex; justify-content: center; align-items: center; flex-direction: column; grid-area: content;"> <div>The account ${username} has made a request to change their notifications email adress. If this is not you, you may safely ignore this email.</div> <div>Click here to confirm your email adress:</div> <a style="background-color: green; padding: 0.3vw; text-decoration: none; font-weight: bold; border-color: green; border-radius: 0.5vw; border-width: 0.1vw; border-style: solid; color: white;" href="http://localhost:5173/account/confirm/?token=${token}">confirm</a> <div style="color: red; font-style: italic;">IMPORTANT: this will not change the email address used for your login, only where we send notifications if you have opted into them.</div> </div>`
+				)
+				.setText(
+					`The account ${username} has made a request to change their notifications email adress. If this is not you, you may safely ignore this email. \nClick here to confirm your email adress: http://localhost:5173/account/confirm/?token=${token} \nIMPORTANT: this will not change the email address used for your login, only where we send notifications if you have opted into them.`
+				);
+
+			const response = await mailerSend.email.send(emailParams);
+			if (response.statusCode < 200 && response.statusCode >= 300) {
+				const fieldErrors: FieldErrors = {
+					name: { message: `Could not send email` }, // TODO: fix this message
+				};
+				throw new ValidateError(fieldErrors, "");
+			}
 		}
 
-		// send email
-		const mailerSend = new MailerSend({
-			apiKey: process.env.API_KEY,
-		});
-
-		const sentFrom = new Sender("email@chess.james.leeks.net", "Chess App");
-
-		const recipients = [new Recipient(enteredEmail, "Your Client")];
-
-		const emailParams = new EmailParams()
-			.setFrom(sentFrom)
-			.setTo(recipients)
-			.setReplyTo(sentFrom)
-			.setSubject("Email confirmation")
-			.setHtml(
-				`<div style="display: flex; justify-content: center; align-items: center; flex-direction: column; grid-area: content;"> <div>The account ${username} has made a request to change their notifications email adress. If this is not you, you may safely ignore this email.</div> <div>Click here to confirm your email adress:</div> <a style="background-color: green; padding: 0.3vw; text-decoration: none; font-weight: bold; border-color: green; border-radius: 0.5vw; border-width: 0.1vw; border-style: solid; color: white;" href="http://localhost:5173/account/confirm/?token=${token}">confirm</a> <div style="color: red; font-style: italic;">IMPORTANT: this will not change the email address used for your login, only where we send notifications if you have opted into them.</div> </div>`
-			)
-			.setText(
-				`The account ${username} has made a request to change their notifications email adress. If this is not you, you may safely ignore this email. \nClick here to confirm your email adress: http://localhost:5173/account/confirm/?token=${token} \nIMPORTANT: this will not change the email address used for your login, only where we send notifications if you have opted into them.`
-			);
-
-		await mailerSend.email.send(emailParams);
-
-		//
-
-		console.log("update user", { userId, username, token });
-
-		const user: UserEmailRequest = {
+		const user: UserEmailRequest | User = {
 			id: userId,
 			username: username,
 			email: email,
 			type: "user",
-			emailRequest: { email: enteredEmail, token: token },
+			emailRequest: enteredEmail !== email ? { email: enteredEmail, token: token } : undefined,
 		};
 
 		try {
@@ -147,7 +147,6 @@ export class UserService {
 		} catch (error) {
 			const errorWithCode = error as { code?: number };
 			if (errorWithCode.code === 409) {
-				// TODO: revisit where we throw this error
 				const fieldErrors: FieldErrors = {
 					// if we get to this point we know it's the username that's not unique because if it's the id the upsert will just update the item
 					name: { message: `Chosen username already in use` },
@@ -192,7 +191,6 @@ export class UserService {
 			} catch (error) {
 				const errorWithCode = error as { code?: number };
 				if (errorWithCode.code === 409) {
-					// TODO: revisit where we throw this error
 					const fieldErrors: FieldErrors = {
 						// if we get to this point we know it's the username or the email that's not unique because if it's the id the upsert will just update the item
 						name: { message: `Chosen username/email already in use` },

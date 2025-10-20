@@ -9,7 +9,7 @@ export function getMsalAccount() {
 		return null;
 	}
 	if (filteredAccounts.length > 1) {
-		console.warn("Multiple accounts detected");
+		console.warn("Multiple accounts detected", { filteredAccounts });
 		return null;
 	}
 

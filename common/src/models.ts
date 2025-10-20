@@ -59,7 +59,7 @@ export type UserEmailRequest = {
 	id: string;
 	username: string;
 	email?: string;
-	emailRequest: {
+	emailRequest?: {
 		email?: string;
 		token: string;
 	};

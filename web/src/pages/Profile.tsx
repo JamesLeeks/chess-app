@@ -28,7 +28,7 @@ export function Profile() {
 			setResponseStatus(response.status);
 			if (response.status === 404) {
 				console.log("TODO: get user to create username");
-				navigate("/account/update");
+				navigate("/account/new");
 				return;
 			}
 			if (!response.ok) {

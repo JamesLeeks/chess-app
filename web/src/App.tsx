@@ -1,14 +1,17 @@
 import { Link, Outlet, Route, Routes } from "react-router-dom";
+import { InteractionType, PublicClientApplication } from "@azure/msal-browser";
+import { MsalAuthenticationTemplate, MsalProvider } from "@azure/msal-react";
+
+import { Home } from "./pages/Home";
 import { CreateGame } from "./pages/CreateGame";
 import { Play } from "./pages/Play";
-import { Home } from "./pages/Home";
-import { MsalAuthenticationTemplate, MsalProvider } from "@azure/msal-react";
-import { InteractionType, PublicClientApplication } from "@azure/msal-browser";
+import { LocalGame } from "./pages/LocalGame";
 import { Profile } from "./pages/Profile";
 import { CreateAccount } from "./pages/CreateUser";
+import { UpdateAccount } from "./pages/UpdateUser";
 import { ConfirmEmail } from "./pages/ConfirmEmail";
+
 import "./css/App.css";
-import { LocalGame } from "./pages/LocalGame";
 
 function App({ instance }: { instance: PublicClientApplication }) {
 	return (
@@ -49,6 +52,10 @@ function App({ instance }: { instance: PublicClientApplication }) {
 							<Route path="/account" element={<Profile />}></Route>
 							<Route
 								path="/account/update"
+								element={<UpdateAccount />}
+							></Route>
+							<Route
+								path="/account/new"
 								element={<CreateAccount />}
 							></Route>
 							<Route

@@ -1,14 +1,11 @@
 import { useState } from "react";
 import { getAuthorizationHeader } from "./getAuthorizationHeader";
 import { getApiBase } from "../getApiBase";
-import { useNavigate } from "react-router-dom";
-
-// TODO: deal with validate error from UserService.ts line 140
 
 export function ConfirmEmail() {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [message, setMessage] = useState<string | undefined>(undefined);
-	const navigate = useNavigate();
+	const [ok, setOk] = useState<boolean>(false);
 
 	async function onClick() {
 		setIsLoading(true);
@@ -41,18 +38,25 @@ export function ConfirmEmail() {
 			setMessage(responseMessage);
 		}
 
-		// const responseBody = await response.json();
-		// const id = responseBody.id;
-
 		if (response.ok) {
-			navigate("/account");
+			setOk(true);
 		}
 		return;
 	}
 
+	if (ok) {
+		return (
+			<>
+				<div className="success-banner">
+					Email address confirmation successful. You can safely close this
+					tab.
+				</div>
+			</>
+		);
+	}
+
 	return (
 		<>
-			TEST PAGE
 			<div className="error-message">{message}</div>
 			<button onClick={onClick} disabled={isLoading}>
 				Confirm Email

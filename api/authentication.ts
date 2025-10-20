@@ -109,3 +109,15 @@ export function ensureUserId(req: express.Request): string {
 	}
 	return userId;
 }
+export function getUserEmailFromRequest(req: express.Request): string {
+	const user = req.user as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+	const userEmail = user?.email;
+	return userEmail;
+}
+export function ensureUserEmail(req: express.Request): string {
+	const userEmail = getUserEmailFromRequest(req);
+	if (!userEmail) {
+		throw new UnauthorizedError();
+	}
+	return userEmail;
+}
