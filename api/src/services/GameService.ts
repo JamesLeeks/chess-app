@@ -34,11 +34,21 @@ export class GameService {
 		ownerId: string,
 		startingTime: number,
 		ownerSide: PieceColour,
-		allowSpectators: allowSpectators
+		allowSpectators: allowSpectators,
+		specifiedOpponent: string | undefined
 	): Promise<Game> {
 		const container = await this.getContainer();
 
-		const game = new Game({ ownerId, whiteTime: startingTime, blackTime: startingTime, ownerSide, allowSpectators });
+		console.log(`specified opponent (game service create): ${specifiedOpponent}`);
+
+		const game = new Game({
+			ownerId,
+			whiteTime: startingTime,
+			blackTime: startingTime,
+			ownerSide,
+			allowSpectators,
+			specifiedOpponent,
+		});
 
 		await container.items.create(game.toJsonObject());
 
@@ -54,35 +64,38 @@ export class GameService {
 			throw new Error("404 not found");
 		}
 
-		if (!response.game.playerId) {
-			// TODO: check that this doesn't happen if playerId is already set
-			const game = new Game({
-				blackTime: response.game.blackTime,
-				whiteTime: response.game.whiteTime,
-				board: response.game.board,
-				currentTurn: response.game.currentTurn,
-				history: response.game.history,
-				id: response.game.id,
-				ownerId: response.game.ownerId,
-				ownerSide: response.game.ownerSide,
-				playerId: playerId,
-				allowSpectators: response.game.allowSpectators,
-			});
-
-			console.log("from GameService.ts: game id - ", game.playerId);
-
-			await container.items.upsert(game.toJsonObject(), {
-				accessCondition: {
-					type: "IfMatch",
-					condition: response.etag,
-				},
-			});
-
-			return game;
-		} else {
+		if (response.game.playerId) {
 			// NOTE: at some point in the future we may allow spectators
 			throw new Error("Game already has player");
 		}
+
+		if (response.game.specifiedOpponent !== playerId) {
+			throw new Error("404 not found");
+		}
+
+		const game = new Game({
+			blackTime: response.game.blackTime,
+			whiteTime: response.game.whiteTime,
+			board: response.game.board,
+			currentTurn: response.game.currentTurn,
+			history: response.game.history,
+			id: response.game.id,
+			ownerId: response.game.ownerId,
+			ownerSide: response.game.ownerSide,
+			playerId: playerId,
+			allowSpectators: response.game.allowSpectators,
+		});
+
+		console.log("from GameService.ts: game id - ", game.playerId);
+
+		await container.items.upsert(game.toJsonObject(), {
+			accessCondition: {
+				type: "IfMatch",
+				condition: response.etag,
+			},
+		});
+
+		return game;
 	}
 
 	public async get(id: string): Promise<{ game: Game; etag: string } | undefined> {

@@ -29,12 +29,14 @@ export interface GameOptions {
 	playerId?: string;
 	ownerSide?: PieceColour;
 	allowSpectators?: allowSpectators;
+	specifiedOpponent?: string;
 }
 
 export interface SerializedGame {
 	id: string;
 	ownerId: string;
 	playerId?: string;
+	specifiedOpponent: string | undefined;
 	ownerSide: PieceColour;
 	allowSpectators?: allowSpectators;
 	moves: {
@@ -63,6 +65,7 @@ export class Game {
 	private _playerId: string | undefined; // id of 2nd player
 	private _ownerSide: PieceColour;
 	private _allowSpectators: allowSpectators;
+	private _specifiedOpponent: string | undefined;
 
 	constructor(gameOptions?: GameOptions) {
 		this._board = gameOptions?.board ?? getStartingBoard();
@@ -76,6 +79,7 @@ export class Game {
 		this._ownerSide = gameOptions?.ownerSide ?? "white";
 		this._playerId = gameOptions?.playerId;
 		this._allowSpectators = gameOptions?.allowSpectators ?? "private"; // private, public, users
+		this._specifiedOpponent = gameOptions?.specifiedOpponent ?? undefined;
 	}
 
 	public get id(): string {
@@ -142,6 +146,10 @@ export class Game {
 
 	public get allowSpectators(): allowSpectators {
 		return this._allowSpectators;
+	}
+
+	public get specifiedOpponent(): string | undefined {
+		return this._specifiedOpponent;
 	}
 
 	private isThreeFoldRepetition(): boolean {
@@ -529,6 +537,7 @@ export class Game {
 			id: this.id,
 			ownerId: this.ownerId,
 			playerId: this._playerId ?? undefined,
+			specifiedOpponent: this._specifiedOpponent,
 			ownerSide: this._ownerSide,
 			allowSpectators: this.allowSpectators,
 			moves,
@@ -549,6 +558,7 @@ export class Game {
 		const id = jsonGame.id;
 		const moves = jsonGame.moves;
 		const playerId = jsonGame.playerId;
+		const specifiedOpponent = jsonGame.specifiedOpponent;
 		const ownerSide = jsonGame.ownerSide;
 		const whiteTimeRemainingAtStartOfTurn = jsonGame.players.white.timeRemainingAtStartOfTurn;
 		const blackTimeRemainingAtStartOfTurn = jsonGame.players.black.timeRemainingAtStartOfTurn;
@@ -562,6 +572,7 @@ export class Game {
 			id,
 			ownerId,
 			playerId,
+			specifiedOpponent,
 			ownerSide,
 			allowSpectators,
 		});

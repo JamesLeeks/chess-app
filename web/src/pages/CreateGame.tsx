@@ -11,6 +11,7 @@ export function CreateGame() {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [startingTime, setStartingTime] = useState<number>(600);
 	const [ownerSide, setOwnerSide] = useState<string>("white");
+	const [opponent, setOpponent] = useState<string | undefined>(undefined);
 	const [allowSpectators, setAllowSpectators] = useState<string>("private");
 
 	const navigate = useNavigate();
@@ -24,7 +25,6 @@ export function CreateGame() {
 			return;
 		}
 
-		// goes to GamesController.ts, line 21
 		const response = await fetch(`${getApiBase()}/games`, {
 			headers: {
 				"content-type": "application/json",
@@ -37,6 +37,7 @@ export function CreateGame() {
 						? ownerSide
 						: pickRandomSide(),
 				allowSpectators: allowSpectators,
+				specifiedOpponent: opponent,
 			}),
 			method: "POST",
 		});
@@ -49,14 +50,23 @@ export function CreateGame() {
 
 	return (
 		<>
-			<div>TODO - add game settings here</div>
+			{/* TIME */}
 			<input
 				type="number"
 				value={startingTime}
 				onChange={(e) => setStartingTime(e.target.valueAsNumber)}
 				disabled={isLoading}
 			/>
-			<input type="string" value={"TODO: username"} disabled={true} />
+
+			{/* OPPONENT */}
+			<input
+				type="string"
+				value={opponent}
+				onChange={(e) => setOpponent(e.target.value)}
+				disabled={isLoading}
+			/>
+
+			{/* SPECTATING */}
 			<select
 				value={allowSpectators}
 				onChange={(e) => setAllowSpectators(e.target.value)}
@@ -68,8 +78,10 @@ export function CreateGame() {
 					Allow specified users to spectate
 				</option>
 			</select>
+
+			{/* OWNER SIDE */}
 			<select
-				value={ownerSide} // ...force the select's value to match the state variable...
+				value={ownerSide}
 				onChange={(e) => setOwnerSide(e.target.value)}
 				disabled={isLoading}
 			>
@@ -77,6 +89,7 @@ export function CreateGame() {
 				<option value="white">OWNER SIDE: White</option>
 				<option value="random">OWNER SIDE: Random</option>
 			</select>
+
 			<div>{isLoading ? "Loading..." : ""}</div>
 			<button onClick={onClick} disabled={isLoading}>
 				New Game

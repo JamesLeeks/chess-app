@@ -173,6 +173,8 @@ export function Play() {
 			</>
 		);
 	} else if (!game.playerId) {
+		// if the game has a specified opponent
+		// if the game is open to any player:
 		return (
 			<>
 				<button onClick={joinGame} disabled={isLoading}>

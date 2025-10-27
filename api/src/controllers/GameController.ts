@@ -6,6 +6,7 @@ import { allowSpectators, PieceColour, Position, PromotionType } from "../../../
 import { getServer } from "../socket";
 import { BadRequestError, NotFoundError, UnauthorizedError } from "../../errorMiddleware";
 import { ensureUserId, getUserIdFromRequest } from "../../authentication";
+import { userService } from "../services/UserService";
 
 interface MakeMoveBody {
 	from: Position;
@@ -17,6 +18,7 @@ interface AddGameOptions {
 	startingTime: number;
 	ownerSide: PieceColour;
 	allowSpectators: allowSpectators;
+	specifiedOpponent: string | undefined;
 }
 
 @Route("games")
@@ -31,10 +33,41 @@ export class GameController extends Controller {
 	): Promise<{ id: string }> {
 		const userId = ensureUserId(req);
 
-		const game = await gameService.create(userId, options.startingTime, options.ownerSide, options.allowSpectators);
-		return {
-			id: game.id,
-		};
+		if (!options.specifiedOpponent) {
+			const game = await gameService.create(
+				userId,
+				options.startingTime,
+				options.ownerSide,
+				options.allowSpectators,
+				undefined
+			);
+
+			console.log("DIDN'T GET SPECIFIED OPPONENT");
+
+			return {
+				id: game.id,
+			};
+		} else {
+			const user = await userService.getByUsername(options.specifiedOpponent);
+			if (!user) {
+				throw new Error("failed to get user by username");
+			}
+			const opponentId = user.id;
+
+			console.log(`game controller add game: ${opponentId}`);
+
+			const game = await gameService.create(
+				userId,
+				options.startingTime,
+				options.ownerSide,
+				options.allowSpectators,
+				opponentId
+			);
+
+			return {
+				id: game.id,
+			};
+		}
 	}
 
 	@Security("AADB2C")
@@ -44,12 +77,9 @@ export class GameController extends Controller {
 		req: express.Request,
 		@Path()
 		gameId: string
-		// @Body()
-		// options: AddGameOptions
 	): Promise<{ id: string }> {
 		const userId = ensureUserId(req);
 
-		// const game = await gameService.create(userId, options.startingTime, options.ownerSide);
 		const game = await gameService.addPlayer(gameId, userId);
 		return game.toJsonObject();
 	}
@@ -66,7 +96,6 @@ export class GameController extends Controller {
 
 		const response = await gameService.get(gameId);
 		if (!response) {
-			console.log("from GameController.ts: ACTUAL NOT FOUND ERROR");
 			throw new NotFoundError();
 		}
 		if (response.game.playerId) {
@@ -75,7 +104,17 @@ export class GameController extends Controller {
 				userId !== response.game.playerId &&
 				response.game.allowSpectators !== "public"
 			) {
-				console.log("from GameController.ts: help");
+				throw new NotFoundError();
+			}
+		}
+
+		if (response.game.specifiedOpponent) {
+			if (
+				userId !== response.game.ownerId &&
+				userId !== response.game.playerId &&
+				userId !== response.game.specifiedOpponent &&
+				response.game.allowSpectators !== "public"
+			) {
 				throw new NotFoundError();
 			}
 		}

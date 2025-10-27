@@ -1,4 +1,4 @@
-import { Container, CosmosClient, ItemResponse } from "@azure/cosmos";
+import { Container, CosmosClient, FeedResponse, ItemResponse, SqlQuerySpec } from "@azure/cosmos";
 import { TokenCredential, DefaultAzureCredential } from "@azure/identity";
 import { Game, SerializedGame } from "../../../common/src/game";
 import { User, UserEmailRequest } from "../../../common/src/models";
@@ -61,6 +61,32 @@ export class UserService {
 			id: response.resource.id,
 			username: response.resource.username,
 			email: response.resource.email,
+			type: "user",
+		};
+	}
+
+	public async getByUsername(username: string): Promise<User | undefined> {
+		const container = await this.getContainer();
+
+		const querySpec: SqlQuerySpec = {
+			query: `SELECT * FROM c WHERE c.username = @username`,
+			parameters: [
+				{
+					name: "@username",
+					value: username,
+				},
+			],
+		};
+
+		let response: FeedResponse<User> = await container.items.query<User>(querySpec).fetchAll();
+		if (response.resources.length > 1) {
+			throw new Error("should not have multiple users with same username");
+		}
+
+		return {
+			id: response.resources[0].id,
+			username: response.resources[0].username,
+			email: response.resources[0].email,
 			type: "user",
 		};
 	}
