@@ -69,7 +69,7 @@ export class GameService {
 			throw new Error("Game already has player");
 		}
 
-		if (response.game.specifiedOpponent !== playerId) {
+		if (response.game.specifiedOpponent && response.game.specifiedOpponent !== playerId) {
 			throw new Error("404 not found");
 		}
 

@@ -36,18 +36,22 @@ io.engine.use((req: any, res: any, next: any) => {
 
 io.on("connection", (socket: Socket) => {
 	// socket.handshake.headers
-	async function thingy() {
+	async function socketConnect() {
 		const gameId = socket.handshake.auth.gameId;
 		const reqAny = socket.request as any;
 		const user = reqAny.user;
 		// console.log("User connected.", { gameId, user });
 		if (gameId) {
 			const response = await gameService.get(gameId);
+			console.log(
+				`server.ts userId =  ${user.id}, gameId = ${gameId}, ownerId = ${response?.game.ownerId}, playerId = ${response?.game.playerId}`
+			);
 			if (
 				user.id === response?.game.ownerId ||
 				user.id === response?.game.playerId ||
 				response?.game.allowSpectators === "public"
 			) {
+				console.log(`user ${user.id} joining ${gameId}`);
 				socket.join(`game-${gameId}`);
 			} else if (response?.game.playerId) {
 				console.log("from server.ts: user not authorised to see game", user.id, response?.game.playerId);
@@ -56,7 +60,7 @@ io.on("connection", (socket: Socket) => {
 			console.log("expected game id");
 		}
 	}
-	thingy();
+	socketConnect();
 });
 
 server.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));

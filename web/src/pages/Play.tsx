@@ -10,26 +10,18 @@ import {
 	getMsalAccount,
 } from "./getAuthorizationHeader";
 
-let socket: Socket | null = null;
-
 export function Play() {
 	const { id } = useParams();
 	const [game, setGame] = useState<Game | null>(null);
 	const [responseStatus, setResponseStatus] = useState<number | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const userId = getMsalAccount()?.localAccountId;
+	const [socket, setSocket] = useState<Socket | null>(null);
 	if (!userId) {
 		throw new Error("User should be logged in");
 	}
 
 	useEffect(() => {
-		// async function doIt() {
-		// 	const game = await getGame();
-		// 	if (userId === game?.ownerId || userId === game?.playerId) {
-		// 		await setUpSocket(game);
-		// 	}
-		// }
-		// doIt();
 		(async function () {
 			const game = await getGame();
 			if (
@@ -44,34 +36,38 @@ export function Play() {
 	}, []);
 
 	async function setUpSocket(game: Game | undefined) {
-		if (!socket) {
-			const authHeader = await getAuthorizationHeader();
-			if (!authHeader) {
-				throw new Error("401");
-			}
-			socket = io(getApiBase(), {
-				extraHeaders: { authorization: authHeader },
-				auth: {
-					gameId: id,
-				},
-			});
-			console.log("socket setup", { game });
-			if (
-				game?.playerId &&
-				userId !== game?.playerId &&
-				userId !== game?.ownerId &&
-				game.allowSpectators !== "public"
-			) {
-				throw new Error("401");
-			}
-
-			function onGameUpdateEvent(g: SerializedGame) {
-				console.log("on game update", { g });
-				setGame(Game.fromJsonObject(g));
-			}
-
-			socket.on("gameUpdate", onGameUpdateEvent);
+		if (socket) {
+			console.log("Socket already set up");
+			return;
 		}
+		const authHeader = await getAuthorizationHeader();
+		if (!authHeader) {
+			throw new Error("401");
+		}
+		console.log(`Setting up socket. Game id: ${id}`);
+		const localSocket = io(getApiBase(), {
+			extraHeaders: { authorization: authHeader },
+			auth: {
+				gameId: id,
+			},
+		});
+		setSocket(localSocket);
+		console.log("socket setup", { game });
+		if (
+			game?.playerId &&
+			userId !== game?.playerId &&
+			userId !== game?.ownerId &&
+			game.allowSpectators !== "public"
+		) {
+			throw new Error("401");
+		}
+
+		function onGameUpdateEvent(g: SerializedGame) {
+			console.log("on game update", { g });
+			setGame(Game.fromJsonObject(g));
+		}
+
+		localSocket.on("gameUpdate", onGameUpdateEvent);
 	}
 
 	async function makeMove(
@@ -97,6 +93,7 @@ export function Play() {
 	}
 
 	async function getGame() {
+		console.log(`Getting game ${id}`);
 		const authHeader = await getAuthorizationHeader();
 		if (!authHeader) {
 			return;
@@ -114,6 +111,7 @@ export function Play() {
 		console.log("game loaded", {
 			whiteTime: game.whiteTime,
 			blackTime: game.blackTime,
+			id: game.id,
 		});
 		setGame(game);
 		return game;
