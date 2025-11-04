@@ -609,6 +609,12 @@ html {
   color: rgb(214, 214, 214);
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .profile-button {
   background-color: rgb(45, 45, 45);
   border-width: 0.2vw;
@@ -646,6 +652,28 @@ html {
 .error-message {
   color: red;
   font-size: xx-large;
+}
+
+.time-input-container {
+  display: flex;
+  align-items: center;
+}
+
+.time-input-segment {
+  background-color: rgb(29, 29, 29);
+  border-width: 0.2vw;
+  border-color: rgb(29, 29, 29);
+  border-style: solid;
+  border-radius: 0.3vw;
+  margin: 0.2vw;
+  padding: 0.1vw;
+  cursor: cursor;
+  font-size: 0.8vw;
+  color: rgb(214, 214, 214);
+}
+
+.colon {
+  font-size: 1.2vw;
 }
 
 html {

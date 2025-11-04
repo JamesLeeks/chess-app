@@ -1,0 +1,23 @@
+@use "Variables" as variables;
+
+.time-input-container {
+	display: flex;
+	align-items: center;
+}
+
+.time-input-segment {
+	background-color: variables.$banner;
+	border-width: 0.2vw;
+	border-color: variables.$banner;
+	border-style: solid;
+	border-radius: 0.3vw;
+	margin: 0.2vw;
+	padding: 0.1vw;
+	cursor: cursor;
+	font-size: 0.8vw;
+	color: variables.$text;
+}
+
+.colon {
+	font-size: 1.2vw;
+}

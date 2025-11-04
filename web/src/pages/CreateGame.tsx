@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { getApiBase } from "../getApiBase";
 import { getAuthorizationHeader } from "./getAuthorizationHeader";
 import { useState } from "react";
+import { TimeInput } from "../components/TimeInput";
 
 function pickRandomSide() {
 	return Math.random() < 0.5 ? "black" : "white";
@@ -50,50 +51,67 @@ export function CreateGame() {
 
 	return (
 		<>
-			{/* TIME */}
-			<input
-				type="number"
-				value={startingTime}
-				onChange={(e) => setStartingTime(e.target.valueAsNumber)}
-				disabled={isLoading}
-			/>
+			<div className="profile-container">
+				<div className="profile-content">
+					{TimeInput()}
 
-			{/* OPPONENT */}
-			<input
-				type="string"
-				value={opponent}
-				onChange={(e) => setOpponent(e.target.value)}
-				disabled={isLoading}
-			/>
+					{/* TIME */}
+					<input
+						className="profile-field"
+						type="number"
+						value={startingTime}
+						onChange={(e) => setStartingTime(e.target.valueAsNumber)}
+						disabled={isLoading}
+					/>
 
-			{/* SPECTATING */}
-			<select
-				value={allowSpectators}
-				onChange={(e) => setAllowSpectators(e.target.value)}
-				disabled={isLoading}
-			>
-				<option value={"private"}>Don't allow public spectating</option>
-				<option value={"public"}>Allow public spectating</option>
-				<option value={"users"} disabled={true}>
-					Allow specified users to spectate
-				</option>
-			</select>
+					{/* OPPONENT */}
+					<input
+						className="profile-field"
+						type="string"
+						value={opponent}
+						onChange={(e) => setOpponent(e.target.value)}
+						disabled={isLoading}
+					/>
 
-			{/* OWNER SIDE */}
-			<select
-				value={ownerSide}
-				onChange={(e) => setOwnerSide(e.target.value)}
-				disabled={isLoading}
-			>
-				<option value="black">OWNER SIDE: Black</option>
-				<option value="white">OWNER SIDE: White</option>
-				<option value="random">OWNER SIDE: Random</option>
-			</select>
+					{/* SPECTATING */}
+					<select
+						className="profile-field"
+						value={allowSpectators}
+						onChange={(e) => setAllowSpectators(e.target.value)}
+						disabled={isLoading}
+					>
+						<option value={"private"}>
+							Don't allow public spectating
+						</option>
+						<option value={"public"}>Allow public spectating</option>
+						<option value={"users"} disabled={true}>
+							Allow specified users to spectate
+						</option>
+					</select>
 
-			<div>{isLoading ? "Loading..." : ""}</div>
-			<button onClick={onClick} disabled={isLoading}>
-				New Game
-			</button>
+					{/* OWNER SIDE */}
+					<select
+						className="profile-field"
+						value={ownerSide}
+						onChange={(e) => setOwnerSide(e.target.value)}
+						disabled={isLoading}
+					>
+						<option value="black">OWNER SIDE: Black</option>
+						<option value="white">OWNER SIDE: White</option>
+						<option value="random">OWNER SIDE: Random</option>
+					</select>
+
+					<div>{isLoading ? "Loading..." : ""}</div>
+
+					<button
+						className="profile-button"
+						onClick={onClick}
+						disabled={isLoading}
+					>
+						New Game
+					</button>
+				</div>
+			</div>
 		</>
 	);
 }
