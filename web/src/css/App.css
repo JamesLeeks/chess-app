@@ -659,6 +659,14 @@ input::-webkit-inner-spin-button {
   align-items: center;
 }
 
+.time-input-box {
+  display: flex;
+  align-items: center;
+}
+.time-input-box input {
+  width: 2em;
+}
+
 .time-input-segment {
   background-color: rgb(29, 29, 29);
   border-width: 0.2vw;

@@ -5,6 +5,15 @@
 	align-items: center;
 }
 
+.time-input-box {
+	display: flex;
+	align-items: center;
+	// width: 30vw;
+	input {
+		width: 2em;
+	}
+}
+
 .time-input-segment {
 	background-color: variables.$banner;
 	border-width: 0.2vw;

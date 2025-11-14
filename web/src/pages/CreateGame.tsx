@@ -53,16 +53,20 @@ export function CreateGame() {
 		<>
 			<div className="profile-container">
 				<div className="profile-content">
-					{TimeInput()}
+					<TimeInput
+						value={startingTime}
+						onChange={setStartingTime}
+						disabled={isLoading}
+					/>
 
 					{/* TIME */}
-					<input
+					{/* <input
 						className="profile-field"
 						type="number"
 						value={startingTime}
 						onChange={(e) => setStartingTime(e.target.valueAsNumber)}
 						disabled={isLoading}
-					/>
+					/> */}
 
 					{/* OPPONENT */}
 					<input
