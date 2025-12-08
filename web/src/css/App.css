@@ -639,13 +639,53 @@ html {
 }
 
 .input-text-red {
-  color: rgb(255, 82, 82);
+  color: rgb(255, 80, 80);
   font-style: italic;
 }
 
 .error-message {
   color: red;
   font-size: xx-large;
+}
+
+.games-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  font-size: large;
+  font-weight: bold;
+}
+.games-grid a,
+.games-grid a:visited {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.2vw;
+  margin-bottom: 0.5vw;
+  cursor: pointer;
+  text-decoration: none;
+  color: rgb(214, 214, 214);
+  background-color: rgb(52, 52, 52);
+  border-color: rgb(52, 52, 52);
+}
+.games-grid a.no-player,
+.games-grid a:visited.no-player {
+  color: rgb(255, 80, 80);
+}
+.games-grid .left {
+  border-bottom-left-radius: 0.5vw;
+  border-top-left-radius: 0.5vw;
+  padding-left: 0.5vw;
+}
+.games-grid .right {
+  border-bottom-right-radius: 0.5vw;
+  border-top-right-radius: 0.5vw;
+  padding-right: 0.5vw;
 }
 
 html {

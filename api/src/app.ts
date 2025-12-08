@@ -18,7 +18,6 @@ app.use(
 app.use(json());
 app.use(cors()); // TODO - limit to specific origins
 
-console.log("foooooooo");
 const options: swaggerUi.SwaggerUiOptions = {
 	swaggerUrl: "/docs/oauth2-redirect.html",
 	swaggerOptions: {

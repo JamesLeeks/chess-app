@@ -1,0 +1,67 @@
+@use "Variables" as variables;
+
+.games-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.games-grid {
+	display: grid;
+	grid-template-columns: auto auto auto auto auto;
+
+	font-size: large;
+	font-weight: bold;
+	a,
+	a:visited {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		padding: 0.2vw;
+		margin-bottom: 0.5vw;
+
+		cursor: pointer;
+		text-decoration: none;
+		color: variables.$text;
+
+		background-color: variables.$history;
+		border-color: variables.$history;
+
+		&.no-player {
+			color: variables.$red-text;
+		}
+	}
+	.left {
+		border-bottom-left-radius: 0.5vw;
+		border-top-left-radius: 0.5vw;
+		padding-left: 0.5vw;
+	}
+	.right {
+		border-bottom-right-radius: 0.5vw;
+		border-top-right-radius: 0.5vw;
+		padding-right: 0.5vw;
+	}
+}
+
+// .games-list {
+// 	border-spacing: 0;
+// 	tr {
+// 		// background-color: variables.$history;
+// 		// border-color: variables.$history;
+// 		border-radius: 0.5vw;
+// 		font-size: 1.5vw;
+// 		font-weight: bold;
+// 		// margin: 1vw;
+// 		// padding: 0.5vw;
+// 		// margin-bottom: 50px;
+
+// 		td {
+// 			// padding: 0;
+// 			// margin: 0;
+// 			padding-bottom: 50px;
+// 			background-color: variables.$history;
+// 			border-color: variables.$history;
+// 		}
+// 	}
+// }

@@ -81,3 +81,27 @@ export type User = {
 	email?: string;
 	type: "user";
 };
+
+export interface ApiGame {
+	id: string;
+	ownerId: string;
+	playerId?: string;
+	ownerName: string;
+	playerName?: string;
+	specifiedOpponent: string | undefined;
+	ownerSide: PieceColour;
+	allowSpectators?: allowSpectators;
+	moves: {
+		move: string;
+		time: number;
+	}[];
+	players: {
+		white: {
+			timeRemainingAtStartOfTurn: number;
+		};
+		black: {
+			timeRemainingAtStartOfTurn: number;
+		};
+	};
+	isActive: boolean;
+}

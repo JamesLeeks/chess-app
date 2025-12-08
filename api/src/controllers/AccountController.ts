@@ -23,6 +23,22 @@ export class UserController extends Controller {
 		return { username: response.username, email: response.email };
 	}
 
+	@Security("AADB2C") // TODO: merge with get account
+	@Get("/{userId}")
+	public async getAccountById(
+		@Request()
+		req: express.Request,
+		@Path()
+		userId: string
+	): Promise<Account> {
+		const response = await userService.get(userId);
+		if (!response) {
+			throw new NotFoundError();
+		}
+
+		return { username: response.username, email: response.email };
+	}
+
 	@Security("AADB2C")
 	@Post()
 	public async addUser(

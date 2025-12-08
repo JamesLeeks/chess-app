@@ -51,6 +51,7 @@ export interface SerializedGame {
 			timeRemainingAtStartOfTurn: number;
 		};
 	};
+	isActive: boolean;
 }
 
 export class Game {
@@ -316,11 +317,9 @@ export class Game {
 	}
 
 	public isActive(): boolean {
-		if (this.getGameResult()) {
-			return false;
-		}
-		return true;
+		return this.getGameResult() === undefined;
 	}
+
 	private noMovesLeft() {
 		return isInCheckmate(this) || isInStalemate(this);
 	}
@@ -545,6 +544,7 @@ export class Game {
 				white: { timeRemainingAtStartOfTurn: this._whiteTimeRemainingAtStartOfTurn },
 				black: { timeRemainingAtStartOfTurn: this._blackTimeRemainingAtStartOfTurn },
 			},
+			isActive: this.isActive(),
 		};
 		return serialisedGame;
 	}

@@ -12,6 +12,7 @@ import { UpdateAccount } from "./pages/UpdateUser";
 import { ConfirmEmail } from "./pages/ConfirmEmail";
 
 import "./css/App.css";
+import { Games } from "./pages/Games";
 
 function App({ instance }: { instance: PublicClientApplication }) {
 	return (
@@ -49,6 +50,7 @@ function App({ instance }: { instance: PublicClientApplication }) {
 							{/* <Route path="/play/" element={<ListGames />} /> */}
 							<Route path="/play/new" element={<CreateGame />} />
 							<Route path="/play/:id" element={<Play />} />
+							<Route path="/games" element={<Games />} />
 							<Route path="/account" element={<Profile />}></Route>
 							<Route
 								path="/account/update"

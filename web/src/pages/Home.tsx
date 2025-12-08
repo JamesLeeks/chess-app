@@ -12,7 +12,7 @@ export function Home() {
 						</Link>
 					</li>
 					<li>
-						<Link className="home-button" to="">
+						<Link className="home-button" to="/games">
 							my games
 						</Link>
 					</li>

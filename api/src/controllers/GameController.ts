@@ -2,11 +2,12 @@ import { Route, Controller, Get, Path, Post, Body, Security, Request } from "tso
 import * as express from "express";
 import { Game, SerializedGame } from "../../../common/src/game";
 import { gameService } from "../services/GameService";
-import { allowSpectators, PieceColour, Position, PromotionType } from "../../../common/src/models";
+import { allowSpectators, ApiGame, PieceColour, Position, PromotionType } from "../../../common/src/models";
 import { getServer } from "../socket";
 import { BadRequestError, NotFoundError, UnauthorizedError } from "../../errorMiddleware";
 import { ensureUserId, getUserIdFromRequest } from "../../authentication";
 import { userService } from "../services/UserService";
+import { error } from "console";
 
 interface MakeMoveBody {
 	from: Position;
@@ -77,11 +78,14 @@ export class GameController extends Controller {
 		req: express.Request,
 		@Path()
 		gameId: string
-	): Promise<{ id: string }> {
+	): Promise<ApiGame> {
 		const userId = ensureUserId(req);
 
 		const game = await gameService.addPlayer(gameId, userId);
-		return game.toJsonObject();
+
+		this.ensureUserCanSeeGame(game, userId);
+
+		return { ...game.toJsonObject(), ...(await this.getUsernamesForGame(game)) };
 	}
 
 	@Security("AADB2C")
@@ -91,35 +95,66 @@ export class GameController extends Controller {
 		req: express.Request,
 		@Path()
 		gameId: string
-	): Promise<SerializedGame> {
+	): Promise<ApiGame> {
 		const userId = ensureUserId(req);
 
-		const response = await gameService.get(gameId);
+		const gameResponse = await gameService.get(gameId);
+		if (!gameResponse) {
+			throw new NotFoundError();
+		}
+
+		const game = gameResponse.game;
+		if (game.playerId) {
+			if (userId !== game.ownerId && userId !== game.playerId && game.allowSpectators !== "public") {
+				throw new NotFoundError();
+			}
+		}
+
+		this.ensureUserCanSeeGame(game, userId);
+
+		return {
+			...game.toJsonObject(),
+			...(await this.getUsernamesForGame(game)),
+		};
+	}
+
+	@Security("AADB2C")
+	@Get("")
+	public async getGamesForUser(
+		@Request()
+		req: express.Request
+	): Promise<ApiGame[]> {
+		const userId = ensureUserId(req);
+
+		const response = await gameService.getGamesForUser(userId);
 		if (!response) {
 			throw new NotFoundError();
 		}
-		if (response.game.playerId) {
-			if (
-				userId !== response.game.ownerId &&
-				userId !== response.game.playerId &&
-				response.game.allowSpectators !== "public"
-			) {
-				throw new NotFoundError();
+
+		const ownerIds = response.map((g) => g.ownerId);
+		const playerIds = response.map((g) => g.playerId).filter((i) => i !== undefined);
+		const userIdsToLookUp = ownerIds.concat(playerIds);
+
+		const userIdMap: Record<string, string> = {};
+
+		for (let i = 0; i < userIdsToLookUp.length; i++) {
+			const userId = userIdsToLookUp[i];
+
+			if (!userId) {
+				continue;
 			}
+			const user = await userService.get(userId);
+			if (!user) {
+				throw new Error("user should have value");
+			}
+			userIdMap[userId] = user?.username;
 		}
 
-		if (response.game.specifiedOpponent) {
-			if (
-				userId !== response.game.ownerId &&
-				userId !== response.game.playerId &&
-				userId !== response.game.specifiedOpponent &&
-				response.game.allowSpectators !== "public"
-			) {
-				throw new NotFoundError();
-			}
-		}
+		const games: ApiGame[] = response.map((g) => {
+			return { ...g.toJsonObject(), ownerName: userIdMap[g.ownerId ?? ""], playerName: userIdMap[g.playerId ?? ""] };
+		});
 
-		return response.game.toJsonObject();
+		return games;
 	}
 
 	@Security("AADB2C")
@@ -131,7 +166,7 @@ export class GameController extends Controller {
 		gameId: string,
 		@Body()
 		move: MakeMoveBody
-	): Promise<SerializedGame> {
+	): Promise<ApiGame> {
 		const userId = ensureUserId(req);
 
 		const response = await gameService.get(gameId);
@@ -157,6 +192,37 @@ export class GameController extends Controller {
 		const io = getServer();
 		io.to(`game-${gameId}`).emit("gameUpdate", newGameJson);
 
-		return newGameJson;
+		return { ...newGameJson, ...(await this.getUsernamesForGame(game)) };
+	}
+
+	private async getUsernamesForGame(game: Game) {
+		if (!game.ownerId) {
+			throw new Error("game should have ownerId");
+		}
+		// get owner name
+		const ownerResponse = await userService.get(game.ownerId);
+		if (!ownerResponse) {
+			throw new NotFoundError();
+		}
+
+		// if player: get player name
+		const playerResponse = game.playerId ? await userService.get(game.playerId) : undefined;
+		if (game.playerId && !playerResponse) {
+			throw new NotFoundError();
+		}
+		return { ownerName: ownerResponse.username, playerName: playerResponse?.username };
+	}
+
+	private ensureUserCanSeeGame(game: Game, userId: string) {
+		if (game.specifiedOpponent) {
+			if (
+				userId !== game.ownerId &&
+				userId !== game.playerId &&
+				userId !== game.specifiedOpponent &&
+				game.allowSpectators !== "public"
+			) {
+				throw new NotFoundError();
+			}
+		}
 	}
 }

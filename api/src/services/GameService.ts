@@ -2,6 +2,7 @@ import { DefaultAzureCredential, TokenCredential } from "@azure/identity";
 import { Game, SerializedGame } from "../../../common/src/game";
 import { allowSpectators, PieceColour, Position, PromotionType } from "../../../common/src/models";
 import { Container, CosmosClient, FeedResponse, ItemResponse, SqlQuerySpec } from "@azure/cosmos";
+import { NotFoundError } from "../../errorMiddleware";
 
 export class GameService {
 	private container: Container | null = null;
@@ -61,7 +62,7 @@ export class GameService {
 		const response = await this.get(gameId);
 
 		if (!response) {
-			throw new Error("404 not found");
+			throw new NotFoundError();
 		}
 
 		if (response.game.playerId) {
@@ -70,7 +71,7 @@ export class GameService {
 		}
 
 		if (response.game.specifiedOpponent && response.game.specifiedOpponent !== playerId) {
-			throw new Error("404 not found");
+			throw new NotFoundError();
 		}
 
 		const game = new Game({
@@ -118,23 +119,19 @@ export class GameService {
 		const container = await this.getContainer();
 
 		const querySpec: SqlQuerySpec = {
-			query: `SELECT * FROM c WHERE c.ownerId = @ownerId`,
+			// query: `SELECT * FROM c WHERE c.ownerId = @ownerId OR c.playerId = @playerId`,
+			query: `SELECT * FROM c WHERE (c.ownerId = @userId OR c.playerId = @userId) AND c.isActive != false`,
 			parameters: [
 				{
-					name: "@ownerId",
+					name: "@userId",
 					value: userId,
 				},
 			],
-		}; // TODO: get games where the user is the player as well as where they are the owner
+		};
 
-		let response: FeedResponse<Game> = await container.items.query<Game>(querySpec).fetchAll();
+		let response: FeedResponse<SerializedGame> = await container.items.query<SerializedGame>(querySpec).fetchAll();
 
-		let games: Game[] = [];
-
-		for (let i = 0; i < response.resources.length; i++) {
-			const element = response.resources[i];
-			games.push(element);
-		}
+		const games = response.resources.map((g) => Game.fromJsonObject(g));
 
 		return games;
 	}
