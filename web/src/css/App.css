@@ -560,11 +560,41 @@ html {
 
 .home-actions > li {
   list-style-type: none;
-  padding: 1em;
-  width: 10em;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.home-button {
+  background-color: rgb(45, 45, 45);
+  color: rgb(214, 214, 214);
+  border-color: rgb(45, 45, 45);
+  border-width: 0.2vw;
+  border-style: solid;
+  border-radius: 0.3vw;
+  box-shadow: 0 0.25vw rgb(29, 29, 29);
+  cursor: pointer;
+  font-size: 1.2vw;
+  font-weight: bold;
+  text-decoration: none;
+  margin: 1vw;
+  width: 10vw;
+  height: 2vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-button:hover {
+  background-color: rgb(51, 51, 51);
+  border-color: rgb(51, 51, 51);
+}
+
+.home-button:active,
+.home-button:focus {
+  background-color: rgb(57, 57, 57);
+  border-color: rgb(57, 57, 57);
+  box-shadow: 0 0.15vw rgb(29, 29, 29);
 }
 
 .profile-container {

@@ -1,17 +1,10 @@
+@use "Variables" as variables;
+
 html {
 	// set height to 100% so that body can use 100% of screen height
 	height: 100%;
 	background-color: rgb(38, 38, 38);
-	// background-color: red;
 }
-
-// body {
-// 	// set margin to zero so that layout can take up the whole screen
-// 	margin: 0;
-// 	// set height to 100% so that layout can use 100% of screen height
-// 	height: 100%;
-// 	font-size: 1.5vw;
-// }
 
 .container {
 	height: 100%;
@@ -26,9 +19,49 @@ html {
 
 .home-actions > li {
 	list-style-type: none;
-	padding: 1em;
-	width: 10em;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.home-button {
+	// colours
+	background-color: variables.$banner-button-hover;
+	color: variables.$text;
+
+	// border and shadow
+	border-color: variables.$banner-button-hover;
+	border-width: 0.2vw;
+	border-style: solid;
+	border-radius: 0.3vw;
+	box-shadow: 0 0.25vw variables.$banner;
+
+	cursor: pointer;
+
+	// text
+	font-size: 1.2vw;
+	font-weight: bold;
+	text-decoration: none;
+
+	// size and spacing
+	margin: 1vw;
+	width: 10vw;
+	height: 2vw;
+
+	// centre text
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.home-button:hover {
+	background-color: variables.$banner-button-active;
+	border-color: variables.$banner-button-active;
+}
+
+.home-button:active,
+.home-button:focus {
+	background-color: variables.$profile-button-active;
+	border-color: variables.$profile-button-active;
+	box-shadow: 0 0.15vw variables.$banner;
 }
