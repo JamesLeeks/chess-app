@@ -34,7 +34,8 @@ jobs:
          with:
             client-id: ${{ vars.ARM_CLIENT_ID }}
             tenant-id: ${{ vars.ARM_TENANT_ID }}
-            subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+            # subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+            allow-no-subscriptions: true
 
       -  name: Log in to the Container registry
          uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
