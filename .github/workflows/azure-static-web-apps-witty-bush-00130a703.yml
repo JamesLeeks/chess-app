@@ -9,6 +9,9 @@ on:
 #    branches:
 #       - main
 
+permissions:
+   id-token: write # https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-azure
+   contents: read
 env:
    REGISTRY: ghcr.io
    IMAGE_NAME: ${{ github.repository }}-api
@@ -26,6 +29,13 @@ jobs:
          id-token: write
 
       steps:
+      - name: 'Az CLI login'
+         uses: azure/login@v2
+         with:
+            client-id: ${{ vars.ARM_CLIENT_ID }}
+            tenant-id: ${{ vars.ARM_TENANT_ID }}
+            subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
       -  name: Log in to the Container registry
          uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
          with:
@@ -61,7 +71,6 @@ jobs:
 
       -  run: |
             set -e
-            az login --service-principal --username "${ARM_CLIENT_ID}" --password "${ARM_CLIENT_SECRET}" --tenant "${ARM_TENANT_ID}"
             az containerapp update -n chess-api -g chess-app --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
          name: Deploy API
          env:
