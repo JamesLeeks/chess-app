@@ -465,6 +465,10 @@
     border-top-right-radius: 0.8vw;
     border-bottom-right-radius: 0.8vw;
   }
+  .arrows {
+    width: 80%;
+    font-size: 150%;
+  }
   .result {
     width: 80%;
     margin-top: 4vw;
@@ -473,6 +477,17 @@
   .history {
     width: 80%;
     font-size: 150%;
+  }
+  .history-panel-item:first-of-type {
+    margin-top: 2vw;
+  }
+  .arrow-button {
+    border-width: 0.4vw;
+    border-radius: 0.6vw;
+    margin: 1vw;
+    padding-left: 2.5vw;
+    padding-right: 2.5vw;
+    font-size: 8vw;
   }
 }
 @media (min-aspect-ratio: 7/6) {

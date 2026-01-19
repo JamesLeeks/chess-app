@@ -543,13 +543,7 @@ $borderRadius: 0.8vw;
 // mobile layout
 @media (max-aspect-ratio: 7/6) {
 	.content {
-		// TODO: add in page content and work out it will look
 		background-color: rgb(38, 38, 38);
-		// background-image: radial-gradient(
-		// 	circle,
-		// 	variables.$background-gradient,
-		// 	variables.$background
-		// );
 	}
 	.clock-panel {
 		display: flex;
@@ -571,6 +565,10 @@ $borderRadius: 0.8vw;
 		border-top-right-radius: $borderRadius;
 		border-bottom-right-radius: $borderRadius;
 	}
+	.arrows {
+		width: 80%;
+		font-size: 150%;
+	}
 	.result {
 		width: 80%;
 		margin-top: 4vw;
@@ -579,6 +577,17 @@ $borderRadius: 0.8vw;
 	.history {
 		width: 80%;
 		font-size: 150%;
+	}
+	.history-panel-item:first-of-type {
+		margin-top: 2vw;
+	}
+	.arrow-button {
+		border-width: 0.4vw;
+		border-radius: 0.6vw;
+		margin: 1vw;
+		padding-left: 2.5vw;
+		padding-right: 2.5vw;
+		font-size: 8vw;
 	}
 }
 
