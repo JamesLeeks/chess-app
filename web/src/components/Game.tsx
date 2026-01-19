@@ -167,6 +167,19 @@ export function GameComponent(params: GameComponentParams) {
 		}
 	}
 
+	function handleHistoryArrowClicked(direction: 1 | -1) {
+		const historyItemIndex = selectedHistoryItem
+			? game.history.indexOf(selectedHistoryItem)
+			: game.history.length - 1;
+		const historyItemToSelect = historyItemIndex + direction;
+		if (
+			historyItemToSelect >= 0 &&
+			historyItemToSelect < game.history.length
+		) {
+			handleHistoryItemSelected(historyItemToSelect);
+		}
+	}
+
 	function promote(
 		from: Position,
 		to: Position,
@@ -277,6 +290,7 @@ export function GameComponent(params: GameComponentParams) {
 							game.history[game.history.length - 1]
 						}
 						onNotationClicked={handleHistoryItemSelected}
+						onArrowClicked={handleHistoryArrowClicked}
 					></HistoryComponent>
 				</div>
 			</div>
