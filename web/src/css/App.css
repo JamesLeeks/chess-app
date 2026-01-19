@@ -651,27 +651,27 @@ html {
 
 .profile-field-info {
   background-color: rgb(29, 29, 29);
-  border-width: 0.2vw;
+  border-width: 0.3vw;
   border-color: rgb(29, 29, 29);
   border-style: solid;
-  border-radius: 0.3vw;
-  margin: 0.2vw;
-  padding: 0.1vw;
+  border-radius: 0.45vw;
+  margin: 0.3vw;
+  padding: 0.15vw;
   cursor: default;
-  font-size: 0.8vw;
+  font-size: 1.2vw;
   color: rgb(214, 214, 214);
 }
 
 .profile-field {
   background-color: rgb(29, 29, 29);
-  border-width: 0.2vw;
+  border-width: 0.3vw;
   border-color: rgb(29, 29, 29);
   border-style: solid;
-  border-radius: 0.3vw;
-  margin: 0.2vw;
-  padding: 0.1vw;
+  border-radius: 0.45vw;
+  margin: 0.3vw;
+  padding: 0.15vw;
   cursor: cursor;
-  font-size: 0.8vw;
+  font-size: 1.2vw;
   color: rgb(214, 214, 214);
 }
 
@@ -683,15 +683,15 @@ input::-webkit-inner-spin-button {
 
 .profile-button {
   background-color: rgb(45, 45, 45);
-  border-width: 0.2vw;
+  border-width: 0.3vw;
   border-color: rgb(45, 45, 45);
   border-style: solid;
-  border-radius: 0.3vw;
-  margin: 0.2vw;
+  border-radius: 0.45vw;
+  margin: 0.3vw;
   color: rgb(214, 214, 214);
   cursor: pointer;
-  font-size: 0.8vw;
-  box-shadow: 0 0.25vw rgb(29, 29, 29);
+  font-size: 1.2vw;
+  box-shadow: 0 0.375vw rgb(29, 29, 29);
 }
 
 .profile-button:hover {
@@ -780,6 +780,21 @@ input::-webkit-inner-spin-button {
   font-size: 1.2vw;
 }
 
+@media (max-aspect-ratio: 7/6) {
+  .time-input-box input {
+    width: 2em;
+  }
+  .time-input-segment {
+    border-width: 1.5vw;
+    border-radius: 2.25vw;
+    margin: 1.5vw;
+    padding: 0.1vw;
+    font-size: 6vw;
+  }
+  .colon {
+    font-size: 10vw;
+  }
+}
 .games-container {
   display: flex;
   justify-content: center;

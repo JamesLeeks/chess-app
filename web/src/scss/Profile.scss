@@ -4,13 +4,11 @@
 	display: grid;
 	grid-template-columns: 1fr 2fr 1fr;
 	grid-template-areas: "left content right";
-	// background-image: linear-gradient(rgb(84, 189, 123), rgb(82, 91, 223));
 	background-image: radial-gradient(
 		circle,
 		variables.$background-gradient,
 		variables.$background
 	);
-	// background-color: rgb(47, 47, 47);
 }
 
 .profile-content {
@@ -24,34 +22,29 @@
 
 .profile-field-info {
 	background-color: variables.$banner;
-	border-width: 0.2vw;
+	border-width: 0.3vw;
 	border-color: variables.$banner;
 	border-style: solid;
-	border-radius: 0.3vw;
-	margin: 0.2vw;
-	padding: 0.1vw;
+	border-radius: 0.45vw;
+	margin: 0.3vw;
+	padding: 0.15vw;
 	cursor: default;
-	font-size: 0.8vw;
+	font-size: 1.2vw;
 	color: variables.$text;
 }
 
 .profile-field {
 	background-color: variables.$banner;
-	border-width: 0.2vw;
+	border-width: 0.3vw;
 	border-color: variables.$banner;
 	border-style: solid;
-	border-radius: 0.3vw;
-	margin: 0.2vw;
-	padding: 0.1vw;
+	border-radius: 0.45vw;
+	margin: 0.3vw;
+	padding: 0.15vw;
 	cursor: cursor;
-	font-size: 0.8vw;
+	font-size: 1.2vw;
 	color: variables.$text;
 }
-
-// .profile-field::-webkit-outer-spin-button {
-// 	-webkit-appearance: none;
-// 	margin: 0;
-// }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -61,17 +54,15 @@ input::-webkit-inner-spin-button {
 
 .profile-button {
 	background-color: variables.$banner-button-hover;
-	// background-color: variables.$banner;
-	border-width: 0.2vw;
+	border-width: 0.3vw;
 	border-color: variables.$banner-button-hover;
 	border-style: solid;
-	border-radius: 0.3vw;
-	margin: 0.2vw;
+	border-radius: 0.45vw;
+	margin: 0.3vw;
 	color: variables.$text;
 	cursor: pointer;
-	font-size: 0.8vw;
-	box-shadow: 0 0.25vw variables.$banner;
-	// box-shadow: 0 0.2vw;
+	font-size: 1.2vw;
+	box-shadow: 0 0.375vw variables.$banner;
 }
 
 .profile-button:hover {

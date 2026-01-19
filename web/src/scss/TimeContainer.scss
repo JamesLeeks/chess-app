@@ -30,3 +30,24 @@
 .colon {
 	font-size: 1.2vw;
 }
+
+// mobile layout
+@media (max-aspect-ratio: 7/6) {
+	.time-input-box {
+		input {
+			width: 2em;
+		}
+	}
+
+	.time-input-segment {
+		border-width: 1.5vw;
+		border-radius: 2.25vw;
+		margin: 1.5vw;
+		padding: 0.1vw;
+		font-size: 6vw;
+	}
+
+	.colon {
+		font-size: 10vw;
+	}
+}
