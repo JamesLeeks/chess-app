@@ -772,12 +772,12 @@ input::-webkit-inner-spin-button {
   margin: 0.2vw;
   padding: 0.1vw;
   cursor: cursor;
-  font-size: 0.8vw;
+  font-size: 1.2vw;
   color: rgb(214, 214, 214);
 }
 
 .colon {
-  font-size: 1.2vw;
+  font-size: 2vw;
 }
 
 @media (max-aspect-ratio: 7/6) {
