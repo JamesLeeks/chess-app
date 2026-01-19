@@ -65,3 +65,26 @@ html {
 	border-color: variables.$profile-button-active;
 	box-shadow: 0 0.15vw variables.$banner;
 }
+
+// mobile layout
+@media (max-aspect-ratio: 7/6) {
+	.home-button {
+		// border and shadow
+		border-width: 1vw;
+		border-radius: 1.5vw;
+		box-shadow: 0 1.25vw variables.$banner;
+
+		// text
+		font-size: 6vw;
+
+		// size and spacing
+		margin: 5vw;
+		width: 50vw;
+		height: 10vw;
+	}
+
+	.home-button:active,
+	.home-button:focus {
+		box-shadow: 0 0.75vw variables.$banner;
+	}
+}
