@@ -1,14 +1,19 @@
 // import { useEffect, useState } from "react";
+import { useState } from "react";
 import { numberToTime, timeToNumber } from "../timeConversion";
 
 export interface TimeInputParams {
 	value: number;
 	onChange: (newValue: number) => void;
+	onIsValidChange: (isValid: boolean) => void;
 	disabled: boolean;
 }
 
 export function TimeInput(params: TimeInputParams) {
-	const { value, onChange, disabled } = params;
+	const { value, onChange, onIsValidChange, disabled } = params;
+	const [hoursValid, setHoursValid] = useState<boolean>(true);
+	const [minutesValid, setMinutesValid] = useState<boolean>(true);
+	const [secondsValid, setSecondsValid] = useState<boolean>(true);
 	const inputTime = numberToTime(value);
 	// const [hours, setHours] = useState<number>(inputTime.hours);
 	// const [minutes, setMinutes] = useState<number>(inputTime.minutes);
@@ -33,84 +38,126 @@ export function TimeInput(params: TimeInputParams) {
 			<div className="time-input-container">
 				<div className="time-input-box">
 					<input
-						className="time-input-segment"
+						className={`time-input-segment${hoursValid ? "" : " invalid-time"}`}
 						type="number"
-						value={hours}
+						defaultValue={hours}
 						// onChange={(e) => setHours(e.target.valueAsNumber)}
 						// onChange={(e) => (hours = e.target.valueAsNumber)}
-						onChange={(e) => {
+						onBlur={(e) => {
 							const newValue = e.target.valueAsNumber;
-							if (e.target.value.indexOf(".") >= 0) {
-								// only want whole numbers!
-								e.preventDefault();
+							console.log("new hours:", newValue);
+							if (
+								newValue < 0 ||
+								isNaN(newValue) ||
+								e.target.value.indexOf(".") >= 0
+							) {
+								// Hours aren't valid after this change
+								// If all the values were valid before this, notify parent that time is now invalid
+								if (hoursValid && minutesValid && secondsValid) {
+									onIsValidChange(false);
+								}
+								setHoursValid(false);
 								return;
 							}
-							if (newValue < 0 || isNaN(newValue)) {
-								e.preventDefault();
-								return;
+
+							// Hours are valid after this change
+							// If hours weren't valid before but minutes and seconds were, notify parent that time is now valid
+							if (!hoursValid && minutesValid && secondsValid) {
+								onIsValidChange(true);
 							}
-							onChange(
-								timeToNumber({
-									hours: e.target.valueAsNumber,
-									minutes,
-									seconds,
-									milliseconds: 0,
-								})
-							);
+							setHoursValid(true);
+							if (minutesValid && secondsValid) {
+								onChange(
+									timeToNumber({
+										hours: newValue,
+										minutes,
+										seconds,
+										milliseconds: 0,
+									}),
+								);
+							}
 						}}
 						disabled={disabled}
 					/>
 					<div className="colon">:</div>
 					<input
-						className="time-input-segment"
+						className={`time-input-segment${minutesValid ? "" : " invalid-time"}`}
 						type="number"
-						value={minutes}
-						onChange={(e) => {
-							if (e.target.value.indexOf(".") >= 0) {
-								// only want whole numbers!
-								e.preventDefault();
-								return;
-							}
+						defaultValue={minutes}
+						onBlur={(e) => {
 							const newValue = e.target.valueAsNumber;
-							if (newValue < 0 || newValue > 59 || isNaN(newValue)) {
-								e.preventDefault();
+							if (
+								newValue < 0 ||
+								newValue > 59 ||
+								isNaN(newValue) ||
+								e.target.value.indexOf(".") >= 0
+							) {
+								// Minutes aren't valid after this change
+								// If all the values were valid before this, notify parent that time is now invalid
+								if (hoursValid && minutesValid && secondsValid) {
+									onIsValidChange(false);
+								}
+								setMinutesValid(false);
 								return;
 							}
-							onChange(
-								timeToNumber({
-									hours,
-									minutes: newValue,
-									seconds,
-									milliseconds: 0,
-								})
-							);
+
+							// Minutes are valid after this change
+							// If minutes weren't valid before but hours and seconds were, notify parent that time is now valid
+							if (!minutesValid && hoursValid && secondsValid) {
+								onIsValidChange(true);
+							}
+							setMinutesValid(true);
+							if (hoursValid && secondsValid) {
+								onChange(
+									timeToNumber({
+										hours,
+										minutes: newValue,
+										seconds,
+										milliseconds: 0,
+									}),
+								);
+							}
 						}}
 						disabled={disabled}
 					/>
 					<div className="colon">:</div>
 					<input
-						className="time-input-segment"
+						className={`time-input-segment${secondsValid ? "" : " invalid-time"}`}
 						type="number"
-						value={seconds}
-						onChange={(e) => {
+						defaultValue={seconds}
+						onBlur={(e) => {
 							const newValue = e.target.valueAsNumber;
-							if (e.target.value.indexOf(".") >= 0) {
-								// only want whole numbers!
-								e.preventDefault();
+							if (
+								newValue < 0 ||
+								newValue > 59 ||
+								isNaN(newValue) ||
+								e.target.value.indexOf(".") >= 0
+							) {
+								// Seconds aren't valid after this change
+								// If all the values were valid before this, notify parent that time is now invalid
+								if (hoursValid && minutesValid && secondsValid) {
+									onIsValidChange(false);
+								}
+								setSecondsValid(false);
 								return;
 							}
-							if (newValue < 0 || newValue > 59 || isNaN(newValue)) {
-								e.preventDefault();
-								return;
+
+							// Seconds are valid after this change
+							// If seconds weren't valid before but hours and minutes were, notify parent that time is now valid
+							if (!secondsValid && hoursValid && minutesValid) {
+								onIsValidChange(true);
 							}
-							onChange(
-								timeToNumber({
-									hours,
-									minutes,
-									seconds: newValue,
-									milliseconds: 0,
-								})
-							);
+							setSecondsValid(true);
+							if (hoursValid && minutesValid) {
+								onChange(
+									timeToNumber({
+										hours,
+										minutes,
+										seconds: newValue,
+										milliseconds: 0,
+									}),
+								);
+							}
 						}}
 						disabled={disabled}
 					/>

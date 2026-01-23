@@ -791,6 +791,10 @@ input::-webkit-inner-spin-button {
   color: rgb(214, 214, 214);
 }
 
+.invalid-time {
+  border-color: rgb(255, 80, 80);
+}
+
 .colon {
   font-size: 2vw;
 }

@@ -27,6 +27,10 @@
 	color: variables.$text;
 }
 
+.invalid-time {
+	border-color: variables.$red-text;
+}
+
 .colon {
 	font-size: 2vw;
 }

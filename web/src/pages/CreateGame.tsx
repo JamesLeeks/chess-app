@@ -14,6 +14,7 @@ export function CreateGame() {
 	const [ownerSide, setOwnerSide] = useState<string>("white");
 	const [opponent, setOpponent] = useState<string | undefined>(undefined);
 	const [allowSpectators, setAllowSpectators] = useState<string>("private");
+	const [isTimeValid, setIsTimeValid] = useState<boolean>(true);
 
 	const navigate = useNavigate();
 
@@ -55,6 +56,7 @@ export function CreateGame() {
 				<div className="profile-content">
 					<TimeInput
 						value={startingTime}
+						onIsValidChange={setIsTimeValid}
 						onChange={setStartingTime}
 						disabled={isLoading}
 					/>
@@ -110,7 +112,7 @@ export function CreateGame() {
 					<button
 						className="profile-button"
 						onClick={onClick}
-						disabled={isLoading}
+						disabled={isLoading || !isTimeValid}
 					>
 						New Game
 					</button>
