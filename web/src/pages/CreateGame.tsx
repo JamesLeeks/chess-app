@@ -10,9 +10,13 @@ function pickRandomSide() {
 
 export function CreateGame() {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [timeType, setTimeType] = useState<"increment" | "normal" | "endless">(
+		"normal",
+	);
 	const [startingTime, setStartingTime] = useState<number>(600);
 	const [ownerSide, setOwnerSide] = useState<string>("white");
 	const [opponent, setOpponent] = useState<string | undefined>(undefined);
+	const [publicGame, setPublicGame] = useState<boolean>(false);
 	const [allowSpectators, setAllowSpectators] = useState<string>("private");
 	const [isTimeValid, setIsTimeValid] = useState<boolean>(true);
 
@@ -54,33 +58,62 @@ export function CreateGame() {
 		<>
 			<div className="profile-container">
 				<div className="profile-content">
+					<div className="header">Time</div>
+					<div className="slider-container">
+						<button
+							className={`slider slider-start ${timeType === "normal" ? "slider-selected" : ""}`}
+							onClick={() => setTimeType("normal")}
+							disabled={isLoading}
+						>
+							Normal
+						</button>
+						<button
+							className={`slider ${timeType === "increment" ? "slider-selected" : ""}`}
+							onClick={() => setTimeType("increment")}
+							disabled={true}
+						>
+							Increment
+						</button>
+						<button
+							className={`slider slider-end ${timeType === "endless" ? "slider-selected" : ""}`}
+							onClick={() => setTimeType("endless")}
+							disabled={true}
+						>
+							Endless
+						</button>
+					</div>
 					<TimeInput
 						value={startingTime}
 						onIsValidChange={setIsTimeValid}
 						onChange={setStartingTime}
 						disabled={isLoading}
 					/>
-
-					{/* TIME */}
-					{/* <input
-						className="profile-field"
-						type="number"
-						value={startingTime}
-						onChange={(e) => setStartingTime(e.target.valueAsNumber)}
-						disabled={isLoading}
-					/> */}
-
-					{/* OPPONENT */}
-					<input
-						className="profile-field"
-						type="string"
-						value={opponent}
-						onChange={(e) => setOpponent(e.target.value)}
-						disabled={isLoading}
-					/>
-
-					{/* SPECTATING */}
-					<select
+					<div className="header">Spectating</div>
+					<div className="slider-container">
+						<button
+							className={`slider slider-start ${allowSpectators === "private" ? "slider-selected" : ""}`}
+							onClick={() => setAllowSpectators("private")}
+							disabled={isLoading}
+						>
+							Private
+						</button>
+						<button
+							className={`slider ${allowSpectators === "public" ? "slider-selected" : ""}`}
+							onClick={() => setAllowSpectators("public")}
+							disabled={isLoading}
+						>
+							Public
+						</button>
+						<button
+							className={`slider slider-end ${allowSpectators === "users" ? "slider-selected" : ""}`}
+							onClick={() => setAllowSpectators("users")}
+							disabled={true}
+						>
+							Custom
+						</button>
+					</div>
+					{/* old spectating input */}
+					{/* <select
 						className="profile-field"
 						value={allowSpectators}
 						onChange={(e) => setAllowSpectators(e.target.value)}
@@ -93,10 +126,62 @@ export function CreateGame() {
 						<option value={"users"} disabled={true}>
 							Allow specified users to spectate
 						</option>
-					</select>
+					</select> */}
+					{/*  */}
+					<div className="header">Opponent</div>
+					<div className="slider-container">
+						<button
+							className={`slider slider-start ${publicGame === false ? "slider-selected" : ""}`}
+							onClick={() => {
+								setPublicGame(false);
+								setOpponent(undefined);
+							}}
+						>
+							Specified
+						</button>
+						<button
+							onClick={() => setPublicGame(true)}
+							className={`slider slider-end ${publicGame === true ? "slider-selected" : ""}`}
+						>
+							Open Game
+						</button>
+					</div>
+					{!publicGame ? "username" : ""}
+					<input
+						className="profile-field"
+						type="string"
+						value={opponent}
+						onChange={(e) => setOpponent(e.target.value)}
+						disabled={isLoading}
+						hidden={publicGame}
+					/>
 
-					{/* OWNER SIDE */}
-					<select
+					<div className="header">Your Side</div>
+					<div className="slider-container">
+						<button
+							className={`slider slider-start ${ownerSide === "white" ? "slider-selected" : ""}`}
+							onClick={() => setOwnerSide("white")}
+							disabled={isLoading}
+						>
+							White
+						</button>
+						<button
+							className={`slider ${ownerSide === "black" ? "slider-selected" : ""}`}
+							onClick={() => setOwnerSide("black")}
+							disabled={isLoading}
+						>
+							Black
+						</button>
+						<button
+							className={`slider slider-end ${ownerSide === "random" ? "slider-selected" : ""}`}
+							onClick={() => setOwnerSide("random")}
+							disabled={isLoading}
+						>
+							Random
+						</button>
+					</div>
+
+					{/* <select
 						className="profile-field"
 						value={ownerSide}
 						onChange={(e) => setOwnerSide(e.target.value)}
@@ -105,10 +190,9 @@ export function CreateGame() {
 						<option value="black">OWNER SIDE: Black</option>
 						<option value="white">OWNER SIDE: White</option>
 						<option value="random">OWNER SIDE: Random</option>
-					</select>
+					</select> */}
 
 					<div>{isLoading ? "Loading..." : ""}</div>
-
 					<button
 						className="profile-button"
 						onClick={onClick}

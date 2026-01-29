@@ -673,7 +673,7 @@ html {
   margin: 0.3vw;
   padding: 0.15vw;
   cursor: default;
-  font-size: 1.2vw;
+  font-size: 1vw;
   color: rgb(214, 214, 214);
 }
 
@@ -686,7 +686,7 @@ html {
   margin: 0.3vw;
   padding: 0.15vw;
   cursor: cursor;
-  font-size: 1.2vw;
+  font-size: 1vw;
   color: rgb(214, 214, 214);
 }
 
@@ -705,7 +705,7 @@ input::-webkit-inner-spin-button {
   margin: 0.3vw;
   color: rgb(214, 214, 214);
   cursor: pointer;
-  font-size: 1.2vw;
+  font-size: 1vw;
   box-shadow: 0 0.375vw rgb(29, 29, 29);
 }
 
@@ -765,6 +765,44 @@ input::-webkit-inner-spin-button {
     box-shadow: 0 1.125vw rgb(29, 29, 29);
   }
 }
+.header {
+  font-size: 1.5vw;
+  text-decoration: underline;
+  margin: 1vw;
+}
+
+.slider {
+  font-size: 1vw;
+  color: rgb(214, 214, 214);
+  background-color: rgb(29, 29, 29);
+  border: solid;
+  border-width: 0.5vw;
+  border-color: rgb(29, 29, 29);
+  cursor: pointer;
+}
+
+.slider-start {
+  border-top-left-radius: 0.45vw;
+  border-bottom-left-radius: 0.45vw;
+}
+
+.slider-end {
+  border-top-right-radius: 0.45vw;
+  border-bottom-right-radius: 0.45vw;
+}
+
+.slider-selected {
+  background-color: rgb(51, 51, 51);
+  border-color: rgb(51, 51, 51);
+}
+
+.slider:disabled {
+  cursor: not-allowed;
+  background-color: rgb(29, 29, 29);
+  border-color: rgb(29, 29, 29);
+  color: rgb(142, 142, 142);
+}
+
 .time-input-container {
   display: flex;
   align-items: center;
