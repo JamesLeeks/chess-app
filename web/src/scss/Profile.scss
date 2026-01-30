@@ -129,7 +129,10 @@ input::-webkit-inner-spin-button {
 
 .header {
 	font-size: 1.5vw;
-	text-decoration: underline;
+	margin-top: 1vw;
+}
+
+.slider-container {
 	margin: 1vw;
 }
 
@@ -154,7 +157,8 @@ input::-webkit-inner-spin-button {
 	background-color: variables.$banner-button-active;
 	border-color: variables.$banner-button-active;
 }
-.slider:disabled {
+.slider:disabled,
+.disabled {
 	cursor: not-allowed;
 	background-color: variables.$banner;
 	border-color: variables.$banner;

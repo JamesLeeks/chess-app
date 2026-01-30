@@ -767,7 +767,10 @@ input::-webkit-inner-spin-button {
 }
 .header {
   font-size: 1.5vw;
-  text-decoration: underline;
+  margin-top: 1vw;
+}
+
+.slider-container {
   margin: 1vw;
 }
 
@@ -796,7 +799,8 @@ input::-webkit-inner-spin-button {
   border-color: rgb(51, 51, 51);
 }
 
-.slider:disabled {
+.slider:disabled,
+.disabled {
   cursor: not-allowed;
   background-color: rgb(29, 29, 29);
   border-color: rgb(29, 29, 29);
