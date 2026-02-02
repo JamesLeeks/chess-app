@@ -91,6 +91,47 @@ input::-webkit-inner-spin-button {
 	font-size: xx-large;
 }
 
+.header {
+	font-size: 1.5vw;
+}
+.header:not(:first-of-type) {
+	margin-top: 1vw;
+}
+
+// slider
+.slider-container {
+	margin: 1vw;
+}
+
+.slider {
+	font-size: 1vw;
+	color: variables.$text;
+	background-color: variables.$banner;
+	border: solid;
+	border-width: 0.5vw;
+	border-color: variables.$banner;
+	cursor: pointer;
+}
+.slider-start {
+	border-top-left-radius: 0.45vw;
+	border-bottom-left-radius: 0.45vw;
+}
+.slider-end {
+	border-top-right-radius: 0.45vw;
+	border-bottom-right-radius: 0.45vw;
+}
+.slider-selected {
+	background-color: variables.$banner-button-active;
+	border-color: variables.$banner-button-active;
+}
+.slider:disabled,
+.disabled {
+	cursor: not-allowed;
+	background-color: variables.$banner;
+	border-color: variables.$banner;
+	color: variables.$text-muted;
+}
+
 // mobile layout
 @media (max-aspect-ratio: 7/6) {
 	.profile-container {
@@ -125,42 +166,39 @@ input::-webkit-inner-spin-button {
 	.profile-button:focus {
 		box-shadow: 0 1.125vw variables.$banner;
 	}
-}
 
-.header {
-	font-size: 1.5vw;
-	margin-top: 1vw;
-}
+	.header {
+		font-size: 9vw;
+	}
+	.header:not(:first-of-type) {
+		margin-top: 3vw;
+	}
 
-.slider-container {
-	margin: 1vw;
-}
+	// slider
+	.slider-container {
+		margin: 3vw;
+	}
 
-.slider {
-	font-size: 1vw;
-	color: variables.$text;
-	background-color: variables.$banner;
-	border: solid;
-	border-width: 0.5vw;
-	border-color: variables.$banner;
-	cursor: pointer;
-}
-.slider-start {
-	border-top-left-radius: 0.45vw;
-	border-bottom-left-radius: 0.45vw;
-}
-.slider-end {
-	border-top-right-radius: 0.45vw;
-	border-bottom-right-radius: 0.45vw;
-}
-.slider-selected {
-	background-color: variables.$banner-button-active;
-	border-color: variables.$banner-button-active;
-}
-.slider:disabled,
-.disabled {
-	cursor: not-allowed;
-	background-color: variables.$banner;
-	border-color: variables.$banner;
-	color: variables.$text-muted;
+	.slider {
+		padding: 1vw;
+		font-size: 6vw;
+		color: variables.$text;
+		background-color: variables.$banner;
+		border: solid;
+		border-width: 1.5vw;
+		border-color: variables.$banner;
+		cursor: pointer;
+	}
+	.slider-start {
+		border-top-left-radius: 2.25vw;
+		border-bottom-left-radius: 2.25vw;
+	}
+	.slider-end {
+		border-top-right-radius: 2.25vw;
+		border-bottom-right-radius: 2.25vw;
+	}
+	.slider-selected {
+		background-color: variables.$banner-button-active;
+		border-color: variables.$banner-button-active;
+	}
 }

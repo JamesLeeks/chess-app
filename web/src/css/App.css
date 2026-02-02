@@ -735,38 +735,11 @@ input::-webkit-inner-spin-button {
   font-size: xx-large;
 }
 
-@media (max-aspect-ratio: 7/6) {
-  .profile-container {
-    grid-template-columns: 0fr 1fr 0fr;
-  }
-  .profile-field-info {
-    border-width: 1.5vw;
-    border-radius: 2.25vw;
-    margin: 1.5vw;
-    padding: 0.75vw;
-    font-size: 6vw;
-  }
-  .profile-field {
-    border-width: 1.5vw;
-    border-radius: 2.25vw;
-    margin: 1.5vw;
-    padding: 0.75vw;
-    font-size: 6vw;
-  }
-  .profile-button {
-    border-width: 1.5vw;
-    border-radius: 2.25vw;
-    margin: 1.5vw;
-    font-size: 6vw;
-    box-shadow: 0 1.875vw rgb(29, 29, 29);
-  }
-  .profile-button:active,
-  .profile-button:focus {
-    box-shadow: 0 1.125vw rgb(29, 29, 29);
-  }
-}
 .header {
   font-size: 1.5vw;
+}
+
+.header:not(:first-of-type) {
   margin-top: 1vw;
 }
 
@@ -807,6 +780,67 @@ input::-webkit-inner-spin-button {
   color: rgb(142, 142, 142);
 }
 
+@media (max-aspect-ratio: 7/6) {
+  .profile-container {
+    grid-template-columns: 0fr 1fr 0fr;
+  }
+  .profile-field-info {
+    border-width: 1.5vw;
+    border-radius: 2.25vw;
+    margin: 1.5vw;
+    padding: 0.75vw;
+    font-size: 6vw;
+  }
+  .profile-field {
+    border-width: 1.5vw;
+    border-radius: 2.25vw;
+    margin: 1.5vw;
+    padding: 0.75vw;
+    font-size: 6vw;
+  }
+  .profile-button {
+    border-width: 1.5vw;
+    border-radius: 2.25vw;
+    margin: 1.5vw;
+    font-size: 6vw;
+    box-shadow: 0 1.875vw rgb(29, 29, 29);
+  }
+  .profile-button:active,
+  .profile-button:focus {
+    box-shadow: 0 1.125vw rgb(29, 29, 29);
+  }
+  .header {
+    font-size: 9vw;
+  }
+  .header:not(:first-of-type) {
+    margin-top: 3vw;
+  }
+  .slider-container {
+    margin: 3vw;
+  }
+  .slider {
+    padding: 1vw;
+    font-size: 6vw;
+    color: rgb(214, 214, 214);
+    background-color: rgb(29, 29, 29);
+    border: solid;
+    border-width: 1.5vw;
+    border-color: rgb(29, 29, 29);
+    cursor: pointer;
+  }
+  .slider-start {
+    border-top-left-radius: 2.25vw;
+    border-bottom-left-radius: 2.25vw;
+  }
+  .slider-end {
+    border-top-right-radius: 2.25vw;
+    border-bottom-right-radius: 2.25vw;
+  }
+  .slider-selected {
+    background-color: rgb(51, 51, 51);
+    border-color: rgb(51, 51, 51);
+  }
+}
 .time-input-container {
   display: flex;
   align-items: center;
