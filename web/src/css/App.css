@@ -840,6 +840,13 @@ input::-webkit-inner-spin-button {
     background-color: rgb(51, 51, 51);
     border-color: rgb(51, 51, 51);
   }
+  .slider:disabled,
+  .disabled {
+    cursor: not-allowed;
+    background-color: rgb(29, 29, 29);
+    border-color: rgb(29, 29, 29);
+    color: rgb(142, 142, 142);
+  }
 }
 .time-input-container {
   display: flex;

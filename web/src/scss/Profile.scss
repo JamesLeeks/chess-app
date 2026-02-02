@@ -201,4 +201,11 @@ input::-webkit-inner-spin-button {
 		background-color: variables.$banner-button-active;
 		border-color: variables.$banner-button-active;
 	}
+	.slider:disabled,
+	.disabled {
+		cursor: not-allowed;
+		background-color: variables.$banner;
+		border-color: variables.$banner;
+		color: variables.$text-muted;
+	}
 }
